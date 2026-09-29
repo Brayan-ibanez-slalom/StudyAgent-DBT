@@ -1,0 +1,16 @@
+{
+  "version": 1,
+  "generated_at": "2026-09-29",
+  "description": "dbt concept/command/config name -> canonical note path. Declared by a '**Concepts:**' line in each note.",
+  "concept_count": 8,
+  "concepts": {
+    "custom materialization": "knowledge/ae/01-developing-and-optimizing-models/materializations.md",
+    "ephemeral": "knowledge/ae/01-developing-and-optimizing-models/materializations.md",
+    "incremental": "knowledge/ae/01-developing-and-optimizing-models/materializations.md",
+    "materialization": "knowledge/ae/01-developing-and-optimizing-models/materializations.md",
+    "materialized": "knowledge/ae/01-developing-and-optimizing-models/materializations.md",
+    "materialized_view": "knowledge/ae/01-developing-and-optimizing-models/materializations.md",
+    "table": "knowledge/ae/01-developing-and-optimizing-models/materializations.md",
+    "view": "knowledge/ae/01-developing-and-optimizing-models/materializations.md"
+  }
+}

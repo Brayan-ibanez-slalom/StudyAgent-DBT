@@ -1,0 +1,9 @@
+{
+  "servers": {
+    "study-agent": {
+      "type": "stdio",
+      "command": "${workspaceFolder}/mcp-server/.venv/bin/python",
+      "args": ["${workspaceFolder}/mcp-server/run.py"]
+    }
+  }
+}

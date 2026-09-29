@@ -1,0 +1,62 @@
+{
+  "version": 1,
+  "generated_at": "2026-09-29",
+  "description": "Machine-readable index of knowledge/ topic notes. Regenerate with scripts/build_topic_index.py.",
+  "weight_note": "dbt Labs does not publish section weights; domain_weight is null by design.",
+  "topic_count": 1,
+  "topics": [
+    {
+      "id": "ae/01-developing-and-optimizing-models/materializations",
+      "path": "knowledge/ae/01-developing-and-optimizing-models/materializations.md",
+      "title": "Materializations",
+      "track": "ae",
+      "domain": "ae-01",
+      "domain_title": "Developing and optimizing dbt models",
+      "domain_weight": null,
+      "verified": "2026-09-29",
+      "keywords": [
+        "access",
+        "configuring",
+        "contract",
+        "custom materialization",
+        "dbt_project.yml",
+        "ephemeral",
+        "ephemeral is the special case",
+        "incremental",
+        "is_incremental",
+        "macro",
+        "materialization",
+        "materialized view",
+        "model",
+        "on_schema_change",
+        "related",
+        "snapshot",
+        "source",
+        "table",
+        "target",
+        "trap",
+        "traps",
+        "view",
+        "when to use which",
+        "why this is likely on the exam"
+      ],
+      "concepts": [
+        "materialization",
+        "materialized",
+        "view",
+        "table",
+        "incremental",
+        "ephemeral",
+        "materialized_view",
+        "custom materialization"
+      ],
+      "sources": [
+        {
+          "title": "source: [Materializations \u2014 dbt Docs",
+          "url": "https://docs.getdbt.com/docs/build/materializations"
+        }
+      ],
+      "related": []
+    }
+  ]
+}

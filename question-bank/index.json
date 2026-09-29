@@ -1,0 +1,62 @@
+{
+  "questions": [
+    {
+      "id": "Q-AU-DBTAE-001",
+      "source": "authored",
+      "source_url": null,
+      "raw_path": "question-bank/authored/EXAMPLE-ae01-materializations.json",
+      "stem": "An analytics engineer maintains a lightweight transformation that is referenced by only two downstream models. The transformation is currently materialized as ephemeral to reduce clutter in the data warehouse. A new governance policy requires this transformation to enforce a model contract so that its column names and data types are guaranteed to downstream consumers. What should the engineer do?",
+      "option_texts": {
+        "A": "Configure an enforced contract in the model's YAML and leave the materialization as ephemeral",
+        "B": "Configure the model to materialize as a view or table, because ephemeral does not support model contracts",
+        "C": "Configure a model alias on the ephemeral model so the contract binds to the generated CTE identifier",
+        "D": "Configure the enforced contract on each of the two downstream models that consume this transformation"
+      },
+      "domain": "ae-01",
+      "track": "ae",
+      "blueprint_task": "1.2",
+      "blueprint_task_title": "Understanding core dbt materializations",
+      "qtype": "multiple_choice",
+      "difficulty_estimate": "L4",
+      "difficulty_source": "authored",
+      "drill_answer": "B",
+      "drill_answer_short": "Ephemeral materialization doesn't support model contracts. Ephemeral models are not directly built into the database; dbt interpolates the code from an ephemeral model into its dependent models using a common table expression.",
+      "drill_rationale": "Ephemeral materialization doesn't support model contracts. Ephemeral models are not directly built into the database; dbt interpolates the code from an ephemeral model into its dependent models using a common table expression.",
+      "decision_hinge": "Ephemeral materialization doesn't support model contracts. Ephemeral models are not directly built into the database; dbt interpolates the code from an ephemeral model into its dependent models using a common table expression.",
+      "plausible_options": {
+        "D": "requires this transformation to enforce a model contract so that its column names and data types are guaranteed to downstream consumers"
+      },
+      "eliminated_by": {
+        "A": {
+          "signal": "The transformation is currently materialized as ephemeral to reduce clutter in the data warehouse",
+          "requires_fact": "Ephemeral materialization doesn't support model contracts."
+        },
+        "C": {
+          "signal": "The transformation is currently materialized as ephemeral to reduce clutter in the data warehouse",
+          "requires_fact": "You can control the identifier for this CTE using a model alias"
+        }
+      },
+      "distractor_traps": {
+        "A": "T1: pairs a real config with a materialization that cannot accept it — the combination does not exist",
+        "C": "T2: a model alias controls the CTE identifier, which is a naming concern, not a contract-enforcement mechanism",
+        "D": "T8: scope error — contracting the consumers guarantees their columns, not this transformation's"
+      },
+      "options_analysis": "",
+      "sources": [
+        "https://docs.getdbt.com/docs/build/materializations"
+      ],
+      "citation_status": "resolved",
+      "topics": [
+        "knowledge/ae/01-developing-and-optimizing-models/materializations.md"
+      ],
+      "verified": true,
+      "status": "verified",
+      "sealed_by": "authored_via_item_qa",
+      "sealed_at": "2026-09-29",
+      "seal_confidence": 90,
+      "needs_review": false
+    }
+  ],
+  "total": 1,
+  "last_updated_at": "2026-09-29"
+}

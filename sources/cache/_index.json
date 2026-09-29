@@ -1,0 +1,63 @@
+{
+  "version": 1,
+  "count": 7,
+  "updated_at": "2026-09-29",
+  "entries": [
+    {
+      "url": "https://docs.getdbt.com/docs/build/incremental-models",
+      "path": "sources/cache/_raw/docs.getdbt.com/docs/build/incremental-models.txt",
+      "title": "Configure incremental models | dbt Developer Hub",
+      "fetched_at": "2026-09-29",
+      "sha256": "98953bbd10a725f0c0d393e31fccaea446cc554d07a51198b05ddc3e13499f55",
+      "source": "mcp-cache_fetch"
+    },
+    {
+      "url": "https://docs.getdbt.com/docs/build/materializations",
+      "path": "sources/cache/_raw/docs.getdbt.com/docs/build/materializations.txt",
+      "title": "Materializations | dbt Developer Hub",
+      "fetched_at": "2026-09-29",
+      "sha256": "9ca668e94a4e74036e3abc5b4e9ce509068e69f5ec42c38700443bd1c8d1acd1",
+      "source": "mcp-cache_fetch"
+    },
+    {
+      "url": "https://docs.getdbt.com/docs/build/unit-tests",
+      "path": "sources/cache/_raw/docs.getdbt.com/docs/build/unit-tests.txt",
+      "title": "Unit tests | dbt Developer Hub",
+      "fetched_at": "2026-09-29",
+      "sha256": "11bc9640ec8094e086400b31e7c95b2c4170631d5bfc38852f8a7a574b4d4655",
+      "source": "mcp-cache_fetch"
+    },
+    {
+      "url": "https://docs.getdbt.com/docs/build/incremental-strategy",
+      "path": "sources/cache/_raw/docs.getdbt.com/docs/build/incremental-strategy.txt",
+      "title": "About incremental strategy | dbt Developer Hub",
+      "fetched_at": "2026-09-29",
+      "sha256": "ecc42e7767c86b8c0be367be6da92674e31fc5b3d72d424cece7722f76bbbf0e",
+      "source": "mcp-cache_fetch"
+    },
+    {
+      "url": "https://docs.getdbt.com/docs/build/snapshots",
+      "path": "sources/cache/_raw/docs.getdbt.com/docs/build/snapshots.txt",
+      "title": "Add snapshots to your DAG | dbt Developer Hub",
+      "fetched_at": "2026-09-29",
+      "sha256": "85e63b484325feb3ddf5d99cad58a0f7ee14d25224b52ba658770c8703d5f425",
+      "source": "mcp-cache_fetch"
+    },
+    {
+      "url": "https://www.getdbt.com/certifications/analytics-engineer-certification-exam",
+      "path": "sources/cache/_raw/www.getdbt.com/certifications/analytics-engineer-certification-exam.txt",
+      "title": "dbt Analytics engineer certification exam | dbt Labs",
+      "fetched_at": "2026-09-29",
+      "sha256": "6849344329b67595233b5be64a14af5b73641639cbdefac6937902bad851f329",
+      "source": "mcp-cache_fetch"
+    },
+    {
+      "url": "https://www.getdbt.com/certifications/dbt-architect-certification-exam",
+      "path": "sources/cache/_raw/www.getdbt.com/certifications/dbt-architect-certification-exam.txt",
+      "title": "dbt Architect certification exam | dbt Labs",
+      "fetched_at": "2026-09-29",
+      "sha256": "cb35c6e87f4e17f332bb6e0733d51a30decaa242de0b86bcf98db3420bcee170",
+      "source": "mcp-cache_fetch"
+    }
+  ]
+}

@@ -1,0 +1,80 @@
+{
+  "version": 1,
+  "generated_at": "2026-09-29",
+  "description": "Reverse index: keyword/tag -> topic IDs. Look here before reading any note file.",
+  "tag_count": 24,
+  "tags": {
+    "access": [
+      "ae/01-developing-and-optimizing-models/materializations"
+    ],
+    "configuring": [
+      "ae/01-developing-and-optimizing-models/materializations"
+    ],
+    "contract": [
+      "ae/01-developing-and-optimizing-models/materializations"
+    ],
+    "custom materialization": [
+      "ae/01-developing-and-optimizing-models/materializations"
+    ],
+    "dbt_project.yml": [
+      "ae/01-developing-and-optimizing-models/materializations"
+    ],
+    "ephemeral": [
+      "ae/01-developing-and-optimizing-models/materializations"
+    ],
+    "ephemeral is the special case": [
+      "ae/01-developing-and-optimizing-models/materializations"
+    ],
+    "incremental": [
+      "ae/01-developing-and-optimizing-models/materializations"
+    ],
+    "is_incremental": [
+      "ae/01-developing-and-optimizing-models/materializations"
+    ],
+    "macro": [
+      "ae/01-developing-and-optimizing-models/materializations"
+    ],
+    "materialization": [
+      "ae/01-developing-and-optimizing-models/materializations"
+    ],
+    "materialized view": [
+      "ae/01-developing-and-optimizing-models/materializations"
+    ],
+    "model": [
+      "ae/01-developing-and-optimizing-models/materializations"
+    ],
+    "on_schema_change": [
+      "ae/01-developing-and-optimizing-models/materializations"
+    ],
+    "related": [
+      "ae/01-developing-and-optimizing-models/materializations"
+    ],
+    "snapshot": [
+      "ae/01-developing-and-optimizing-models/materializations"
+    ],
+    "source": [
+      "ae/01-developing-and-optimizing-models/materializations"
+    ],
+    "table": [
+      "ae/01-developing-and-optimizing-models/materializations"
+    ],
+    "target": [
+      "ae/01-developing-and-optimizing-models/materializations"
+    ],
+    "trap": [
+      "ae/01-developing-and-optimizing-models/materializations"
+    ],
+    "traps": [
+      "ae/01-developing-and-optimizing-models/materializations"
+    ],
+    "view": [
+      "ae/01-developing-and-optimizing-models/materializations"
+    ],
+    "when to use which": [
+      "ae/01-developing-and-optimizing-models/materializations"
+    ],
+    "why this is likely on the exam": [
+      "ae/01-developing-and-optimizing-models/materializations"
+    ]
+  }
+}

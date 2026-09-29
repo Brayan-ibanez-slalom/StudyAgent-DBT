@@ -1,0 +1,13 @@
+{
+  "python.defaultInterpreterPath": "${workspaceFolder}/mcp-server/.venv/bin/python",
+  "python.analysis.extraPaths": ["${workspaceFolder}/mcp-server"],
+  "files.exclude": {
+    "**/__pycache__": true,
+    "**/.venv": true
+  },
+  "search.exclude": {
+    "sources/cache/_raw": true,
+    "mcp-server/.venv": true
+  },
+  "markdown.validate.enabled": true
+}

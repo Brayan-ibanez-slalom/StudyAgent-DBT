@@ -1,0 +1,20 @@
+# Python
+__pycache__/
+*.py[cod]
+mcp-server/.venv/
+.venv/
+
+# Editor / OS
+.DS_Store
+*.swp
+
+# Progress is personal study data, not source. Keep the generated skeleton
+# (scorecard.md, missed-questions.md, needs-review.md) and ignore the rest.
+progress/asked-log.json
+progress/attempts.jsonl
+progress/sessions/*/
+
+# Cached docs are large and re-fetchable. The index IS tracked so a fresh clone
+# knows what was cited and can refetch it.
+sources/cache/_raw/**
+!sources/cache/_raw/.gitkeep
