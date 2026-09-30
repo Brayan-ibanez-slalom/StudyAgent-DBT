@@ -1,0 +1,274 @@
+[
+  {
+    "id": "draft-ae05-unit-test-location",
+    "domain": "ae-05",
+    "blueprint_task": "5.1",
+    "qtype": "multiple_choice",
+    "difficulty_estimate": "L4",
+
+    "stem": "An engineer writes a unit test for `dim_customers` and saves the YAML in the project's `tests/` directory alongside the singular data tests. Running `dbt test --select \"test_type:unit\"` finds nothing. The definition must be discoverable without renaming the test. Where should the YAML live?",
+    "option_texts": {
+      "A": "In a `.yml` file under `model-paths`, alongside the model",
+      "B": "In `tests/generic/`, alongside the custom generic test blocks",
+      "C": "In `macros/`, because unit tests compile like macros do",
+      "D": "In any path listed under `test-paths` in `dbt_project.yml`"
+    },
+    "drill_answer": "A",
+    "drill_answer_short": "Unit tests are discovered from model-paths, not from tests/",
+
+    "decision_hinge": "Unit tests are discovered from model-paths, by default the models directory, so define them alongside your models in a .yml file under your model-paths. Don't define unit test YAML in the tests directory, which is reserved for data tests.",
+    "sources": [
+      "https://docs.getdbt.com/docs/build/unit-tests",
+      "https://docs.getdbt.com/best-practices/writing-custom-generic-tests"
+    ],
+
+    "plausible_options": {
+      "D": "The definition must be discoverable without renaming the test"
+    },
+    "eliminated_by": {
+      "B": {
+        "signal": "saves the YAML in the project's `tests/` directory alongside the singular data tests",
+        "requires_fact": "Generic tests are defined in SQL files that can live in tests/generic, a special subfolder named generic within your test paths."
+      },
+      "C": {
+        "signal": "An engineer writes a unit test for `dim_customers`",
+        "requires_fact": "Generic tests work a lot like macros, and historically macros was the only place they could be defined."
+      }
+    },
+    "distractor_traps": {
+      "B": "T3: tests/generic is where custom generic data tests live, not unit tests",
+      "C": "T3: macros is a legitimate home for generic test blocks, but not for unit tests",
+      "D": "T8: scope error — test-paths governs data tests; unit tests come from model-paths"
+    },
+    "topics": ["ae/05-implementing-tests/test-types"]
+  },
+
+  {
+    "id": "draft-ae05-unit-vs-data-test",
+    "domain": "ae-05",
+    "blueprint_task": "5.1",
+    "qtype": "multiple_choice",
+    "difficulty_estimate": "L3",
+
+    "stem": "A team is about to refactor a complex revenue calculation. They must prove the new SQL produces the expected output for a handful of hand-written edge-case rows, and the check must run before the model is materialized anywhere. Which kind of test fits?",
+    "option_texts": {
+      "A": "A unit test, which validates modelling logic against static inputs",
+      "B": "A singular data test, which returns the rows that should not exist",
+      "C": "A custom generic data test, reusable across every revenue model",
+      "D": "An `accepted_values` generic test on the calculated revenue column"
+    },
+    "drill_answer": "A",
+    "drill_answer_short": "Unit tests validate logic on static inputs before the model is materialized",
+
+    "decision_hinge": "Unit tests allow you to validate your SQL modeling logic on a small set of static inputs before you materialize your full model in production.",
+    "sources": ["https://docs.getdbt.com/docs/build/unit-tests"],
+
+    "plausible_options": {
+      "C": "They must prove the new SQL produces the expected output for a handful of hand-written edge-case rows"
+    },
+    "eliminated_by": {
+      "B": {
+        "signal": "the check must run before the model is materialized anywhere",
+        "requires_fact": "Historically, dbt's test coverage was confined to data tests, but these tests could only be executed after building a model."
+      },
+      "D": {
+        "signal": "A team is about to refactor a complex revenue calculation",
+        "requires_fact": "dbt ships with Not Null, Unique, Relationships, and Accepted Values generic data tests, which are defined as test blocks."
+      }
+    },
+    "distractor_traps": {
+      "B": "T3: a singular data test is still a data test and runs only after the model is built",
+      "C": "T3: reusability is the wrong axis — a custom generic test is still a data test",
+      "D": "T8: scope error — accepted_values checks a finite value set, not a calculation's logic"
+    },
+    "topics": ["ae/05-implementing-tests/test-types"]
+  },
+
+  {
+    "id": "draft-ae05-generic-test-model-arg-blank",
+    "domain": "ae-05",
+    "blueprint_task": "5.1",
+    "qtype": "fill_in_blank",
+    "difficulty_estimate": "L4",
+
+    "stem": "A custom generic test must work when applied to a source as well as to a model, so the team needs the correct standard argument name. The argument naming the resource the test is defined on is always called ____, even when the resource is a source, seed, or snapshot.",
+    "drill_answer": "model",
+    "accepted_answers": ["model", "the model argument"],
+    "drill_answer_short": "model",
+
+    "decision_hinge": "The argument is always named model, even when the resource is a source, seed, or snapshot, templated out to its relation name.",
+    "sources": ["https://docs.getdbt.com/best-practices/writing-custom-generic-tests"],
+    "topics": ["ae/05-implementing-tests/test-types"]
+  },
+
+  {
+    "id": "draft-ae05-severity-warn-skips-error-if",
+    "domain": "ae-05",
+    "blueprint_task": "5.3",
+    "qtype": "multiple_choice",
+    "difficulty_estimate": "L5",
+
+    "stem": "A test is configured with `severity: warn`, `error_if: \"> 100\"`, and `warn_if: \"> 10\"`. A run returns 250 failures. The owner must predict the status dbt reports for this test. What happens?",
+    "option_texts": {
+      "A": "It errors, because the failure count satisfies `error_if`",
+      "B": "It warns, because `severity: warn` skips `error_if` entirely",
+      "C": "It passes, because `warn_if` outranks the raw failure count",
+      "D": "It errors, because `severity: warn` escalates above both thresholds"
+    },
+    "drill_answer": "B",
+    "drill_answer_short": "With severity: warn dbt never evaluates error_if",
+
+    "decision_hinge": "If severity is warn, dbt will skip the error_if condition entirely and jump straight to the warn_if condition. If the warn condition is met, the test warns; if it's not met, the test passes.",
+    "sources": ["https://docs.getdbt.com/reference/resource-configs/severity"],
+
+    "plausible_options": {
+      "A": "A test is configured with `severity: warn`, `error_if: \"> 100\"`, and `warn_if: \"> 10\"`"
+    },
+    "eliminated_by": {
+      "C": {
+        "signal": "A run returns 250 failures",
+        "requires_fact": "Conditional expressions can be any comparison logic supported by your SQL syntax with an integer number of failures."
+      },
+      "D": {
+        "signal": "The owner must predict the status dbt reports for this test",
+        "requires_fact": "By default, a test with severity warn will only ever return a warning, and not cause errors."
+      }
+    },
+    "distractor_traps": {
+      "A": "T5: the error_if expression really is satisfied, but severity decides whether it is ever read",
+      "C": "T1: warn_if does not outrank the count — the count is what warn_if is compared against",
+      "D": "T1: dbt has no escalation rule that promotes a warning on volume alone"
+    },
+    "topics": ["ae/05-implementing-tests/test-severity-and-workflow"]
+  },
+
+  {
+    "id": "draft-ae05-store-failures-config-beats-flag",
+    "domain": "ae-05",
+    "blueprint_task": "5.3",
+    "qtype": "multiple_choice",
+    "difficulty_estimate": "L4",
+
+    "stem": "One noisy test sets `store_failures: false` in its config. A scheduled job runs `dbt test --store-failures` so that every other test persists its failing rows. The team must know whether that one test writes a failures table. What happens?",
+    "option_texts": {
+      "A": "It writes the table, because a command-line flag wins over the config",
+      "B": "It writes the table, because the flag applies to every selected test",
+      "C": "It writes nothing, because the config takes precedence over the flag",
+      "D": "It writes nothing, because `--store-failures` needs `store_failures_as`"
+    },
+    "drill_answer": "C",
+    "drill_answer_short": "An explicit true/false store_failures config beats the --store-failures flag",
+
+    "decision_hinge": "If specified as true or false, the store_failures config will take precedence over the presence or absence of the --store-failures flag. If the store_failures config is none or omitted, the resource will use the value of the --store-failures flag.",
+    "sources": [
+      "https://docs.getdbt.com/reference/resource-configs/store_failures",
+      "https://docs.getdbt.com/reference/global-configs/command-line-options"
+    ],
+
+    "plausible_options": {
+      "A": "A scheduled job runs `dbt test --store-failures` so that every other test persists its failing rows"
+    },
+    "eliminated_by": {
+      "B": {
+        "signal": "One noisy test sets `store_failures: false` in its config",
+        "requires_fact": "The configured tests will store their failures when dbt test --store-failures is invoked."
+      },
+      "D": {
+        "signal": "The team must know whether that one test writes a failures table",
+        "requires_fact": "If you set this configuration as false but store_failures_as is configured, it will be overridden."
+      }
+    },
+    "distractor_traps": {
+      "A": "T6: CLI-beats-config is the normal flag precedence rule, which store_failures deliberately inverts",
+      "B": "T4: it ignores the explicit per-test config named in the stem",
+      "D": "T1: --store-failures has no dependency on store_failures_as being set"
+    },
+    "topics": ["ae/05-implementing-tests/test-severity-and-workflow"]
+  },
+
+  {
+    "id": "draft-ae05-unit-tests-not-in-prod",
+    "domain": "ae-05",
+    "blueprint_task": "5.3",
+    "qtype": "multiple_choice",
+    "difficulty_estimate": "L4",
+
+    "stem": "A production job runs `dbt build` nightly and the team must cut its compute cost without losing any coverage that production actually needs. The project has a large suite of unit tests whose inputs are fixed fixtures. What is the BEST change, given data tests must keep running nightly?",
+    "option_texts": {
+      "A": "Exclude unit tests from the production build using a resource-type flag",
+      "B": "Set every unit test to `severity: warn` so failures stop blocking the job",
+      "C": "Replace the production `dbt build` with `dbt run`, then `dbt test` later",
+      "D": "Move the unit tests into `tests/` so the nightly build stops discovering them"
+    },
+    "drill_answer": "A",
+    "drill_answer_short": "Static inputs mean unit tests earn nothing in production — exclude them by resource type",
+
+    "decision_hinge": "dbt Labs strongly recommends only running unit tests in development or CI environments. Since the inputs of the unit tests are static, there's no need to use additional compute cycles running them in production. Use the resource type flag --exclude-resource-type to exclude unit tests from your production builds and save compute.",
+    "sources": [
+      "https://docs.getdbt.com/docs/build/unit-tests",
+      "https://docs.getdbt.com/reference/commands/build",
+      "https://docs.getdbt.com/reference/resource-configs/severity"
+    ],
+
+    "plausible_options": {
+      "C": "the team must cut its compute cost without losing any coverage that production actually needs",
+      "D": "The project has a large suite of unit tests whose inputs are fixed fixtures"
+    },
+    "eliminated_by": {
+      "B": {
+        "signal": "data tests must keep running nightly",
+        "requires_fact": "By default, a test with severity warn will only ever return a warning, and not cause errors."
+      }
+    },
+    "distractor_traps": {
+      "B": "T2: severity changes what a failure means, not whether the test consumes compute",
+      "C": "T7: splitting the schedule loses dbt build's DAG-order skipping and still runs the unit tests",
+      "D": "T3: tests/ is reserved for data tests, so this hides the unit tests rather than scheduling them properly"
+    },
+    "topics": ["ae/05-implementing-tests/test-severity-and-workflow"]
+  },
+
+  {
+    "id": "draft-ae05-build-order-list",
+    "domain": "ae-05",
+    "blueprint_task": "5.3",
+    "qtype": "build_list",
+    "difficulty_estimate": "L4",
+
+    "stem": "A team must understand what `dbt build` does to a single SQL model that has both unit tests and data tests defined. Put the steps in the order dbt performs them for that model.",
+    "build_items": [
+      "Run the unit tests on the model",
+      "Materialize the model in the warehouse",
+      "Run the data tests on the model",
+      "Run the data tests on the model's parents",
+      "Generate the documentation site"
+    ],
+    "drill_answer": [
+      "Run the unit tests on the model",
+      "Materialize the model in the warehouse",
+      "Run the data tests on the model"
+    ],
+    "drill_answer_short": "Unit tests, then materialize, then data tests",
+
+    "decision_hinge": "Use dbt build to, in lineage order, run the unit tests on your model, materialize your model in the warehouse, and run the data tests on your model.",
+    "sources": ["https://docs.getdbt.com/docs/build/unit-tests"],
+    "topics": ["ae/05-implementing-tests/test-severity-and-workflow"]
+  },
+
+  {
+    "id": "draft-ae05-test-arguments-nesting-blank",
+    "domain": "ae-05",
+    "blueprint_task": "5.3",
+    "qtype": "fill_in_blank",
+    "difficulty_estimate": "L4",
+
+    "stem": "A project on dbt v1.10.5 or higher must write an `accepted_values` test so that its `values` list is passed correctly. Any arguments or configurations passed to a generic data test should be nested below the ____ property.",
+    "drill_answer": "arguments",
+    "accepted_answers": ["arguments", "arguments:"],
+    "drill_answer_short": "arguments",
+
+    "decision_hinge": "Any arguments or configurations passed to those data tests should be nested below the arguments property.",
+    "sources": ["https://docs.getdbt.com/reference/resource-properties/data-tests"],
+    "topics": ["ae/05-implementing-tests/test-severity-and-workflow"]
+  }
+]

@@ -1,0 +1,386 @@
+[
+  {
+    "id": "draft-ae06-exposure-required-properties",
+    "domain": "ae-06",
+    "blueprint_task": "6.1",
+    "qtype": "multiple_response",
+    "difficulty_estimate": "L3",
+
+    "stem": "A team declares an exposure for a BI dashboard. The definition must parse without dbt reporting a missing required property. Which properties are required on an exposure?",
+    "option_texts": {
+      "A": "`name` — a unique exposure name written in snake case",
+      "B": "`type` — one of dashboard, notebook, analysis, ml, application",
+      "C": "`owner` — satisfied by a name or an email address",
+      "D": "`url` — the link to this exposure in the documentation site",
+      "E": "`maturity` — how trusted the dashboard is: high, medium, or low"
+    },
+    "drill_answer": "A,B,C",
+    "drill_answer_short": "name, type, and owner are required; url and maturity are optional",
+
+    "decision_hinge": "Required exposure properties are name, a unique exposure name written in snake case, type, one of dashboard, notebook, analysis, ml, application, and owner, where name or email is required.",
+    "sources": ["https://docs.getdbt.com/docs/build/exposures"],
+
+    "plausible_options": {
+      "D": "The definition must parse without dbt reporting a missing required property"
+    },
+    "eliminated_by": {
+      "E": {
+        "signal": "A team declares an exposure for a BI dashboard",
+        "requires_fact": "maturity indicates the level of confidence or stability in the exposure, one of high, medium, or low, and is optional."
+      }
+    },
+    "distractor_traps": {
+      "D": "T3: url is optional — it activates the View this exposure link rather than being required",
+      "E": "T8: scope error — maturity is documentation metadata, not a parse requirement"
+    },
+    "topics": ["ae/06-external-dependencies/exposures"]
+  },
+
+  {
+    "id": "draft-ae06-exposure-name-vs-label",
+    "domain": "ae-06",
+    "blueprint_task": "6.1",
+    "qtype": "multiple_choice",
+    "difficulty_estimate": "L3",
+
+    "stem": "An exposure must appear in the documentation site as \"Weekly Jaffle Metrics (EMEA)\", with the spaces, capital letters, and parentheses preserved. The YAML must still parse. Where does that display text belong?",
+    "option_texts": {
+      "A": "In `label`, which may contain spaces, capitals, and special characters",
+      "B": "In `name`, because dbt renders the exposure name with its spaces",
+      "C": "In `description`, which is free text shown on the exposure page",
+      "D": "In `meta`, which carries arbitrary display metadata for consumers"
+    },
+    "drill_answer": "A",
+    "drill_answer_short": "label holds the human-readable text; name must stay snake case",
+
+    "decision_hinge": "label may contain spaces, capital letters, or special characters, while name is a unique exposure name written in snake case.",
+    "sources": ["https://docs.getdbt.com/docs/build/exposures"],
+
+    "plausible_options": {
+      "C": "with the spaces, capital letters, and parentheses preserved"
+    },
+    "eliminated_by": {
+      "B": {
+        "signal": "An exposure must appear in the documentation site as \"Weekly Jaffle Metrics (EMEA)\"",
+        "requires_fact": "name is a unique exposure name written in snake case."
+      },
+      "D": {
+        "signal": "The YAML must still parse",
+        "requires_fact": "General optional properties on an exposure include description, tags, meta, and enabled."
+      }
+    },
+    "distractor_traps": {
+      "B": "T4: a snake-case name cannot hold spaces, capitals, or parentheses",
+      "C": "T3: description is free text but it is the body copy, not the exposure's display title",
+      "D": "T2: meta is generic metadata, not the documented display-name property"
+    },
+    "topics": ["ae/06-external-dependencies/exposures"]
+  },
+
+  {
+    "id": "draft-ae06-freshness-no-thresholds",
+    "domain": "ae-06",
+    "blueprint_task": "6.2",
+    "qtype": "multiple_choice",
+    "difficulty_estimate": "L4",
+
+    "stem": "A source declares `loaded_at_field` but sets neither `warn_after` nor `error_after`. The nightly freshness step reports nothing at all for that source, and the team must explain why before adding alerting. What is happening?",
+    "option_texts": {
+      "A": "dbt uses a default threshold of 24 hours and the data is fresh",
+      "B": "dbt cannot read the timestamp, because `loaded_at_query` is missing",
+      "C": "dbt skips the source entirely, because neither threshold is set",
+      "D": "dbt reports only on failure, so silence means neither source failed"
+    },
+    "drill_answer": "C",
+    "drill_answer_short": "With neither warn_after nor error_after, dbt does not check freshness at all",
+
+    "decision_hinge": "One or both of warn_after and error_after can be provided. If neither is set, dbt will not check freshness for that resource.",
+    "sources": ["https://docs.getdbt.com/reference/resource-properties/freshness"],
+
+    "plausible_options": {
+      "D": "The nightly freshness step reports nothing at all for that source"
+    },
+    "eliminated_by": {
+      "A": {
+        "signal": "sets neither `warn_after` nor `error_after`",
+        "requires_fact": "Each of warn_after and error_after requires both count and period; setting only one issues a parse warning but causes an error when the freshness check runs."
+      },
+      "B": {
+        "signal": "A source declares `loaded_at_field` but sets neither `warn_after` nor `error_after`",
+        "requires_fact": "loaded_at_query is a SQL expression that returns the most recent loaded timestamp, an alternative to loaded_at_field."
+      }
+    },
+    "distractor_traps": {
+      "A": "T1: dbt has no default freshness threshold to fall back on",
+      "B": "T3: loaded_at_query is an alternative to loaded_at_field, not a companion requirement",
+      "D": "T5: right that silence is ambiguous, wrong reason — nothing ran to stay silent about"
+    },
+    "topics": ["ae/06-external-dependencies/source-freshness"]
+  },
+
+  {
+    "id": "draft-ae06-loaded-at-mutually-exclusive",
+    "domain": "ae-06",
+    "blueprint_task": "6.2",
+    "qtype": "multiple_choice",
+    "difficulty_estimate": "L4",
+
+    "stem": "A source sets both `loaded_at_field` and `loaded_at_query` on the same table, expecting dbt to fall back from one to the other. The project must parse cleanly before the next deploy. What is the result?",
+    "option_texts": {
+      "A": "A parse error, because setting both on one resource is not allowed",
+      "B": "A parse warning, after which `loaded_at_query` takes precedence",
+      "C": "Clean parsing, because `loaded_at_field` is used when metadata is absent",
+      "D": "Clean parsing, but the `filter` clause is then silently ignored"
+    },
+    "drill_answer": "A",
+    "drill_answer_short": "Setting both loaded_at_query and loaded_at_field on one resource is a parse error",
+
+    "decision_hinge": "Setting both loaded_at_query and loaded_at_field on the same resource is a parse error.",
+    "sources": ["https://docs.getdbt.com/reference/resource-properties/freshness"],
+
+    "plausible_options": {
+      "B": "expecting dbt to fall back from one to the other"
+    },
+    "eliminated_by": {
+      "C": {
+        "signal": "A source sets both `loaded_at_field` and `loaded_at_query` on the same table",
+        "requires_fact": "loaded_at_field is the column dbt queries to determine the most recent loaded timestamp, required when adapter metadata is unavailable."
+      },
+      "D": {
+        "signal": "The project must parse cleanly before the next deploy",
+        "requires_fact": "filter adds a WHERE clause to the freshness query to limit data scanned, and does not apply to loaded_at_query."
+      }
+    },
+    "distractor_traps": {
+      "B": "T3: dbt defines no precedence between the two — it refuses to parse instead",
+      "C": "T5: the metadata-unavailable rule is real but describes when loaded_at_field is needed, not this conflict",
+      "D": "T2: the filter caveat is about loaded_at_query's scan, not about parsing"
+    },
+    "topics": ["ae/06-external-dependencies/source-freshness"]
+  },
+
+  {
+    "id": "draft-ae06-source-freshness-command-blank",
+    "domain": "ae-06",
+    "blueprint_task": "6.2",
+    "qtype": "fill_in_blank",
+    "difficulty_estimate": "L2",
+
+    "stem": "A scheduled job must evaluate only the project's sources against their configured thresholds and produce `sources.json`. The legacy subcommand that checks freshness for sources only is `dbt ____`.",
+    "drill_answer": "source freshness",
+    "accepted_answers": ["source freshness", "dbt source freshness", "source-freshness"],
+    "drill_answer_short": "dbt source freshness",
+
+    "decision_hinge": "dbt source freshness is a legacy command that checks freshness for sources only. It's still supported for backward compatibility and continues to produce sources.json.",
+    "sources": ["https://docs.getdbt.com/reference/resource-properties/freshness"],
+    "topics": ["ae/06-external-dependencies/source-freshness"]
+  },
+
+  {
+    "id": "draft-ae07-tags-not-modified",
+    "domain": "ae-07",
+    "blueprint_task": "7.1",
+    "qtype": "multiple_choice",
+    "difficulty_estimate": "L5",
+
+    "stem": "A pull request edits only the `tags` value on one model and a column-level `meta` value on another. A Slim CI job selects `state:modified` against the production manifest and builds nothing. The team must explain the empty run. Why did nothing build?",
+    "option_texts": {
+      "A": "The comparison manifest was stale, so both edits look unchanged",
+      "B": "Column-level YAML edits never participate in state comparison at all",
+      "C": "dbt treats `tags` and `meta` as metadata only, so neither counts",
+      "D": "`persist_docs` is disabled, so YAML-only edits are all ignored"
+    },
+    "drill_answer": "C",
+    "drill_answer_short": "tags and meta are metadata-only and deliberately do not trigger state:modified",
+
+    "decision_hinge": "dbt treats tags and meta as metadata-only fields, not modifications, at both the resource and column level. Changing a tags or meta value doesn't trigger state:modified, because these fields don't affect how dbt materializes the resource.",
+    "sources": [
+      "https://docs.getdbt.com/reference/node-selection/state-comparison-caveats",
+      "https://docs.getdbt.com/reference/node-selection/methods"
+    ],
+
+    "plausible_options": {
+      "D": "A Slim CI job selects `state:modified` against the production manifest and builds nothing"
+    },
+    "eliminated_by": {
+      "A": {
+        "signal": "A pull request edits only the `tags` value on one model",
+        "requires_fact": "state:new means there is no node with the same unique_id in the comparison manifest."
+      },
+      "B": {
+        "signal": "a column-level `meta` value on another",
+        "requires_fact": "description is treated as a modification, but only when persist_docs is enabled, at relation or column level."
+      }
+    },
+    "distractor_traps": {
+      "A": "T5: a stale manifest is a real failure mode, but it would also hide genuine code changes",
+      "B": "T1: column-level edits do participate — a column description counts when persist_docs is on",
+      "D": "T3: persist_docs governs descriptions specifically, not every YAML-only edit"
+    },
+    "topics": ["ae/07-dbt-state/state-selection"]
+  },
+
+  {
+    "id": "draft-ae07-large-seed-state",
+    "domain": "ae-07",
+    "blueprint_task": "7.1",
+    "qtype": "multiple_choice",
+    "difficulty_estimate": "L5",
+
+    "stem": "A 4 MiB seed file has several rows corrected, with no rename. The CI job runs `--select state:modified --state prod` and the seed is not rebuilt. The team must get the corrected rows into the warehouse on this run. What explains the behaviour?",
+    "option_texts": {
+      "A": "dbt compares only the seed's file path above 1 MiB, so edits are invisible",
+      "B": "dbt excludes seeds from state comparison and only ever compares models",
+      "C": "dbt hashes seed contents at every size, so the hash must be unchanged",
+      "D": "dbt needs `--full-refresh` before any seed is eligible for state selection"
+    },
+    "drill_answer": "A",
+    "drill_answer_short": "Above 1 MiB dbt falls back to comparing the seed's file path, not its contents",
+
+    "decision_hinge": "dbt stores a file hash of seed files that are under 1 MiB in size. If a seed file is over 1 MiB in size, dbt cannot compare its contents and will raise a warning as such. Instead, dbt will use only the seed's file path to detect changes.",
+    "sources": [
+      "https://docs.getdbt.com/reference/node-selection/state-comparison-caveats",
+      "https://docs.getdbt.com/reference/commands/run"
+    ],
+
+    "plausible_options": {
+      "C": "A 4 MiB seed file has several rows corrected, with no rename"
+    },
+    "eliminated_by": {
+      "B": {
+        "signal": "The CI job runs `--select state:modified --state prod` and the seed is not rebuilt",
+        "requires_fact": "If the contents of these seeds is modified, the seed will be included in state:modified."
+      },
+      "D": {
+        "signal": "The team must get the corrected rows into the warehouse on this run",
+        "requires_fact": "If you provide the --full-refresh flag to dbt run, dbt will treat incremental models as table models."
+      }
+    },
+    "distractor_traps": {
+      "B": "T1: seeds are covered by state comparison; it is the size that changes the method",
+      "C": "T8: scope error — content hashing is real, but it only applies below the 1 MiB limit",
+      "D": "T2: full-refresh governs rebuild behaviour, not eligibility for state selection"
+    },
+    "topics": ["ae/07-dbt-state/state-selection"]
+  },
+
+  {
+    "id": "draft-ae07-state-subselector-match",
+    "domain": "ae-07",
+    "blueprint_task": "7.1",
+    "qtype": "matching",
+    "difficulty_estimate": "L4",
+
+    "stem": "A team must narrow a Slim CI selector so that it reacts to one specific kind of change. Match each change to the `state:modified` subselector that detects it.",
+    "match_left": [
+      "The SQL inside a model file changed",
+      "A model's schema or alias changed",
+      "An upstream macro the model calls changed",
+      "A contracted column's data_type changed"
+    ],
+    "match_right": [
+      "state:modified.body",
+      "state:modified.relation",
+      "state:modified.macros",
+      "state:modified.contract",
+      "state:modified.configs",
+      "state:modified.persisted_descriptions"
+    ],
+    "drill_answer": {
+      "The SQL inside a model file changed": "state:modified.body",
+      "A model's schema or alias changed": "state:modified.relation",
+      "An upstream macro the model calls changed": "state:modified.macros",
+      "A contracted column's data_type changed": "state:modified.contract"
+    },
+    "drill_answer_short": "body is SQL, relation is database/schema/alias, macros is upstream macros, contract is name and data_type",
+
+    "decision_hinge": "state:modified.body detects changes to node body such as model SQL, state:modified.relation detects changes to database, schema or alias, state:modified.macros detects changes to upstream macros, and state:modified.contract detects changes to a model's contract including the name and data_type of columns.",
+    "sources": ["https://docs.getdbt.com/reference/node-selection/methods"],
+    "topics": ["ae/07-dbt-state/state-selection"]
+  },
+
+  {
+    "id": "draft-ae07-retry-noop",
+    "domain": "ae-07",
+    "blueprint_task": "7.2",
+    "qtype": "multiple_choice",
+    "difficulty_estimate": "L3",
+
+    "stem": "After a `dbt build` that completed with no failures, an automation step always issues `dbt retry` as a safety net. The team must know whether that step can rebuild anything or waste warehouse compute. What does the retry do?",
+    "option_texts": {
+      "A": "It rebuilds every node from the previous invocation's result set",
+      "B": "It rebuilds only the nodes whose tests warned during that invocation",
+      "C": "It raises an error, because there is no failure to resume from",
+      "D": "It finishes as a no operation, because the previous command succeeded"
+    },
+    "drill_answer": "D",
+    "drill_answer_short": "After a successful command, dbt retry is a no-op",
+
+    "decision_hinge": "If the previously executed command completed successfully, retry will finish as no operation.",
+    "sources": ["https://docs.getdbt.com/reference/commands/retry"],
+
+    "plausible_options": {
+      "C": "The team must know whether that step can rebuild anything or waste warehouse compute"
+    },
+    "eliminated_by": {
+      "A": {
+        "signal": "After a `dbt build` that completed with no failures",
+        "requires_fact": "Retry re-executes the last invocation from the point of failure."
+      },
+      "B": {
+        "signal": "an automation step always issues `dbt retry` as a safety net",
+        "requires_fact": "Once some nodes have run, you can use retry to re-execute from any new point of failure."
+      }
+    },
+    "distractor_traps": {
+      "A": "T4: retry resumes from a failure point; with no failure there is nothing to resume",
+      "B": "T1: retry has no notion of re-running nodes because their tests warned",
+      "C": "T5: a reasonable guess about strictness, but dbt exits quietly instead"
+    },
+    "topics": ["ae/07-dbt-state/dbt-retry"]
+  },
+
+  {
+    "id": "draft-ae07-retry-vs-rerun",
+    "domain": "ae-07",
+    "blueprint_task": "7.2",
+    "qtype": "multiple_choice",
+    "difficulty_estimate": "L4",
+
+    "stem": "A run failed midway. The on-call engineer wants to resume, but also to widen the selector to include two extra models that were never part of the failed invocation. They must get all of it built in one go. What should they do?",
+    "option_texts": {
+      "A": "Run `dbt retry`, which honours a new selector passed alongside it",
+      "B": "Run the build command again with the widened selector, not `dbt retry`",
+      "C": "Run `dbt retry --full-refresh`, which re-selects and rebuilds everything",
+      "D": "Run `dbt retry` twice, so the second pass picks up the extra models"
+    },
+    "drill_answer": "B",
+    "drill_answer_short": "retry resumes the previous invocation; it does not re-select",
+
+    "decision_hinge": "Retry re-executes the last invocation from the point of failure. Once some nodes have run, you can use retry to re-execute from any new point of failure.",
+    "sources": [
+      "https://docs.getdbt.com/reference/commands/retry",
+      "https://docs.getdbt.com/reference/commands/run"
+    ],
+
+    "plausible_options": {
+      "C": "also to widen the selector to include two extra models that were never part of the failed invocation"
+    },
+    "eliminated_by": {
+      "A": {
+        "signal": "The on-call engineer wants to resume, but also to widen the selector",
+        "requires_fact": "Retry re-executes the last invocation from the point of failure."
+      },
+      "D": {
+        "signal": "They must get all of it built in one go",
+        "requires_fact": "If the previously executed command completed successfully, retry will finish as no operation."
+      }
+    },
+    "distractor_traps": {
+      "A": "T1: retry replays the recorded invocation and does not accept a replacement selector",
+      "C": "T3: full-refresh changes how incremental models rebuild, not which nodes are selected",
+      "D": "T5: a second retry is a no-op once the first one succeeds"
+    },
+    "topics": ["ae/07-dbt-state/dbt-retry"]
+  }
+]

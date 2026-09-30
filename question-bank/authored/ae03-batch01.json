@@ -1,0 +1,356 @@
+[
+  {
+    "id": "draft-ae03-parse-vs-compile",
+    "domain": "ae-03",
+    "blueprint_task": "3.2",
+    "qtype": "multiple_choice",
+    "difficulty_estimate": "L3",
+
+    "stem": "A CI step must validate that every Jinja reference and YAML property in the project is readable, and it runs on a runner that has no warehouse credentials at all. The step should fail the build when the project code is invalid. Which command fits?",
+    "option_texts": {
+      "A": "Run `dbt compile`, which renders the SQL for every node",
+      "B": "Run `dbt parse`, which reads and validates the project code",
+      "C": "Run `dbt debug`, which checks the project file and environment",
+      "D": "Run `dbt build --empty`, which reads inputs as zero rows"
+    },
+    "drill_answer": "B",
+    "drill_answer_short": "dbt parse — the only one that validates project code without a warehouse connection",
+
+    "decision_hinge": "If you just want dbt to read and validate your project code, without connecting to the data warehouse, use dbt parse instead.",
+    "sources": [
+      "https://docs.getdbt.com/reference/commands/compile",
+      "https://docs.getdbt.com/reference/commands/debug",
+      "https://docs.getdbt.com/reference/commands/run"
+    ],
+
+    "plausible_options": {
+      "C": "validate that every Jinja reference and YAML property in the project is readable"
+    },
+    "eliminated_by": {
+      "A": {
+        "signal": "it runs on a runner that has no warehouse credentials at all",
+        "requires_fact": "dbt compile is similar to dbt run except that it doesn't materialize the model's compiled SQL into an existing table, so both require a data platform connection and run queries."
+      },
+      "D": {
+        "signal": "The step should fail the build when the project code is invalid",
+        "requires_fact": "The --empty flag limits the refs and sources to zero rows. dbt will still execute the model SQL against the target data warehouse but will avoid expensive reads of input data."
+      }
+    },
+    "distractor_traps": {
+      "A": "T4: compile requires a data platform connection, which the stem rules out",
+      "C": "T3: dbt debug checks the connection, project file, and environment — it is a setup check, not a code validation",
+      "D": "T5: --empty removes the input rows, not the warehouse connection"
+    },
+    "topics": ["ae/03-debugging-modeling-errors/compiled-code-and-logs"]
+  },
+
+  {
+    "id": "draft-ae03-compile-not-prerequisite",
+    "domain": "ae-03",
+    "blueprint_task": "3.2",
+    "qtype": "multiple_choice",
+    "difficulty_estimate": "L3",
+
+    "stem": "A scheduled job is defined as `dbt deps`, then `dbt compile`, then `dbt build`. The job owner must reduce total runtime without losing any validation the job currently performs. Which step can be removed?",
+    "option_texts": {
+      "A": "`dbt deps`, since packages are cached between runs anyway",
+      "B": "`dbt compile`, since building commands handle compilation themselves",
+      "C": "`dbt build`, since `dbt compile` already writes the objects",
+      "D": "None of them, since each step validates something the next relies on"
+    },
+    "drill_answer": "B",
+    "drill_answer_short": "dbt compile is not a prerequisite of dbt run or other building commands",
+
+    "decision_hinge": "dbt compile is not a pre-requisite of dbt run, or other building commands. Those commands will handle compilation themselves.",
+    "sources": [
+      "https://docs.getdbt.com/reference/commands/compile",
+      "https://docs.getdbt.com/reference/commands/build",
+      "https://docs.getdbt.com/reference/dbt-commands"
+    ],
+
+    "plausible_options": {
+      "D": "The job owner must reduce total runtime without losing any validation the job currently performs"
+    },
+    "eliminated_by": {
+      "A": {
+        "signal": "A scheduled job is defined as `dbt deps`, then `dbt compile`, then `dbt build`",
+        "requires_fact": "deps downloads dependencies for a project."
+      },
+      "C": {
+        "signal": "without losing any validation the job currently performs",
+        "requires_fact": "The dbt build command will run models, test tests, snapshot snapshots, and seed seeds in DAG order, for selected resources or an entire project."
+      }
+    },
+    "distractor_traps": {
+      "A": "T1: dbt does not cache installed packages across scheduled runs in the way this claims",
+      "C": "T3: compile renders SQL but never materializes it; build is what creates the objects",
+      "D": "T7: over-engineering — it defends a step the docs explicitly call unnecessary"
+    },
+    "topics": ["ae/03-debugging-modeling-errors/compiled-code-and-logs"]
+  },
+
+  {
+    "id": "draft-ae03-warn-error-options",
+    "domain": "ae-03",
+    "blueprint_task": "3.5",
+    "qtype": "multiple_choice",
+    "difficulty_estimate": "L4",
+
+    "stem": "A production job must fail when a selector matches no resources, but must keep every other dbt warning as a warning so that a new warning in a future dbt version cannot break the job. The team already sets `WARN_ERROR` in an environment variable. What should they do?",
+    "option_texts": {
+      "A": "Replace `WARN_ERROR` with `WARN_ERROR_OPTIONS` listing that one warning",
+      "B": "Keep `WARN_ERROR` and add `WARN_ERROR_OPTIONS` listing that one warning",
+      "C": "Keep `WARN_ERROR` and pass `--fail-fast` so the job stops on that warning",
+      "D": "Replace `WARN_ERROR` with `--warn-error-options '{\"error\": \"all\"}'`"
+    },
+    "drill_answer": "A",
+    "drill_answer_short": "WARN_ERROR and WARN_ERROR_OPTIONS are mutually exclusive — use options alone",
+
+    "decision_hinge": "WARN_ERROR and WARN_ERROR_OPTIONS are mutually exclusive. You can only specify one, even when you're specifying the config in multiple places, otherwise you'll see a usage error.",
+    "sources": [
+      "https://docs.getdbt.com/reference/global-configs/warnings",
+      "https://docs.getdbt.com/reference/global-configs/failing-fast"
+    ],
+
+    "plausible_options": {
+      "B": "must keep every other dbt warning as a warning so that a new warning in a future dbt version cannot break the job"
+    },
+    "eliminated_by": {
+      "C": {
+        "signal": "The team already sets `WARN_ERROR` in an environment variable",
+        "requires_fact": "Supply the -x or --fail-fast flag to dbt run, dbt build, or dbt test to make dbt exit immediately on the first failure."
+      },
+      "D": {
+        "signal": "A production job must fail when a selector matches no resources",
+        "requires_fact": "Using the --warn-error flag or --warn-error-options '{\"error\": \"all\"}' will treat all current and future warnings as errors."
+      }
+    },
+    "distractor_traps": {
+      "B": "T3: confusable siblings that look additive — in fact only one of the two may be set",
+      "C": "T2: fail-fast controls when a run stops, not whether a warning counts as a failure",
+      "D": "T6: error-all reproduces exactly the future-warning risk the stem forbids"
+    },
+    "topics": ["ae/03-debugging-modeling-errors/behaviour-flags"]
+  },
+
+  {
+    "id": "draft-ae03-fail-fast-scope",
+    "domain": "ae-03",
+    "blueprint_task": "3.5",
+    "qtype": "multiple_choice",
+    "difficulty_estimate": "L4",
+
+    "stem": "An engineer passes `-x` to `dbt build` on a large project so that a broken run stops early. A test on an early model fails while several models are still executing. The engineer must predict what dbt does next. What happens?",
+    "option_texts": {
+      "A": "dbt finishes the in-progress models, then exits before starting new ones",
+      "B": "dbt continues, because `-x` reacts to run errors rather than test failures",
+      "C": "dbt skips only the children of the tested model and completes the rest",
+      "D": "dbt exits immediately and terminates the connections for still-running models"
+    },
+    "drill_answer": "D",
+    "drill_answer_short": "fail_fast is global: it stops on test errors too and kills in-flight connections",
+
+    "decision_hinge": "fail_fast is a global flag, so it stops on both run errors and test errors, not just run errors. If other models are in-progress when the first failure happens, then dbt will terminate the connections for these still-running models.",
+    "sources": [
+      "https://docs.getdbt.com/reference/global-configs/failing-fast",
+      "https://docs.getdbt.com/reference/commands/build"
+    ],
+
+    "plausible_options": {
+      "A": "A test on an early model fails while several models are still executing"
+    },
+    "eliminated_by": {
+      "B": {
+        "signal": "An engineer passes `-x` to `dbt build` on a large project",
+        "requires_fact": "Supply the -x or --fail-fast flag to dbt run, dbt build, or dbt test to make dbt exit immediately on the first failure."
+      },
+      "C": {
+        "signal": "The engineer must predict what dbt does next",
+        "requires_fact": "Tests on upstream resources will block downstream resources from running, and a test failure will cause those downstream resources to skip entirely."
+      }
+    },
+    "distractor_traps": {
+      "A": "T5: graceful drain is a reasonable guess, but dbt cancels the in-flight queries instead",
+      "B": "T3: fail_fast is a global flag covering test errors as well as run errors",
+      "C": "T3: skipping children is plain dbt build behaviour without -x, not fail-fast behaviour"
+    },
+    "topics": ["ae/03-debugging-modeling-errors/behaviour-flags"]
+  },
+
+  {
+    "id": "draft-ae03-fail-fast-shorthand-blank",
+    "domain": "ae-03",
+    "blueprint_task": "3.5",
+    "qtype": "fill_in_blank",
+    "difficulty_estimate": "L2",
+
+    "stem": "A run must exit immediately on the first failure instead of working through the rest of the DAG. Supplied to `dbt run`, `dbt build`, or `dbt test`, the single-character shorthand for `--fail-fast` is ____.",
+    "drill_answer": "-x",
+    "accepted_answers": ["-x", "x"],
+    "drill_answer_short": "-x",
+
+    "decision_hinge": "Supply the -x or --fail-fast flag to dbt run, dbt build, or dbt test to make dbt exit immediately on the first failure.",
+    "sources": ["https://docs.getdbt.com/reference/global-configs/failing-fast"],
+    "topics": ["ae/03-debugging-modeling-errors/behaviour-flags"]
+  },
+
+  {
+    "id": "draft-ae03-config-selection-method",
+    "domain": "ae-03",
+    "blueprint_task": "3.3",
+    "qtype": "multiple_choice",
+    "difficulty_estimate": "L4",
+
+    "stem": "A team wants to run every resource whose `materialized` value is `incremental`, and separately to run every resource whose `description` mentions finance. They must use dbt's built-in selection rather than scripting. Which of these is possible?",
+    "option_texts": {
+      "A": "Only the `materialized` one, because selection reads configs and not properties",
+      "B": "Only the `description` one, because selection reads properties and not configs",
+      "C": "Both, because every YAML key is exposed to the selection syntax",
+      "D": "Neither, because `materialized` and `description` are both plain properties"
+    },
+    "drill_answer": "A",
+    "drill_answer_short": "The config: selection method reads config values, not non-config properties",
+
+    "decision_hinge": "You can select resources based on their config values using the config: selection method, but not the values of non-config properties.",
+    "sources": [
+      "https://docs.getdbt.com/reference/configs-and-properties",
+      "https://docs.getdbt.com/reference/node-selection/syntax"
+    ],
+
+    "plausible_options": {
+      "C": "They must use dbt's built-in selection rather than scripting"
+    },
+    "eliminated_by": {
+      "B": {
+        "signal": "run every resource whose `materialized` value is `incremental`",
+        "requires_fact": "Configs are a special kind of property, set in properties.yml under a config property, via a config() macro in .sql files, or for many resources at once in dbt_project.yml."
+      },
+      "D": {
+        "signal": "separately to run every resource whose `description` mentions finance",
+        "requires_fact": "Properties are declared for resources one-by-one in properties.yml files."
+      }
+    },
+    "distractor_traps": {
+      "B": "T3: inverted — properties describe resources, configs are what selection can read",
+      "C": "T5: right instinct that YAML drives selection, wrong about which YAML keys are exposed",
+      "D": "T8: scope error — it treats a config as though it were an ordinary property"
+    },
+    "topics": ["ae/03-debugging-modeling-errors/yaml-properties-vs-configs"]
+  },
+
+  {
+    "id": "draft-ae03-tests-alias-blank",
+    "domain": "ae-03",
+    "blueprint_task": "3.3",
+    "qtype": "fill_in_blank",
+    "difficulty_estimate": "L3",
+
+    "stem": "An older project's YAML still uses the `tests:` key and the team must know whether that will break. In current dbt the `tests:` YAML key is still supported as an ____ for `data_tests:`.",
+    "drill_answer": "alias",
+    "accepted_answers": ["alias", "an alias"],
+    "drill_answer_short": "alias — tests: still works and means the same as data_tests:",
+
+    "decision_hinge": "The YAML key tests: is still supported as an alias for data_tests:.",
+    "sources": ["https://docs.getdbt.com/docs/build/data-tests"],
+    "topics": ["ae/03-debugging-modeling-errors/yaml-properties-vs-configs"]
+  },
+
+  {
+    "id": "draft-ae03-defer-conditions",
+    "domain": "ae-03",
+    "blueprint_task": "3.4",
+    "qtype": "multiple_choice",
+    "difficulty_estimate": "L5",
+
+    "stem": "A developer runs `dbt build --select my_model+ --defer --state prod_artifacts`. A parent of `my_model` is not selected, and a stale copy of that parent already exists in the developer's own schema. The developer must know which relation the `ref` will resolve to. What happens?",
+    "option_texts": {
+      "A": "The `ref` resolves to the developer's own copy, because it exists",
+      "B": "The `ref` resolves to the production relation, because the state manifest exists",
+      "C": "The `ref` fails, because the developer did not also select the parent",
+      "D": "The `ref` resolves to production only if `--favor-state` is also passed"
+    },
+    "drill_answer": "A",
+    "drill_answer_short": "Defer only kicks in when the node is unselected AND absent from the database",
+
+    "decision_hinge": "When --defer is enabled, dbt resolves ref calls using the state manifest instead, but only if the node isn't among the selected nodes, and it doesn't exist in the database (or --favor-state is used).",
+    "sources": ["https://docs.getdbt.com/reference/node-selection/defer"],
+
+    "plausible_options": {
+      "B": "A parent of `my_model` is not selected"
+    },
+    "eliminated_by": {
+      "C": {
+        "signal": "The developer must know which relation the `ref` will resolve to",
+        "requires_fact": "Defer makes it possible to run a subset of models, tests, or functions in a sandbox environment without having to first build their upstream parents."
+      },
+      "D": {
+        "signal": "a stale copy of that parent already exists in the developer's own schema",
+        "requires_fact": "When --favor-state is passed, dbt prioritizes node definitions from the --state directory. However, this doesn't apply if the node is also part of the selected nodes."
+      }
+    },
+    "distractor_traps": {
+      "B": "T5: right destination, wrong condition — deferral also requires the node to be absent from the database",
+      "C": "T1: deferral exists precisely so unselected parents need not be built or selected",
+      "D": "T5: right feature, wrong framing — this option describes the correct fix rather than what actually happens"
+    },
+    "topics": ["ae/03-debugging-modeling-errors/fix-and-verify-before-merge"]
+  },
+
+  {
+    "id": "draft-ae03-ci-temp-schema",
+    "domain": "ae-03",
+    "blueprint_task": "3.4",
+    "qtype": "multiple_choice",
+    "difficulty_estimate": "L3",
+
+    "stem": "A team reviews how their CI jobs use the warehouse. Every pull request must build into an isolated location that does not linger after the PR closes, and reviewers must be able to find that location in the run details. Where does a dbt CI job build?",
+    "option_texts": {
+      "A": "In the production schema, behind a transaction that is rolled back",
+      "B": "In the developer's personal target schema from their credentials",
+      "C": "In a temporary schema named `dbt_cloud_pr_<job_id>_<pr_id>`",
+      "D": "In a permanent `ci` schema that later runs overwrite in place"
+    },
+    "drill_answer": "C",
+    "drill_answer_short": "A temporary schema unique to the PR, dropped when the PR closes or merges",
+
+    "decision_hinge": "dbt builds and tests models affected by the code change in a temporary schema, unique to the PR. The unique schema name follows the naming convention dbt_cloud_pr_<job_id>_<pr_id>.",
+    "sources": ["https://docs.getdbt.com/docs/deploy/continuous-integration"],
+
+    "plausible_options": {
+      "D": "Every pull request must build into an isolated location that does not linger after the PR closes"
+    },
+    "eliminated_by": {
+      "A": {
+        "signal": "reviewers must be able to find that location in the run details",
+        "requires_fact": "dbt deletes the temporary schema from your data warehouse when you close or merge the pull request."
+      },
+      "B": {
+        "signal": "A team reviews how their CI jobs use the warehouse",
+        "requires_fact": "When you run a CI job, only the modified data assets in your pull request and their downstream dependencies are built and tested in a staging schema."
+      }
+    },
+    "distractor_traps": {
+      "A": "T1: dbt does not build CI changes into production behind a rollback",
+      "B": "T2: personal target schemas belong to development environments, not CI jobs",
+      "D": "T3: a shared permanent schema is not isolated per PR and is never dropped"
+    },
+    "topics": ["ae/03-debugging-modeling-errors/fix-and-verify-before-merge"]
+  },
+
+  {
+    "id": "draft-ae03-favor-state-blank",
+    "domain": "ae-03",
+    "blueprint_task": "3.4",
+    "qtype": "fill_in_blank",
+    "difficulty_estimate": "L4",
+
+    "stem": "A developer must make dbt prefer the production definitions in the `--state` directory even when a local copy of an unselected node already exists. The flag that prioritizes node definitions from the state directory is ____.",
+    "drill_answer": "--favor-state",
+    "accepted_answers": ["--favor-state", "favor-state", "favor_state"],
+    "drill_answer_short": "--favor-state",
+
+    "decision_hinge": "When --favor-state is passed, dbt prioritizes node definitions from the --state directory. However, this doesn't apply if the node is also part of the selected nodes.",
+    "sources": ["https://docs.getdbt.com/reference/node-selection/defer"],
+    "topics": ["ae/03-debugging-modeling-errors/fix-and-verify-before-merge"]
+  }
+]

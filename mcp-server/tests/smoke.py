@@ -119,9 +119,10 @@ def main() -> int:
               lambda r: isinstance(r, dict) and r.get("guardrail") == "BATCH_NOT_ALLOWED")
 
         # ---- mutating, against the fixture -------------------------------------
+        # Every check below targets FIXTURE_ID, so the pool is narrowed to the
+        # fixture alone — otherwise a random draw competes with the real bank.
         idx = repo.load_index()
-        idx["questions"] = [q for q in idx["questions"] if q["id"] != FIXTURE_ID]
-        idx["questions"].append(dict(FIXTURE))
+        idx["questions"] = [dict(FIXTURE)]
         repo.save_index(idx)
 
         picked = check("drill_pick returns the fixture",

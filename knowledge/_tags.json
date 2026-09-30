@@ -2,79 +2,789 @@
   "version": 1,
   "generated_at": "2026-09-29",
   "description": "Reverse index: keyword/tag -> topic IDs. Look here before reading any note file.",
-  "tag_count": 24,
+  "tag_count": 138,
   "tags": {
+    "`--empty` \u2014 schema-only dry run": [
+      "ae/01-developing-and-optimizing-models/dry-runs-and-sampling"
+    ],
+    "`--fail-fast` / `-x`": [
+      "ae/03-debugging-modeling-errors/behaviour-flags"
+    ],
+    "`--favor-state`": [
+      "ae/03-debugging-modeling-errors/fix-and-verify-before-merge"
+    ],
+    "`--sample` \u2014 time-based sample mode": [
+      "ae/01-developing-and-optimizing-models/dry-runs-and-sampling"
+    ],
+    "`--warn-error` vs `--warn-error-options`": [
+      "ae/03-debugging-modeling-errors/behaviour-flags"
+    ],
+    "`dbt build` is not \"run then test\"": [
+      "ae/01-developing-and-optimizing-models/dbt-commands"
+    ],
+    "`dbt clone` vs deferral": [
+      "ae/04-troubleshooting-pipelines/dbt-clone"
+    ],
+    "`dbt retry`": [
+      "ae/04-troubleshooting-pipelines/dag-failure-points"
+    ],
+    "`dbt show`": [
+      "ae/01-developing-and-optimizing-models/dbt-commands"
+    ],
+    "`deprecation_date`": [
+      "ae/02-model-governance/model-versions"
+    ],
+    "`packages.yml` vs `dependencies.yml`": [
+      "ae/01-developing-and-optimizing-models/packages"
+    ],
+    "`state:modified` subselectors": [
+      "ae/07-dbt-state/state-selection"
+    ],
+    "`state:modified` vs `--defer` vs `--favor-state`": [
+      "ae/07-dbt-state/state-selection"
+    ],
+    "`store_failures`": [
+      "ae/05-implementing-tests/test-severity-and-workflow"
+    ],
     "access": [
-      "ae/01-developing-and-optimizing-models/materializations"
+      "ae/01-developing-and-optimizing-models/dbt-commands",
+      "ae/01-developing-and-optimizing-models/dry-runs-and-sampling",
+      "ae/01-developing-and-optimizing-models/grants",
+      "ae/01-developing-and-optimizing-models/incremental-models",
+      "ae/01-developing-and-optimizing-models/materializations",
+      "ae/01-developing-and-optimizing-models/microbatch",
+      "ae/01-developing-and-optimizing-models/packages",
+      "ae/01-developing-and-optimizing-models/project-config-and-flags",
+      "ae/01-developing-and-optimizing-models/snapshots",
+      "ae/02-model-governance/constraints",
+      "ae/02-model-governance/model-contracts",
+      "ae/02-model-governance/model-versions",
+      "ae/03-debugging-modeling-errors/behaviour-flags",
+      "ae/03-debugging-modeling-errors/compiled-code-and-logs",
+      "ae/03-debugging-modeling-errors/fix-and-verify-before-merge",
+      "ae/03-debugging-modeling-errors/yaml-properties-vs-configs",
+      "ae/04-troubleshooting-pipelines/dag-failure-points",
+      "ae/04-troubleshooting-pipelines/dbt-clone",
+      "ae/05-implementing-tests/test-severity-and-workflow",
+      "ae/05-implementing-tests/test-types",
+      "ae/06-external-dependencies/exposures",
+      "ae/06-external-dependencies/source-freshness",
+      "ae/07-dbt-state/dbt-retry",
+      "ae/07-dbt-state/state-selection"
+    ],
+    "adapter": [
+      "ae/01-developing-and-optimizing-models/incremental-models",
+      "ae/01-developing-and-optimizing-models/microbatch",
+      "ae/03-debugging-modeling-errors/behaviour-flags",
+      "ae/03-debugging-modeling-errors/compiled-code-and-logs",
+      "ae/06-external-dependencies/source-freshness"
+    ],
+    "analysis": [
+      "ae/01-developing-and-optimizing-models/project-config-and-flags",
+      "ae/03-debugging-modeling-errors/compiled-code-and-logs",
+      "ae/06-external-dependencies/exposures"
+    ],
+    "append": [
+      "ae/01-developing-and-optimizing-models/incremental-models",
+      "ae/02-model-governance/model-contracts"
+    ],
+    "caveats that decide exam questions": [
+      "ae/07-dbt-state/state-selection"
+    ],
+    "choosing a strategy": [
+      "ae/01-developing-and-optimizing-models/incremental-models",
+      "ae/01-developing-and-optimizing-models/snapshots"
+    ],
+    "ci job": [
+      "ae/03-debugging-modeling-errors/fix-and-verify-before-merge",
+      "ae/04-troubleshooting-pipelines/dbt-clone"
+    ],
+    "column level vs model level": [
+      "ae/02-model-governance/constraints"
     ],
     "configuring": [
       "ae/01-developing-and-optimizing-models/materializations"
     ],
+    "consequences you can be tested on": [
+      "ae/03-debugging-modeling-errors/yaml-properties-vs-configs"
+    ],
+    "continuous integration": [
+      "ae/03-debugging-modeling-errors/fix-and-verify-before-merge"
+    ],
     "contract": [
-      "ae/01-developing-and-optimizing-models/materializations"
+      "ae/01-developing-and-optimizing-models/materializations",
+      "ae/02-model-governance/constraints",
+      "ae/02-model-governance/model-contracts",
+      "ae/02-model-governance/model-versions",
+      "ae/07-dbt-state/state-selection"
+    ],
+    "cross-project": [
+      "ae/01-developing-and-optimizing-models/packages"
+    ],
+    "custom generic tests": [
+      "ae/05-implementing-tests/test-types"
     ],
     "custom materialization": [
-      "ae/01-developing-and-optimizing-models/materializations"
+      "ae/01-developing-and-optimizing-models/materializations",
+      "ae/02-model-governance/model-contracts"
+    ],
+    "custom strategies": [
+      "ae/01-developing-and-optimizing-models/incremental-models"
+    ],
+    "dbt clone": [
+      "ae/03-debugging-modeling-errors/fix-and-verify-before-merge",
+      "ae/04-troubleshooting-pipelines/dag-failure-points",
+      "ae/04-troubleshooting-pipelines/dbt-clone",
+      "ae/07-dbt-state/dbt-retry"
+    ],
+    "dbt mesh": [
+      "ae/01-developing-and-optimizing-models/packages"
+    ],
+    "dbt retry": [
+      "ae/03-debugging-modeling-errors/fix-and-verify-before-merge",
+      "ae/04-troubleshooting-pipelines/dag-failure-points",
+      "ae/04-troubleshooting-pipelines/dbt-clone",
+      "ae/07-dbt-state/dbt-retry"
     ],
     "dbt_project.yml": [
-      "ae/01-developing-and-optimizing-models/materializations"
+      "ae/01-developing-and-optimizing-models/dry-runs-and-sampling",
+      "ae/01-developing-and-optimizing-models/grants",
+      "ae/01-developing-and-optimizing-models/materializations",
+      "ae/01-developing-and-optimizing-models/packages",
+      "ae/01-developing-and-optimizing-models/project-config-and-flags",
+      "ae/02-model-governance/model-contracts",
+      "ae/03-debugging-modeling-errors/behaviour-flags",
+      "ae/03-debugging-modeling-errors/compiled-code-and-logs",
+      "ae/03-debugging-modeling-errors/yaml-properties-vs-configs",
+      "ae/06-external-dependencies/exposures"
+    ],
+    "decision rule": [
+      "ae/01-developing-and-optimizing-models/dry-runs-and-sampling",
+      "ae/01-developing-and-optimizing-models/packages",
+      "ae/03-debugging-modeling-errors/behaviour-flags",
+      "ae/04-troubleshooting-pipelines/dbt-clone",
+      "ae/07-dbt-state/dbt-retry"
+    ],
+    "declaring one": [
+      "ae/02-model-governance/model-contracts",
+      "ae/06-external-dependencies/exposures"
+    ],
+    "defer": [
+      "ae/03-debugging-modeling-errors/fix-and-verify-before-merge",
+      "ae/04-troubleshooting-pipelines/dbt-clone",
+      "ae/07-dbt-state/dbt-retry",
+      "ae/07-dbt-state/state-selection"
+    ],
+    "defer \u2014 building a subset without building its parents": [
+      "ae/03-debugging-modeling-errors/fix-and-verify-before-merge"
+    ],
+    "defining a snapshot in yaml": [
+      "ae/01-developing-and-optimizing-models/snapshots"
+    ],
+    "delete+insert": [
+      "ae/01-developing-and-optimizing-models/incremental-models",
+      "ae/01-developing-and-optimizing-models/microbatch"
+    ],
+    "dependencies.yml": [
+      "ae/01-developing-and-optimizing-models/packages"
+    ],
+    "environment": [
+      "ae/01-developing-and-optimizing-models/project-config-and-flags",
+      "ae/01-developing-and-optimizing-models/snapshots",
+      "ae/02-model-governance/constraints",
+      "ae/02-model-governance/model-versions",
+      "ae/03-debugging-modeling-errors/behaviour-flags",
+      "ae/03-debugging-modeling-errors/compiled-code-and-logs",
+      "ae/03-debugging-modeling-errors/fix-and-verify-before-merge",
+      "ae/04-troubleshooting-pipelines/dag-failure-points",
+      "ae/04-troubleshooting-pipelines/dbt-clone",
+      "ae/07-dbt-state/dbt-retry"
     ],
     "ephemeral": [
-      "ae/01-developing-and-optimizing-models/materializations"
+      "ae/01-developing-and-optimizing-models/materializations",
+      "ae/01-developing-and-optimizing-models/snapshots",
+      "ae/02-model-governance/constraints",
+      "ae/02-model-governance/model-contracts",
+      "ae/03-debugging-modeling-errors/fix-and-verify-before-merge"
     ],
     "ephemeral is the special case": [
       "ae/01-developing-and-optimizing-models/materializations"
     ],
+    "error": [
+      "ae/01-developing-and-optimizing-models/dbt-commands",
+      "ae/01-developing-and-optimizing-models/grants",
+      "ae/01-developing-and-optimizing-models/incremental-models",
+      "ae/01-developing-and-optimizing-models/microbatch",
+      "ae/01-developing-and-optimizing-models/packages",
+      "ae/01-developing-and-optimizing-models/project-config-and-flags",
+      "ae/01-developing-and-optimizing-models/snapshots",
+      "ae/02-model-governance/constraints",
+      "ae/03-debugging-modeling-errors/behaviour-flags",
+      "ae/03-debugging-modeling-errors/compiled-code-and-logs",
+      "ae/03-debugging-modeling-errors/yaml-properties-vs-configs",
+      "ae/04-troubleshooting-pipelines/dag-failure-points",
+      "ae/04-troubleshooting-pipelines/dbt-clone",
+      "ae/05-implementing-tests/test-severity-and-workflow",
+      "ae/05-implementing-tests/test-types",
+      "ae/06-external-dependencies/source-freshness",
+      "ae/07-dbt-state/dbt-retry",
+      "ae/07-dbt-state/state-selection"
+    ],
+    "exposure": [
+      "ae/02-model-governance/model-versions",
+      "ae/03-debugging-modeling-errors/yaml-properties-vs-configs",
+      "ae/06-external-dependencies/exposures",
+      "ae/06-external-dependencies/source-freshness",
+      "ae/07-dbt-state/state-selection"
+    ],
+    "fix-and-verify loop for a yaml error": [
+      "ae/03-debugging-modeling-errors/yaml-properties-vs-configs"
+    ],
+    "flag precedence \u2014 \"the most specific setting wins\"": [
+      "ae/01-developing-and-optimizing-models/project-config-and-flags"
+    ],
+    "flags": [
+      "ae/07-dbt-state/dbt-retry"
+    ],
+    "flags that break the pattern": [
+      "ae/01-developing-and-optimizing-models/project-config-and-flags"
+    ],
+    "generate_schema_name": [
+      "ae/01-developing-and-optimizing-models/snapshots",
+      "ae/03-debugging-modeling-errors/fix-and-verify-before-merge"
+    ],
+    "generic test": [
+      "ae/05-implementing-tests/test-types"
+    ],
+    "grants": [
+      "ae/01-developing-and-optimizing-models/grants",
+      "ae/01-developing-and-optimizing-models/project-config-and-flags"
+    ],
+    "graph operator": [
+      "ae/01-developing-and-optimizing-models/dbt-commands",
+      "ae/04-troubleshooting-pipelines/dag-failure-points"
+    ],
+    "group": [
+      "ae/01-developing-and-optimizing-models/grants",
+      "ae/01-developing-and-optimizing-models/microbatch",
+      "ae/07-dbt-state/state-selection"
+    ],
+    "hook": [
+      "ae/01-developing-and-optimizing-models/grants"
+    ],
+    "how a test decides pass / warn / error": [
+      "ae/05-implementing-tests/test-severity-and-workflow"
+    ],
+    "how it works": [
+      "ae/01-developing-and-optimizing-models/microbatch"
+    ],
     "incremental": [
-      "ae/01-developing-and-optimizing-models/materializations"
+      "ae/01-developing-and-optimizing-models/incremental-models",
+      "ae/01-developing-and-optimizing-models/materializations",
+      "ae/01-developing-and-optimizing-models/microbatch",
+      "ae/01-developing-and-optimizing-models/snapshots",
+      "ae/02-model-governance/constraints",
+      "ae/02-model-governance/model-contracts",
+      "ae/04-troubleshooting-pipelines/dbt-clone",
+      "ae/05-implementing-tests/test-types",
+      "ae/07-dbt-state/dbt-retry"
+    ],
+    "incremental_strategy": [
+      "ae/01-developing-and-optimizing-models/incremental-models",
+      "ae/01-developing-and-optimizing-models/microbatch"
+    ],
+    "inheritance: \"merge and clobber\"": [
+      "ae/01-developing-and-optimizing-models/grants"
+    ],
+    "insert_overwrite": [
+      "ae/01-developing-and-optimizing-models/incremental-models",
+      "ae/01-developing-and-optimizing-models/microbatch"
     ],
     "is_incremental": [
+      "ae/01-developing-and-optimizing-models/incremental-models",
       "ae/01-developing-and-optimizing-models/materializations"
+    ],
+    "jinja": [
+      "ae/01-developing-and-optimizing-models/packages",
+      "ae/03-debugging-modeling-errors/compiled-code-and-logs"
+    ],
+    "logs": [
+      "ae/03-debugging-modeling-errors/compiled-code-and-logs"
     ],
     "macro": [
-      "ae/01-developing-and-optimizing-models/materializations"
+      "ae/01-developing-and-optimizing-models/dry-runs-and-sampling",
+      "ae/01-developing-and-optimizing-models/incremental-models",
+      "ae/01-developing-and-optimizing-models/materializations",
+      "ae/01-developing-and-optimizing-models/microbatch",
+      "ae/01-developing-and-optimizing-models/packages",
+      "ae/01-developing-and-optimizing-models/project-config-and-flags",
+      "ae/03-debugging-modeling-errors/compiled-code-and-logs",
+      "ae/03-debugging-modeling-errors/yaml-properties-vs-configs",
+      "ae/05-implementing-tests/test-types",
+      "ae/07-dbt-state/state-selection"
+    ],
+    "manifest": [
+      "ae/01-developing-and-optimizing-models/dbt-commands",
+      "ae/03-debugging-modeling-errors/fix-and-verify-before-merge",
+      "ae/04-troubleshooting-pipelines/dbt-clone",
+      "ae/07-dbt-state/state-selection"
+    ],
+    "manual vs automatic": [
+      "ae/06-external-dependencies/exposures"
     ],
     "materialization": [
-      "ae/01-developing-and-optimizing-models/materializations"
+      "ae/01-developing-and-optimizing-models/dbt-commands",
+      "ae/01-developing-and-optimizing-models/incremental-models",
+      "ae/01-developing-and-optimizing-models/materializations",
+      "ae/01-developing-and-optimizing-models/microbatch",
+      "ae/01-developing-and-optimizing-models/snapshots",
+      "ae/02-model-governance/constraints",
+      "ae/02-model-governance/model-contracts",
+      "ae/03-debugging-modeling-errors/compiled-code-and-logs",
+      "ae/04-troubleshooting-pipelines/dbt-clone",
+      "ae/05-implementing-tests/test-types",
+      "ae/07-dbt-state/state-selection"
     ],
     "materialized view": [
-      "ae/01-developing-and-optimizing-models/materializations"
+      "ae/01-developing-and-optimizing-models/materializations",
+      "ae/02-model-governance/model-contracts"
+    ],
+    "merge": [
+      "ae/01-developing-and-optimizing-models/grants",
+      "ae/01-developing-and-optimizing-models/incremental-models",
+      "ae/01-developing-and-optimizing-models/microbatch",
+      "ae/03-debugging-modeling-errors/behaviour-flags",
+      "ae/03-debugging-modeling-errors/fix-and-verify-before-merge",
+      "ae/03-debugging-modeling-errors/yaml-properties-vs-configs",
+      "ae/04-troubleshooting-pipelines/dbt-clone",
+      "ae/07-dbt-state/state-selection"
+    ],
+    "meta columns": [
+      "ae/01-developing-and-optimizing-models/snapshots"
+    ],
+    "microbatch": [
+      "ae/01-developing-and-optimizing-models/incremental-models",
+      "ae/01-developing-and-optimizing-models/microbatch"
     ],
     "model": [
-      "ae/01-developing-and-optimizing-models/materializations"
+      "ae/01-developing-and-optimizing-models/dbt-commands",
+      "ae/01-developing-and-optimizing-models/dry-runs-and-sampling",
+      "ae/01-developing-and-optimizing-models/grants",
+      "ae/01-developing-and-optimizing-models/incremental-models",
+      "ae/01-developing-and-optimizing-models/materializations",
+      "ae/01-developing-and-optimizing-models/microbatch",
+      "ae/01-developing-and-optimizing-models/packages",
+      "ae/01-developing-and-optimizing-models/project-config-and-flags",
+      "ae/01-developing-and-optimizing-models/snapshots",
+      "ae/02-model-governance/constraints",
+      "ae/02-model-governance/model-contracts",
+      "ae/02-model-governance/model-versions",
+      "ae/03-debugging-modeling-errors/behaviour-flags",
+      "ae/03-debugging-modeling-errors/compiled-code-and-logs",
+      "ae/03-debugging-modeling-errors/fix-and-verify-before-merge",
+      "ae/03-debugging-modeling-errors/yaml-properties-vs-configs",
+      "ae/04-troubleshooting-pipelines/dag-failure-points",
+      "ae/04-troubleshooting-pipelines/dbt-clone",
+      "ae/05-implementing-tests/test-severity-and-workflow",
+      "ae/05-implementing-tests/test-types",
+      "ae/06-external-dependencies/exposures",
+      "ae/06-external-dependencies/source-freshness",
+      "ae/07-dbt-state/dbt-retry",
+      "ae/07-dbt-state/state-selection"
+    ],
+    "model version": [
+      "ae/02-model-governance/model-versions",
+      "ae/06-external-dependencies/exposures"
+    ],
+    "notification": [
+      "ae/03-debugging-modeling-errors/fix-and-verify-before-merge"
     ],
     "on_schema_change": [
-      "ae/01-developing-and-optimizing-models/materializations"
+      "ae/01-developing-and-optimizing-models/materializations",
+      "ae/02-model-governance/model-contracts"
+    ],
+    "package": [
+      "ae/01-developing-and-optimizing-models/packages",
+      "ae/01-developing-and-optimizing-models/project-config-and-flags",
+      "ae/05-implementing-tests/test-types",
+      "ae/07-dbt-state/dbt-retry"
+    ],
+    "persist_docs": [
+      "ae/07-dbt-state/state-selection"
+    ],
+    "prerequisites": [
+      "ae/02-model-governance/constraints"
+    ],
+    "prerequisites and unsupported cases": [
+      "ae/05-implementing-tests/test-types"
+    ],
+    "re-running just the broken part": [
+      "ae/04-troubleshooting-pipelines/dag-failure-points"
     ],
     "related": [
-      "ae/01-developing-and-optimizing-models/materializations"
+      "ae/01-developing-and-optimizing-models/dbt-commands",
+      "ae/01-developing-and-optimizing-models/dry-runs-and-sampling",
+      "ae/01-developing-and-optimizing-models/grants",
+      "ae/01-developing-and-optimizing-models/incremental-models",
+      "ae/01-developing-and-optimizing-models/materializations",
+      "ae/01-developing-and-optimizing-models/microbatch",
+      "ae/01-developing-and-optimizing-models/packages",
+      "ae/01-developing-and-optimizing-models/project-config-and-flags",
+      "ae/01-developing-and-optimizing-models/snapshots",
+      "ae/02-model-governance/constraints",
+      "ae/02-model-governance/model-contracts",
+      "ae/02-model-governance/model-versions",
+      "ae/03-debugging-modeling-errors/behaviour-flags",
+      "ae/03-debugging-modeling-errors/compiled-code-and-logs",
+      "ae/03-debugging-modeling-errors/fix-and-verify-before-merge",
+      "ae/03-debugging-modeling-errors/yaml-properties-vs-configs",
+      "ae/04-troubleshooting-pipelines/dag-failure-points",
+      "ae/04-troubleshooting-pipelines/dbt-clone",
+      "ae/05-implementing-tests/test-severity-and-workflow",
+      "ae/05-implementing-tests/test-types",
+      "ae/06-external-dependencies/exposures",
+      "ae/06-external-dependencies/source-freshness",
+      "ae/07-dbt-state/dbt-retry",
+      "ae/07-dbt-state/state-selection"
+    ],
+    "relevant configs": [
+      "ae/01-developing-and-optimizing-models/microbatch"
+    ],
+    "run_results": [
+      "ae/04-troubleshooting-pipelines/dag-failure-points",
+      "ae/07-dbt-state/dbt-retry"
+    ],
+    "running the check": [
+      "ae/06-external-dependencies/source-freshness"
+    ],
+    "seed": [
+      "ae/01-developing-and-optimizing-models/dbt-commands",
+      "ae/01-developing-and-optimizing-models/grants",
+      "ae/01-developing-and-optimizing-models/project-config-and-flags",
+      "ae/01-developing-and-optimizing-models/snapshots",
+      "ae/02-model-governance/model-contracts",
+      "ae/03-debugging-modeling-errors/yaml-properties-vs-configs",
+      "ae/05-implementing-tests/test-types",
+      "ae/07-dbt-state/state-selection"
+    ],
+    "selector": [
+      "ae/01-developing-and-optimizing-models/dbt-commands",
+      "ae/03-debugging-modeling-errors/compiled-code-and-logs",
+      "ae/05-implementing-tests/test-severity-and-workflow",
+      "ae/05-implementing-tests/test-types",
+      "ae/07-dbt-state/dbt-retry",
+      "ae/07-dbt-state/state-selection"
+    ],
+    "separate state for comparison and deferral": [
+      "ae/03-debugging-modeling-errors/fix-and-verify-before-merge"
+    ],
+    "singular test": [
+      "ae/05-implementing-tests/test-types"
+    ],
+    "slim ci": [
+      "ae/03-debugging-modeling-errors/fix-and-verify-before-merge",
+      "ae/07-dbt-state/state-selection"
     ],
     "snapshot": [
-      "ae/01-developing-and-optimizing-models/materializations"
+      "ae/01-developing-and-optimizing-models/dbt-commands",
+      "ae/01-developing-and-optimizing-models/grants",
+      "ae/01-developing-and-optimizing-models/incremental-models",
+      "ae/01-developing-and-optimizing-models/materializations",
+      "ae/01-developing-and-optimizing-models/project-config-and-flags",
+      "ae/01-developing-and-optimizing-models/snapshots",
+      "ae/02-model-governance/model-contracts",
+      "ae/03-debugging-modeling-errors/yaml-properties-vs-configs",
+      "ae/05-implementing-tests/test-types"
     ],
     "source": [
-      "ae/01-developing-and-optimizing-models/materializations"
+      "ae/01-developing-and-optimizing-models/dbt-commands",
+      "ae/01-developing-and-optimizing-models/dry-runs-and-sampling",
+      "ae/01-developing-and-optimizing-models/grants",
+      "ae/01-developing-and-optimizing-models/incremental-models",
+      "ae/01-developing-and-optimizing-models/materializations",
+      "ae/01-developing-and-optimizing-models/microbatch",
+      "ae/01-developing-and-optimizing-models/packages",
+      "ae/01-developing-and-optimizing-models/project-config-and-flags",
+      "ae/01-developing-and-optimizing-models/snapshots",
+      "ae/02-model-governance/constraints",
+      "ae/02-model-governance/model-contracts",
+      "ae/02-model-governance/model-versions",
+      "ae/03-debugging-modeling-errors/behaviour-flags",
+      "ae/03-debugging-modeling-errors/compiled-code-and-logs",
+      "ae/03-debugging-modeling-errors/fix-and-verify-before-merge",
+      "ae/03-debugging-modeling-errors/yaml-properties-vs-configs",
+      "ae/04-troubleshooting-pipelines/dag-failure-points",
+      "ae/04-troubleshooting-pipelines/dbt-clone",
+      "ae/05-implementing-tests/test-severity-and-workflow",
+      "ae/05-implementing-tests/test-types",
+      "ae/06-external-dependencies/exposures",
+      "ae/06-external-dependencies/source-freshness",
+      "ae/07-dbt-state/dbt-retry",
+      "ae/07-dbt-state/state-selection"
+    ],
+    "sso": [
+      "ae/03-debugging-modeling-errors/behaviour-flags"
+    ],
+    "state:modified": [
+      "ae/03-debugging-modeling-errors/fix-and-verify-before-merge",
+      "ae/07-dbt-state/dbt-retry",
+      "ae/07-dbt-state/state-selection"
+    ],
+    "structure of a constraint": [
+      "ae/02-model-governance/constraints"
     ],
     "table": [
-      "ae/01-developing-and-optimizing-models/materializations"
+      "ae/01-developing-and-optimizing-models/dbt-commands",
+      "ae/01-developing-and-optimizing-models/dry-runs-and-sampling",
+      "ae/01-developing-and-optimizing-models/grants",
+      "ae/01-developing-and-optimizing-models/incremental-models",
+      "ae/01-developing-and-optimizing-models/materializations",
+      "ae/01-developing-and-optimizing-models/microbatch",
+      "ae/01-developing-and-optimizing-models/packages",
+      "ae/01-developing-and-optimizing-models/project-config-and-flags",
+      "ae/01-developing-and-optimizing-models/snapshots",
+      "ae/02-model-governance/constraints",
+      "ae/02-model-governance/model-contracts",
+      "ae/03-debugging-modeling-errors/compiled-code-and-logs",
+      "ae/04-troubleshooting-pipelines/dbt-clone",
+      "ae/05-implementing-tests/test-severity-and-workflow",
+      "ae/05-implementing-tests/test-types",
+      "ae/06-external-dependencies/source-freshness",
+      "ae/07-dbt-state/dbt-retry"
     ],
     "target": [
-      "ae/01-developing-and-optimizing-models/materializations"
+      "ae/01-developing-and-optimizing-models/dry-runs-and-sampling",
+      "ae/01-developing-and-optimizing-models/incremental-models",
+      "ae/01-developing-and-optimizing-models/materializations",
+      "ae/01-developing-and-optimizing-models/project-config-and-flags",
+      "ae/01-developing-and-optimizing-models/snapshots",
+      "ae/03-debugging-modeling-errors/compiled-code-and-logs",
+      "ae/04-troubleshooting-pipelines/dbt-clone",
+      "ae/07-dbt-state/dbt-retry",
+      "ae/07-dbt-state/state-selection"
+    ],
+    "test": [
+      "ae/01-developing-and-optimizing-models/dbt-commands",
+      "ae/01-developing-and-optimizing-models/dry-runs-and-sampling",
+      "ae/01-developing-and-optimizing-models/microbatch",
+      "ae/01-developing-and-optimizing-models/project-config-and-flags",
+      "ae/02-model-governance/constraints",
+      "ae/02-model-governance/model-versions",
+      "ae/03-debugging-modeling-errors/behaviour-flags",
+      "ae/03-debugging-modeling-errors/compiled-code-and-logs",
+      "ae/03-debugging-modeling-errors/fix-and-verify-before-merge",
+      "ae/03-debugging-modeling-errors/yaml-properties-vs-configs",
+      "ae/04-troubleshooting-pipelines/dag-failure-points",
+      "ae/04-troubleshooting-pipelines/dbt-clone",
+      "ae/05-implementing-tests/test-severity-and-workflow",
+      "ae/05-implementing-tests/test-types",
+      "ae/06-external-dependencies/exposures",
+      "ae/06-external-dependencies/source-freshness",
+      "ae/07-dbt-state/dbt-retry",
+      "ae/07-dbt-state/state-selection"
+    ],
+    "the config": [
+      "ae/06-external-dependencies/source-freshness"
+    ],
+    "the distinction that causes most yaml errors": [
+      "ae/03-debugging-modeling-errors/yaml-properties-vs-configs"
+    ],
+    "the families": [
+      "ae/05-implementing-tests/test-types"
+    ],
+    "the file itself": [
+      "ae/01-developing-and-optimizing-models/project-config-and-flags"
+    ],
+    "the five built-in strategies": [
+      "ae/01-developing-and-optimizing-models/incremental-models"
+    ],
+    "the four state selectors": [
+      "ae/07-dbt-state/state-selection"
+    ],
+    "the rules that decide questions": [
+      "ae/06-external-dependencies/source-freshness"
+    ],
+    "the three cases you can be tested on": [
+      "ae/07-dbt-state/dbt-retry"
+    ],
+    "the three states and the naming convention": [
+      "ae/02-model-governance/model-versions"
+    ],
+    "threads": [
+      "ae/04-troubleshooting-pipelines/dbt-clone",
+      "ae/07-dbt-state/dbt-retry"
+    ],
+    "three categories of platform support": [
+      "ae/02-model-governance/constraints"
+    ],
+    "three commands people confuse": [
+      "ae/03-debugging-modeling-errors/compiled-code-and-logs"
     ],
     "trap": [
-      "ae/01-developing-and-optimizing-models/materializations"
+      "ae/01-developing-and-optimizing-models/dbt-commands",
+      "ae/01-developing-and-optimizing-models/dry-runs-and-sampling",
+      "ae/01-developing-and-optimizing-models/grants",
+      "ae/01-developing-and-optimizing-models/incremental-models",
+      "ae/01-developing-and-optimizing-models/materializations",
+      "ae/01-developing-and-optimizing-models/microbatch",
+      "ae/01-developing-and-optimizing-models/packages",
+      "ae/01-developing-and-optimizing-models/project-config-and-flags",
+      "ae/01-developing-and-optimizing-models/snapshots",
+      "ae/02-model-governance/constraints",
+      "ae/02-model-governance/model-contracts",
+      "ae/02-model-governance/model-versions",
+      "ae/03-debugging-modeling-errors/behaviour-flags",
+      "ae/03-debugging-modeling-errors/compiled-code-and-logs",
+      "ae/03-debugging-modeling-errors/fix-and-verify-before-merge",
+      "ae/03-debugging-modeling-errors/yaml-properties-vs-configs",
+      "ae/04-troubleshooting-pipelines/dag-failure-points",
+      "ae/04-troubleshooting-pipelines/dbt-clone",
+      "ae/05-implementing-tests/test-severity-and-workflow",
+      "ae/05-implementing-tests/test-types",
+      "ae/06-external-dependencies/exposures",
+      "ae/06-external-dependencies/source-freshness",
+      "ae/07-dbt-state/dbt-retry",
+      "ae/07-dbt-state/state-selection"
     ],
     "traps": [
-      "ae/01-developing-and-optimizing-models/materializations"
+      "ae/01-developing-and-optimizing-models/dbt-commands",
+      "ae/01-developing-and-optimizing-models/dry-runs-and-sampling",
+      "ae/01-developing-and-optimizing-models/grants",
+      "ae/01-developing-and-optimizing-models/incremental-models",
+      "ae/01-developing-and-optimizing-models/materializations",
+      "ae/01-developing-and-optimizing-models/microbatch",
+      "ae/01-developing-and-optimizing-models/packages",
+      "ae/01-developing-and-optimizing-models/project-config-and-flags",
+      "ae/01-developing-and-optimizing-models/snapshots",
+      "ae/02-model-governance/constraints",
+      "ae/02-model-governance/model-contracts",
+      "ae/02-model-governance/model-versions",
+      "ae/03-debugging-modeling-errors/behaviour-flags",
+      "ae/03-debugging-modeling-errors/compiled-code-and-logs",
+      "ae/03-debugging-modeling-errors/fix-and-verify-before-merge",
+      "ae/03-debugging-modeling-errors/yaml-properties-vs-configs",
+      "ae/04-troubleshooting-pipelines/dag-failure-points",
+      "ae/04-troubleshooting-pipelines/dbt-clone",
+      "ae/05-implementing-tests/test-severity-and-workflow",
+      "ae/05-implementing-tests/test-types",
+      "ae/06-external-dependencies/exposures",
+      "ae/06-external-dependencies/source-freshness",
+      "ae/07-dbt-state/dbt-retry",
+      "ae/07-dbt-state/state-selection"
+    ],
+    "traps about what a snapshot is not": [
+      "ae/01-developing-and-optimizing-models/snapshots"
+    ],
+    "troubleshooting": [
+      "ae/03-debugging-modeling-errors/compiled-code-and-logs",
+      "ae/03-debugging-modeling-errors/yaml-properties-vs-configs",
+      "ae/04-troubleshooting-pipelines/dag-failure-points",
+      "ae/07-dbt-state/dbt-retry"
+    ],
+    "unit test": [
+      "ae/05-implementing-tests/test-severity-and-workflow",
+      "ae/05-implementing-tests/test-types"
+    ],
+    "unit tests": [
+      "ae/05-implementing-tests/test-types"
+    ],
+    "upstream `event_time` is the thing people get wrong": [
+      "ae/01-developing-and-optimizing-models/microbatch"
+    ],
+    "vars": [
+      "ae/07-dbt-state/dbt-retry",
+      "ae/07-dbt-state/state-selection"
     ],
     "view": [
-      "ae/01-developing-and-optimizing-models/materializations"
+      "ae/01-developing-and-optimizing-models/dbt-commands",
+      "ae/01-developing-and-optimizing-models/dry-runs-and-sampling",
+      "ae/01-developing-and-optimizing-models/grants",
+      "ae/01-developing-and-optimizing-models/materializations",
+      "ae/01-developing-and-optimizing-models/microbatch",
+      "ae/02-model-governance/constraints",
+      "ae/02-model-governance/model-contracts",
+      "ae/04-troubleshooting-pipelines/dbt-clone",
+      "ae/05-implementing-tests/test-types",
+      "ae/06-external-dependencies/exposures"
+    ],
+    "what `dbt compile` is for": [
+      "ae/03-debugging-modeling-errors/compiled-code-and-logs"
+    ],
+    "what `dbt debug` validates": [
+      "ae/03-debugging-modeling-errors/compiled-code-and-logs"
+    ],
+    "what a ci job does": [
+      "ae/03-debugging-modeling-errors/fix-and-verify-before-merge"
+    ],
+    "what a failure does to the rest of the dag": [
+      "ae/04-troubleshooting-pipelines/dag-failure-points"
+    ],
+    "what dbt does differently": [
+      "ae/02-model-governance/model-contracts"
+    ],
+    "what defining one buys you": [
+      "ae/06-external-dependencies/exposures"
+    ],
+    "what does *not* count as modified": [
+      "ae/07-dbt-state/state-selection"
+    ],
+    "what each command actually covers": [
+      "ae/01-developing-and-optimizing-models/dbt-commands"
+    ],
+    "what it does": [
+      "ae/01-developing-and-optimizing-models/grants",
+      "ae/04-troubleshooting-pipelines/dbt-clone",
+      "ae/07-dbt-state/dbt-retry"
+    ],
+    "what it is useful for": [
+      "ae/04-troubleshooting-pipelines/dbt-clone"
+    ],
+    "when a `ref` actually gets deferred": [
+      "ae/03-debugging-modeling-errors/fix-and-verify-before-merge"
+    ],
+    "when to use hooks instead": [
+      "ae/01-developing-and-optimizing-models/grants"
     ],
     "when to use which": [
       "ae/01-developing-and-optimizing-models/materializations"
     ],
+    "where contracts are and are not supported": [
+      "ae/02-model-governance/model-contracts"
+    ],
+    "where tests fit in the workflow": [
+      "ae/05-implementing-tests/test-severity-and-workflow"
+    ],
+    "where unit tests run": [
+      "ae/05-implementing-tests/test-types"
+    ],
     "why this is likely on the exam": [
-      "ae/01-developing-and-optimizing-models/materializations"
+      "ae/01-developing-and-optimizing-models/dbt-commands",
+      "ae/01-developing-and-optimizing-models/dry-runs-and-sampling",
+      "ae/01-developing-and-optimizing-models/grants",
+      "ae/01-developing-and-optimizing-models/incremental-models",
+      "ae/01-developing-and-optimizing-models/materializations",
+      "ae/01-developing-and-optimizing-models/microbatch",
+      "ae/01-developing-and-optimizing-models/packages",
+      "ae/01-developing-and-optimizing-models/project-config-and-flags",
+      "ae/01-developing-and-optimizing-models/snapshots",
+      "ae/02-model-governance/constraints",
+      "ae/02-model-governance/model-contracts",
+      "ae/02-model-governance/model-versions",
+      "ae/03-debugging-modeling-errors/behaviour-flags",
+      "ae/03-debugging-modeling-errors/compiled-code-and-logs",
+      "ae/03-debugging-modeling-errors/fix-and-verify-before-merge",
+      "ae/03-debugging-modeling-errors/yaml-properties-vs-configs",
+      "ae/04-troubleshooting-pipelines/dag-failure-points",
+      "ae/04-troubleshooting-pipelines/dbt-clone",
+      "ae/05-implementing-tests/test-severity-and-workflow",
+      "ae/05-implementing-tests/test-types",
+      "ae/06-external-dependencies/exposures",
+      "ae/06-external-dependencies/source-freshness",
+      "ae/07-dbt-state/dbt-retry",
+      "ae/07-dbt-state/state-selection"
+    ],
+    "why version rather than edit in place": [
+      "ae/02-model-governance/model-versions"
     ]
   }
 }

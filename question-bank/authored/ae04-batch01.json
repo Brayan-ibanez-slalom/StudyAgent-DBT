@@ -1,0 +1,226 @@
+[
+  {
+    "id": "draft-ae04-clone-fallback-pointer-view",
+    "domain": "ae-04",
+    "blueprint_task": "4.2",
+    "qtype": "multiple_choice",
+    "difficulty_estimate": "L4",
+
+    "stem": "A team runs `dbt clone --state prod_artifacts` on a platform that has no zero-copy cloning. They must still end up with queryable objects in the development schema for every selected model. What does dbt produce?",
+    "option_texts": {
+      "A": "An error, because the `clone` materialization needs platform support",
+      "B": "A pointer view that selects from the source object",
+      "C": "A full table copy, sized the same as the source relation",
+      "D": "Nothing at all, because pre-existing relations are left alone"
+    },
+    "drill_answer": "B",
+    "drill_answer_short": "Without zero-copy support dbt falls back to a simple pointer view",
+
+    "decision_hinge": "If your data platform supports zero-copy cloning of tables and this model exists as a table in the source environment, dbt will create it in your target environment as a clone. Otherwise, dbt will create a simple pointer view, select star from the source object.",
+    "sources": ["https://docs.getdbt.com/reference/commands/clone"],
+
+    "plausible_options": {
+      "C": "They must still end up with queryable objects in the development schema for every selected model"
+    },
+    "eliminated_by": {
+      "A": {
+        "signal": "A team runs `dbt clone --state prod_artifacts` on a platform that has no zero-copy cloning",
+        "requires_fact": "The dbt clone command clones selected nodes from the specified state to the target schemas. This command makes use of the clone materialization."
+      },
+      "D": {
+        "signal": "must still end up with queryable objects in the development schema",
+        "requires_fact": "By default, dbt clone will not recreate pre-existing relations in the current target. To override this, use the --full-refresh flag."
+      }
+    },
+    "distractor_traps": {
+      "A": "T1: the command does not fail without zero-copy support; it changes what it creates",
+      "C": "T3: a real copy is what zero-copy cloning avoids, and it is not the fallback either",
+      "D": "T5: the pre-existing-relation rule is real, but the stem describes a fresh development schema"
+    },
+    "topics": ["ae/04-troubleshooting-pipelines/dbt-clone"]
+  },
+
+  {
+    "id": "draft-ae04-clone-vs-defer",
+    "domain": "ae-04",
+    "blueprint_task": "4.2",
+    "qtype": "multiple_choice",
+    "difficulty_estimate": "L4",
+
+    "stem": "An analyst must validate a change to a mart by pointing an external BI dashboard at the modified tables before the pull request merges. The team wants the approach with the LEAST warehouse spend that still satisfies the dashboard. Which approach should they choose?",
+    "option_texts": {
+      "A": "Run the build with `--defer --state`, since deferral is cheaper than cloning",
+      "B": "Run `dbt clone --state`, since the dashboard needs real warehouse objects",
+      "C": "Run a full `dbt build` of the whole project into a personal warehouse schema",
+      "D": "Run `dbt compile` and hand the compiled SQL to the dashboard owner"
+    },
+    "drill_answer": "B",
+    "drill_answer_short": "Only clone creates real objects an external tool can query",
+
+    "decision_hinge": "Unlike deferral, dbt clone requires some compute and creation of additional objects in your data warehouse. In many cases, deferral is a cheaper and simpler alternative to dbt clone. However, by creating actual data warehouse objects, dbt clone allows you to test out your code changes on downstream dependencies.",
+    "sources": [
+      "https://docs.getdbt.com/reference/commands/clone",
+      "https://docs.getdbt.com/reference/node-selection/defer",
+      "https://docs.getdbt.com/reference/commands/compile"
+    ],
+
+    "plausible_options": {
+      "A": "The team wants the approach with the LEAST warehouse spend that still satisfies the dashboard",
+      "C": "must validate a change to a mart by pointing an external BI dashboard at the modified tables"
+    },
+    "eliminated_by": {
+      "D": {
+        "signal": "pointing an external BI dashboard at the modified tables before the pull request merges",
+        "requires_fact": "dbt compile is similar to dbt run except that it doesn't materialize the model's compiled SQL into an existing table."
+      }
+    },
+    "distractor_traps": {
+      "A": "T3: confusable sibling — deferral redirects refs inside dbt, so no object appears for an external tool",
+      "C": "T7: over-engineering — it produces real objects but rebuilds the entire project to do it",
+      "D": "T2: compiled SQL is text, not a relation a dashboard can point at"
+    },
+    "topics": ["ae/04-troubleshooting-pipelines/dbt-clone"]
+  },
+
+  {
+    "id": "draft-ae04-clone-full-refresh-blank",
+    "domain": "ae-04",
+    "blueprint_task": "4.2",
+    "qtype": "fill_in_blank",
+    "difficulty_estimate": "L3",
+
+    "stem": "A second `dbt clone` run must replace relations that a previous clone already created in the target. Because dbt clone will not recreate pre-existing relations by default, the team needs to add the ____ flag.",
+    "drill_answer": "--full-refresh",
+    "accepted_answers": ["--full-refresh", "full-refresh", "full_refresh", "-f"],
+    "drill_answer_short": "--full-refresh",
+
+    "decision_hinge": "By default, dbt clone will not recreate pre-existing relations in the current target. To override this, use the --full-refresh flag.",
+    "sources": ["https://docs.getdbt.com/reference/commands/clone"],
+    "topics": ["ae/04-troubleshooting-pipelines/dbt-clone"]
+  },
+
+  {
+    "id": "draft-ae04-at-operator",
+    "domain": "ae-04",
+    "blueprint_task": "4.1",
+    "qtype": "multiple_choice",
+    "difficulty_estimate": "L5",
+
+    "stem": "A CI run must build a changed model and everything downstream of it. Several downstream models also read from other parents that have never been built in this schema. The selection must therefore pull in those other parents too. Which selector does that?",
+    "option_texts": {
+      "A": "`--select \"@my_model\"`, which adds the ancestors of the descendants",
+      "B": "`--select \"my_model+\"`, which adds every descendant of the model",
+      "C": "`--select \"+my_model+\"`, which adds the model's own ancestors too",
+      "D": "`--select \"my_model+1\"`, which steps one edge past the model"
+    },
+    "drill_answer": "A",
+    "drill_answer_short": "@ is + plus all ancestors of all descendants",
+
+    "decision_hinge": "The at operator is similar to plus, but will also include all ancestors of all descendants of the selected model. This is useful in continuous integration environments where you want to build a model and all of its descendants, but the ancestors of those descendants might not exist in the schema yet.",
+    "sources": ["https://docs.getdbt.com/reference/node-selection/graph-operators"],
+
+    "plausible_options": {
+      "C": "Several downstream models also read from other parents that have never been built in this schema"
+    },
+    "eliminated_by": {
+      "B": {
+        "signal": "The selection must therefore pull in those other parents too",
+        "requires_fact": "Placed after a model or resource, the plus operator includes the resource itself and all its descendants, which are its downstream dependencies."
+      },
+      "D": {
+        "signal": "A CI run must build a changed model and everything downstream of it",
+        "requires_fact": "You can adjust the behavior of the plus operator by quantifying the number of edges to step through, so my_model+1 selects my_model and its first-degree descendants."
+      }
+    },
+    "distractor_traps": {
+      "B": "T4: it covers descendants but never reaches the descendants' other parents",
+      "C": "T3: confusable sibling — it adds the selected model's own ancestors, not the descendants' ancestors",
+      "D": "T8: scope error — the n-plus operator limits depth rather than widening the graph"
+    },
+    "topics": ["ae/04-troubleshooting-pipelines/dag-failure-points"]
+  },
+
+  {
+    "id": "draft-ae04-retry-no-recorded-nodes",
+    "domain": "ae-04",
+    "blueprint_task": "4.1",
+    "qtype": "multiple_choice",
+    "difficulty_estimate": "L4",
+
+    "stem": "A nightly job dies immediately with a warehouse permission error, before any node executes. An on-call engineer runs `dbt retry` and sees nothing execute. The engineer must get the job's nodes built tonight. What is going on, and what should they do?",
+    "option_texts": {
+      "A": "Retry skipped nodes that succeeded earlier, so pass `--full-refresh` as well",
+      "B": "Retry reuses stale state, so delete `target/` and run `dbt retry` again",
+      "C": "Retry found no recorded nodes, so check `run_results.json` and re-run the full job",
+      "D": "Retry treated the permission error as a warning, so add `--warn-error` and retry"
+    },
+    "drill_answer": "C",
+    "drill_answer_short": "With no nodes executed there is nothing to retry from — re-run the full job",
+
+    "decision_hinge": "If no nodes are executed before the failure, for example if a run failed early due to a warehouse connection or permission errors, retry won't run anything since there are no recorded nodes to retry from. In these cases, we recommend checking your run_results.json file and manually re-running the full job so the nodes build.",
+    "sources": [
+      "https://docs.getdbt.com/reference/commands/retry",
+      "https://docs.getdbt.com/reference/global-configs/warnings"
+    ],
+
+    "plausible_options": {
+      "B": "An on-call engineer runs `dbt retry` and sees nothing execute"
+    },
+    "eliminated_by": {
+      "A": {
+        "signal": "A nightly job dies immediately with a warehouse permission error, before any node executes",
+        "requires_fact": "If the previously executed command completed successfully, retry will finish as no operation."
+      },
+      "D": {
+        "signal": "The engineer must get the job's nodes built tonight",
+        "requires_fact": "Enabling WARN_ERROR config or setting the --warn-error flag will convert all dbt warnings into errors."
+      }
+    },
+    "distractor_traps": {
+      "A": "T5: right that nothing ran, wrong cause — a full refresh does not create nodes to retry from",
+      "B": "T5: right that artifacts are involved, wrong direction — deleting target discards what retry reads",
+      "D": "T2: warn-error changes what counts as a failure; a permission error was already an error"
+    },
+    "topics": ["ae/04-troubleshooting-pipelines/dag-failure-points"]
+  },
+
+  {
+    "id": "draft-ae04-recovery-match",
+    "domain": "ae-04",
+    "blueprint_task": "4.1",
+    "qtype": "matching",
+    "difficulty_estimate": "L4",
+
+    "stem": "An on-call engineer must pick the right recovery tool for each situation without rebuilding more than necessary. Match each situation to the dbt capability that addresses it.",
+    "match_left": [
+      "A run stopped halfway and must resume from the failure",
+      "An incremental model's schema changed and it must be rebuilt from scratch",
+      "Production tables must be copied into a development schema as real objects",
+      "A subset must run without building its unselected upstream parents"
+    ],
+    "match_right": [
+      "dbt retry",
+      "--full-refresh",
+      "dbt clone",
+      "--defer with --state",
+      "--empty",
+      "dbt show --limit"
+    ],
+    "drill_answer": {
+      "A run stopped halfway and must resume from the failure": "dbt retry",
+      "An incremental model's schema changed and it must be rebuilt from scratch": "--full-refresh",
+      "Production tables must be copied into a development schema as real objects": "dbt clone",
+      "A subset must run without building its unselected upstream parents": "--defer with --state"
+    },
+    "drill_answer_short": "retry resumes, full-refresh rebuilds, clone copies, defer redirects",
+
+    "decision_hinge": "Retry re-executes the last invocation from the point of failure. If you provide the --full-refresh flag to dbt run, dbt will treat incremental models as table models. The dbt clone command clones selected nodes from the specified state to the target schemas. Defer makes it possible to run a subset of models without having to first build their upstream parents.",
+    "sources": [
+      "https://docs.getdbt.com/reference/commands/retry",
+      "https://docs.getdbt.com/reference/commands/run",
+      "https://docs.getdbt.com/reference/commands/clone",
+      "https://docs.getdbt.com/reference/node-selection/defer"
+    ],
+    "topics": ["ae/04-troubleshooting-pipelines/dag-failure-points"]
+  }
+]

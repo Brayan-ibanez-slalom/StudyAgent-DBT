@@ -3,8 +3,248 @@
   "generated_at": "2026-09-29",
   "description": "Machine-readable index of knowledge/ topic notes. Regenerate with scripts/build_topic_index.py.",
   "weight_note": "dbt Labs does not publish section weights; domain_weight is null by design.",
-  "topic_count": 1,
+  "topic_count": 24,
   "topics": [
+    {
+      "id": "ae/01-developing-and-optimizing-models/dbt-commands",
+      "path": "knowledge/ae/01-developing-and-optimizing-models/dbt-commands.md",
+      "title": "Core dbt commands",
+      "track": "ae",
+      "domain": "ae-01",
+      "domain_title": "Developing and optimizing dbt models",
+      "domain_weight": null,
+      "verified": "2026-09-29",
+      "keywords": [
+        "`dbt build` is not \"run then test\"",
+        "`dbt show`",
+        "access",
+        "error",
+        "graph operator",
+        "manifest",
+        "materialization",
+        "model",
+        "related",
+        "seed",
+        "selector",
+        "snapshot",
+        "source",
+        "table",
+        "test",
+        "trap",
+        "traps",
+        "view",
+        "what each command actually covers",
+        "why this is likely on the exam"
+      ],
+      "concepts": [
+        "dbt build",
+        "dbt run",
+        "dbt test",
+        "dbt seed",
+        "dbt snapshot",
+        "dbt show",
+        "dbt compile",
+        "dbt docs generate",
+        "indirect selection",
+        "--limit",
+        "--inline"
+      ],
+      "sources": [
+        {
+          "title": "source: [About dbt build command \u2014 dbt Docs",
+          "url": "https://docs.getdbt.com/reference/commands/build"
+        },
+        {
+          "title": "source: [About dbt run command \u2014 dbt Docs",
+          "url": "https://docs.getdbt.com/reference/commands/run"
+        },
+        {
+          "title": "source: [About dbt show command \u2014 dbt Docs",
+          "url": "https://docs.getdbt.com/reference/commands/show"
+        },
+        {
+          "title": "source: [About dbt seed command \u2014 dbt Docs",
+          "url": "https://docs.getdbt.com/reference/commands/seed"
+        },
+        {
+          "title": "source: [dbt Command reference \u2014 dbt Docs",
+          "url": "https://docs.getdbt.com/reference/dbt-commands"
+        }
+      ],
+      "related": [
+        "ae/01-developing-and-optimizing-models/dry-runs-and-sampling",
+        "ae/01-developing-and-optimizing-models/project-config-and-flags"
+      ]
+    },
+    {
+      "id": "ae/01-developing-and-optimizing-models/dry-runs-and-sampling",
+      "path": "knowledge/ae/01-developing-and-optimizing-models/dry-runs-and-sampling.md",
+      "title": "Dry runs (`--empty`) and sample mode (`--sample`)",
+      "track": "ae",
+      "domain": "ae-01",
+      "domain_title": "Developing and optimizing dbt models",
+      "domain_weight": null,
+      "verified": "2026-09-29",
+      "keywords": [
+        "`--empty` \u2014 schema-only dry run",
+        "`--sample` \u2014 time-based sample mode",
+        "access",
+        "dbt_project.yml",
+        "decision rule",
+        "macro",
+        "model",
+        "related",
+        "source",
+        "table",
+        "target",
+        "test",
+        "trap",
+        "traps",
+        "view",
+        "why this is likely on the exam"
+      ],
+      "concepts": [
+        "--empty",
+        "empty flag",
+        "dry run",
+        "--sample",
+        "sample mode",
+        "DBT_ENGINE_EMPTY",
+        "DBT_ENGINE_SAMPLE"
+      ],
+      "sources": [
+        {
+          "title": "source: [About dbt run command \u2014 dbt Docs",
+          "url": "https://docs.getdbt.com/reference/commands/run"
+        },
+        {
+          "title": "source: [Upgrading to v1.10 \u2014 dbt Docs",
+          "url": "https://docs.getdbt.com/docs/dbt-versions/core-upgrade/upgrading-to-v1.10"
+        },
+        {
+          "title": "source: [About flags (global configs) \u2014 dbt Docs",
+          "url": "https://docs.getdbt.com/reference/global-configs/about-global-configs"
+        }
+      ],
+      "related": [
+        "ae/01-developing-and-optimizing-models/dbt-commands",
+        "ae/01-developing-and-optimizing-models/project-config-and-flags"
+      ]
+    },
+    {
+      "id": "ae/01-developing-and-optimizing-models/grants",
+      "path": "knowledge/ae/01-developing-and-optimizing-models/grants.md",
+      "title": "The `grants` config",
+      "track": "ae",
+      "domain": "ae-01",
+      "domain_title": "Developing and optimizing dbt models",
+      "domain_weight": null,
+      "verified": "2026-09-29",
+      "keywords": [
+        "access",
+        "dbt_project.yml",
+        "error",
+        "grants",
+        "group",
+        "hook",
+        "inheritance: \"merge and clobber\"",
+        "merge",
+        "model",
+        "related",
+        "seed",
+        "snapshot",
+        "source",
+        "table",
+        "trap",
+        "traps",
+        "view",
+        "what it does",
+        "when to use hooks instead",
+        "why this is likely on the exam"
+      ],
+      "concepts": [
+        "grants",
+        "privilege",
+        "grantee",
+        "+select",
+        "clobber",
+        "merge and clobber",
+        "hooks",
+        "apply grants"
+      ],
+      "sources": [
+        {
+          "title": "source: [grants \u2014 dbt Docs",
+          "url": "https://docs.getdbt.com/reference/resource-configs/grants"
+        }
+      ],
+      "related": [
+        "ae/01-developing-and-optimizing-models/project-config-and-flags"
+      ]
+    },
+    {
+      "id": "ae/01-developing-and-optimizing-models/incremental-models",
+      "path": "knowledge/ae/01-developing-and-optimizing-models/incremental-models.md",
+      "title": "Incremental models and incremental strategies",
+      "track": "ae",
+      "domain": "ae-01",
+      "domain_title": "Developing and optimizing dbt models",
+      "domain_weight": null,
+      "verified": "2026-09-29",
+      "keywords": [
+        "access",
+        "adapter",
+        "append",
+        "choosing a strategy",
+        "custom strategies",
+        "delete+insert",
+        "error",
+        "incremental",
+        "incremental_strategy",
+        "insert_overwrite",
+        "is_incremental",
+        "macro",
+        "materialization",
+        "merge",
+        "microbatch",
+        "model",
+        "related",
+        "snapshot",
+        "source",
+        "table",
+        "target",
+        "the five built-in strategies",
+        "trap",
+        "traps",
+        "why this is likely on the exam"
+      ],
+      "concepts": [
+        "incremental",
+        "incremental_strategy",
+        "append",
+        "merge",
+        "delete+insert",
+        "insert_overwrite",
+        "unique_key",
+        "is_incremental",
+        "custom incremental strategy"
+      ],
+      "sources": [
+        {
+          "title": "source: [About incremental strategy \u2014 dbt Docs",
+          "url": "https://docs.getdbt.com/docs/build/incremental-strategy"
+        },
+        {
+          "title": "source: [Incremental models \u2014 dbt Docs",
+          "url": "https://docs.getdbt.com/docs/build/incremental-models"
+        }
+      ],
+      "related": [
+        "ae/01-developing-and-optimizing-models/materializations",
+        "ae/01-developing-and-optimizing-models/microbatch",
+        "ae/01-developing-and-optimizing-models/snapshots"
+      ]
+    },
     {
       "id": "ae/01-developing-and-optimizing-models/materializations",
       "path": "knowledge/ae/01-developing-and-optimizing-models/materializations.md",
@@ -56,7 +296,1131 @@
           "url": "https://docs.getdbt.com/docs/build/materializations"
         }
       ],
+      "related": [
+        "ae/01-developing-and-optimizing-models/incremental-models",
+        "ae/01-developing-and-optimizing-models/snapshots"
+      ]
+    },
+    {
+      "id": "ae/01-developing-and-optimizing-models/microbatch",
+      "path": "knowledge/ae/01-developing-and-optimizing-models/microbatch.md",
+      "title": "Microbatch incremental models",
+      "track": "ae",
+      "domain": "ae-01",
+      "domain_title": "Developing and optimizing dbt models",
+      "domain_weight": null,
+      "verified": "2026-09-29",
+      "keywords": [
+        "access",
+        "adapter",
+        "delete+insert",
+        "error",
+        "group",
+        "how it works",
+        "incremental",
+        "incremental_strategy",
+        "insert_overwrite",
+        "macro",
+        "materialization",
+        "merge",
+        "microbatch",
+        "model",
+        "related",
+        "relevant configs",
+        "source",
+        "table",
+        "test",
+        "trap",
+        "traps",
+        "upstream `event_time` is the thing people get wrong",
+        "view",
+        "why this is likely on the exam"
+      ],
+      "concepts": [
+        "microbatch",
+        "event_time",
+        "begin",
+        "batch_size",
+        "lookback",
+        "concurrent_batches",
+        "backfill",
+        "batch"
+      ],
+      "sources": [
+        {
+          "title": "source: [About microbatch incremental models \u2014 dbt Docs",
+          "url": "https://docs.getdbt.com/docs/build/incremental-microbatch"
+        },
+        {
+          "title": "source: [event_time \u2014 dbt Docs",
+          "url": "https://docs.getdbt.com/reference/resource-configs/event-time"
+        }
+      ],
+      "related": [
+        "ae/01-developing-and-optimizing-models/incremental-models"
+      ]
+    },
+    {
+      "id": "ae/01-developing-and-optimizing-models/packages",
+      "path": "knowledge/ae/01-developing-and-optimizing-models/packages.md",
+      "title": "Packages and project dependencies",
+      "track": "ae",
+      "domain": "ae-01",
+      "domain_title": "Developing and optimizing dbt models",
+      "domain_weight": null,
+      "verified": "2026-09-29",
+      "keywords": [
+        "`packages.yml` vs `dependencies.yml`",
+        "access",
+        "cross-project",
+        "dbt mesh",
+        "dbt_project.yml",
+        "decision rule",
+        "dependencies.yml",
+        "error",
+        "jinja",
+        "macro",
+        "model",
+        "package",
+        "related",
+        "source",
+        "table",
+        "trap",
+        "traps",
+        "why this is likely on the exam"
+      ],
+      "concepts": [
+        "packages.yml",
+        "dependencies.yml",
+        "dbt deps",
+        "package dependencies",
+        "project dependencies",
+        "dbt Hub",
+        "private packages"
+      ],
+      "sources": [
+        {
+          "title": "source: [Packages \u2014 dbt Docs",
+          "url": "https://docs.getdbt.com/docs/build/packages"
+        }
+      ],
+      "related": [
+        "ae/01-developing-and-optimizing-models/dbt-commands"
+      ]
+    },
+    {
+      "id": "ae/01-developing-and-optimizing-models/project-config-and-flags",
+      "path": "knowledge/ae/01-developing-and-optimizing-models/project-config-and-flags.md",
+      "title": "`dbt_project.yml` and flag precedence",
+      "track": "ae",
+      "domain": "ae-01",
+      "domain_title": "Developing and optimizing dbt models",
+      "domain_weight": null,
+      "verified": "2026-09-29",
+      "keywords": [
+        "access",
+        "analysis",
+        "dbt_project.yml",
+        "environment",
+        "error",
+        "flag precedence \u2014 \"the most specific setting wins\"",
+        "flags that break the pattern",
+        "grants",
+        "macro",
+        "model",
+        "package",
+        "related",
+        "seed",
+        "snapshot",
+        "source",
+        "table",
+        "target",
+        "test",
+        "the file itself",
+        "trap",
+        "traps",
+        "why this is likely on the exam"
+      ],
+      "concepts": [
+        "dbt_project.yml",
+        "config-version",
+        "model-paths",
+        "require-dbt-version",
+        "flags",
+        "global configs",
+        "config precedence",
+        "configs vs properties",
+        "--project-dir"
+      ],
+      "sources": [
+        {
+          "title": "source: [dbt_project.yml \u2014 dbt Docs",
+          "url": "https://docs.getdbt.com/reference/dbt_project.yml"
+        },
+        {
+          "title": "source: [About flags (global configs) \u2014 dbt Docs",
+          "url": "https://docs.getdbt.com/reference/global-configs/about-global-configs"
+        },
+        {
+          "title": "source: [Command line options \u2014 dbt Docs",
+          "url": "https://docs.getdbt.com/reference/global-configs/command-line-options"
+        },
+        {
+          "title": "Configs and properties",
+          "url": "https://docs.getdbt.com/reference/configs-and-properties"
+        }
+      ],
+      "related": [
+        "ae/01-developing-and-optimizing-models/dry-runs-and-sampling",
+        "ae/01-developing-and-optimizing-models/grants"
+      ]
+    },
+    {
+      "id": "ae/01-developing-and-optimizing-models/snapshots",
+      "path": "knowledge/ae/01-developing-and-optimizing-models/snapshots.md",
+      "title": "Snapshots",
+      "track": "ae",
+      "domain": "ae-01",
+      "domain_title": "Developing and optimizing dbt models",
+      "domain_weight": null,
+      "verified": "2026-09-29",
+      "keywords": [
+        "access",
+        "choosing a strategy",
+        "defining a snapshot in yaml",
+        "environment",
+        "ephemeral",
+        "error",
+        "generate_schema_name",
+        "incremental",
+        "materialization",
+        "meta columns",
+        "model",
+        "related",
+        "seed",
+        "snapshot",
+        "source",
+        "table",
+        "target",
+        "trap",
+        "traps",
+        "traps about what a snapshot is not",
+        "why this is likely on the exam"
+      ],
+      "concepts": [
+        "snapshot",
+        "strategy",
+        "timestamp",
+        "check",
+        "check_cols",
+        "updated_at",
+        "unique_key",
+        "hard_deletes",
+        "dbt_valid_from",
+        "dbt_valid_to",
+        "dbt_valid_to_current",
+        "snapshot_meta_column_names",
+        "SCD Type 2"
+      ],
+      "sources": [
+        {
+          "title": "source: [Add snapshots to your DAG \u2014 dbt Docs",
+          "url": "https://docs.getdbt.com/docs/build/snapshots"
+        },
+        {
+          "title": "source: [About dbt snapshot command \u2014 dbt Docs",
+          "url": "https://docs.getdbt.com/reference/commands/snapshot"
+        }
+      ],
+      "related": [
+        "ae/01-developing-and-optimizing-models/incremental-models",
+        "ae/01-developing-and-optimizing-models/materializations"
+      ]
+    },
+    {
+      "id": "ae/02-model-governance/constraints",
+      "path": "knowledge/ae/02-model-governance/constraints.md",
+      "title": "Constraints",
+      "track": "ae",
+      "domain": "ae-02",
+      "domain_title": "Managing dbt models governance",
+      "domain_weight": null,
+      "verified": "2026-09-29",
+      "keywords": [
+        "access",
+        "column level vs model level",
+        "contract",
+        "environment",
+        "ephemeral",
+        "error",
+        "incremental",
+        "materialization",
+        "model",
+        "prerequisites",
+        "related",
+        "source",
+        "structure of a constraint",
+        "table",
+        "test",
+        "three categories of platform support",
+        "trap",
+        "traps",
+        "view",
+        "why this is likely on the exam"
+      ],
+      "concepts": [
+        "constraints",
+        "not_null",
+        "primary_key",
+        "foreign_key",
+        "unique",
+        "check",
+        "custom",
+        "warn_unenforced",
+        "warn_unsupported",
+        "to",
+        "to_columns",
+        "expression"
+      ],
+      "sources": [
+        {
+          "title": "source: [constraints \u2014 dbt Docs",
+          "url": "https://docs.getdbt.com/reference/resource-properties/constraints"
+        },
+        {
+          "title": "source: [Model contracts \u2014 dbt Docs",
+          "url": "https://docs.getdbt.com/docs/collaborate/govern/model-contracts"
+        }
+      ],
+      "related": [
+        "ae/02-model-governance/model-contracts"
+      ]
+    },
+    {
+      "id": "ae/02-model-governance/model-contracts",
+      "path": "knowledge/ae/02-model-governance/model-contracts.md",
+      "title": "Model contracts",
+      "track": "ae",
+      "domain": "ae-02",
+      "domain_title": "Managing dbt models governance",
+      "domain_weight": null,
+      "verified": "2026-09-29",
+      "keywords": [
+        "access",
+        "append",
+        "contract",
+        "custom materialization",
+        "dbt_project.yml",
+        "declaring one",
+        "ephemeral",
+        "incremental",
+        "materialization",
+        "materialized view",
+        "model",
+        "on_schema_change",
+        "related",
+        "seed",
+        "snapshot",
+        "source",
+        "table",
+        "trap",
+        "traps",
+        "view",
+        "what dbt does differently",
+        "where contracts are and are not supported",
+        "why this is likely on the exam"
+      ],
+      "concepts": [
+        "contract",
+        "enforced",
+        "data_type",
+        "preflight check",
+        "model governance"
+      ],
+      "sources": [
+        {
+          "title": "source: [Model contracts \u2014 dbt Docs",
+          "url": "https://docs.getdbt.com/docs/collaborate/govern/model-contracts"
+        },
+        {
+          "title": "source: [contract \u2014 dbt Docs",
+          "url": "https://docs.getdbt.com/reference/resource-configs/contract"
+        }
+      ],
+      "related": [
+        "ae/02-model-governance/constraints",
+        "ae/02-model-governance/model-versions"
+      ]
+    },
+    {
+      "id": "ae/02-model-governance/model-versions",
+      "path": "knowledge/ae/02-model-governance/model-versions.md",
+      "title": "Model versions and deprecation",
+      "track": "ae",
+      "domain": "ae-02",
+      "domain_title": "Managing dbt models governance",
+      "domain_weight": null,
+      "verified": "2026-09-29",
+      "keywords": [
+        "`deprecation_date`",
+        "access",
+        "contract",
+        "environment",
+        "exposure",
+        "model",
+        "model version",
+        "related",
+        "source",
+        "test",
+        "the three states and the naming convention",
+        "trap",
+        "traps",
+        "why this is likely on the exam",
+        "why version rather than edit in place"
+      ],
+      "concepts": [
+        "versions",
+        "latest_version",
+        "prerelease",
+        "deprecation_date",
+        "ref with version",
+        "include",
+        "exclude",
+        "model versions"
+      ],
+      "sources": [
+        {
+          "title": "source: [Model versions \u2014 dbt Docs",
+          "url": "https://docs.getdbt.com/docs/collaborate/govern/model-versions"
+        },
+        {
+          "title": "source: [deprecation_date \u2014 dbt Docs",
+          "url": "https://docs.getdbt.com/reference/resource-properties/deprecation_date"
+        }
+      ],
+      "related": [
+        "ae/02-model-governance/model-contracts"
+      ]
+    },
+    {
+      "id": "ae/03-debugging-modeling-errors/behaviour-flags",
+      "path": "knowledge/ae/03-debugging-modeling-errors/behaviour-flags.md",
+      "title": "Managing dbt behaviour with flags",
+      "track": "ae",
+      "domain": "ae-03",
+      "domain_title": "Debugging data modeling errors",
+      "domain_weight": null,
+      "verified": "2026-09-29",
+      "keywords": [
+        "`--fail-fast` / `-x`",
+        "`--warn-error` vs `--warn-error-options`",
+        "access",
+        "adapter",
+        "dbt_project.yml",
+        "decision rule",
+        "environment",
+        "error",
+        "merge",
+        "model",
+        "related",
+        "source",
+        "sso",
+        "test",
+        "trap",
+        "traps",
+        "why this is likely on the exam"
+      ],
+      "concepts": [
+        "--warn-error",
+        "--warn-error-options",
+        "WARN_ERROR",
+        "WARN_ERROR_OPTIONS",
+        "--fail-fast",
+        "-x",
+        "--quiet",
+        "--debug",
+        "partial_parse",
+        "behaviour flags"
+      ],
+      "sources": [
+        {
+          "title": "source: [Warnings \u2014 dbt Docs",
+          "url": "https://docs.getdbt.com/reference/global-configs/warnings"
+        },
+        {
+          "title": "source: [Failing fast \u2014 dbt Docs",
+          "url": "https://docs.getdbt.com/reference/global-configs/failing-fast"
+        },
+        {
+          "title": "source: [Parsing \u2014 dbt Docs",
+          "url": "https://docs.getdbt.com/reference/global-configs/parsing"
+        }
+      ],
+      "related": [
+        "ae/03-debugging-modeling-errors/compiled-code-and-logs"
+      ]
+    },
+    {
+      "id": "ae/03-debugging-modeling-errors/compiled-code-and-logs",
+      "path": "knowledge/ae/03-debugging-modeling-errors/compiled-code-and-logs.md",
+      "title": "Debugging with compiled code",
+      "track": "ae",
+      "domain": "ae-03",
+      "domain_title": "Debugging data modeling errors",
+      "domain_weight": null,
+      "verified": "2026-09-29",
+      "keywords": [
+        "access",
+        "adapter",
+        "analysis",
+        "dbt_project.yml",
+        "environment",
+        "error",
+        "jinja",
+        "logs",
+        "macro",
+        "materialization",
+        "model",
+        "related",
+        "selector",
+        "source",
+        "table",
+        "target",
+        "test",
+        "three commands people confuse",
+        "trap",
+        "traps",
+        "troubleshooting",
+        "what `dbt compile` is for",
+        "what `dbt debug` validates",
+        "why this is likely on the exam"
+      ],
+      "concepts": [
+        "dbt compile",
+        "target/compiled",
+        "target/run",
+        "dbt parse",
+        "dbt debug",
+        "--inline",
+        "execute",
+        "compiled SQL",
+        "logs/dbt.log"
+      ],
+      "sources": [
+        {
+          "title": "source: [About dbt compile command \u2014 dbt Docs",
+          "url": "https://docs.getdbt.com/reference/commands/compile"
+        },
+        {
+          "title": "source: [About dbt debug command \u2014 dbt Docs",
+          "url": "https://docs.getdbt.com/reference/commands/debug"
+        },
+        {
+          "title": "source: [Logs \u2014 dbt Docs",
+          "url": "https://docs.getdbt.com/reference/global-configs/logs"
+        }
+      ],
+      "related": [
+        "ae/03-debugging-modeling-errors/behaviour-flags"
+      ]
+    },
+    {
+      "id": "ae/03-debugging-modeling-errors/fix-and-verify-before-merge",
+      "path": "knowledge/ae/03-debugging-modeling-errors/fix-and-verify-before-merge.md",
+      "title": "Fixing and verifying before merge",
+      "track": "ae",
+      "domain": "ae-03",
+      "domain_title": "Debugging data modeling errors",
+      "domain_weight": null,
+      "verified": "2026-09-29",
+      "keywords": [
+        "`--favor-state`",
+        "access",
+        "ci job",
+        "continuous integration",
+        "dbt clone",
+        "dbt retry",
+        "defer",
+        "defer \u2014 building a subset without building its parents",
+        "environment",
+        "ephemeral",
+        "generate_schema_name",
+        "manifest",
+        "merge",
+        "model",
+        "notification",
+        "related",
+        "separate state for comparison and deferral",
+        "slim ci",
+        "source",
+        "state:modified",
+        "test",
+        "trap",
+        "traps",
+        "what a ci job does",
+        "when a `ref` actually gets deferred",
+        "why this is likely on the exam"
+      ],
+      "concepts": [
+        "CI job",
+        "continuous integration",
+        "Slim CI",
+        "--defer",
+        "--state",
+        "--favor-state",
+        "--defer-state",
+        "state:modified",
+        "temporary schema"
+      ],
+      "sources": [
+        {
+          "title": "source: [Continuous integration in dbt \u2014 dbt Docs",
+          "url": "https://docs.getdbt.com/docs/deploy/continuous-integration"
+        },
+        {
+          "title": "source: [Defer \u2014 dbt Docs",
+          "url": "https://docs.getdbt.com/reference/node-selection/defer"
+        }
+      ],
       "related": []
+    },
+    {
+      "id": "ae/03-debugging-modeling-errors/yaml-properties-vs-configs",
+      "path": "knowledge/ae/03-debugging-modeling-errors/yaml-properties-vs-configs.md",
+      "title": "YAML properties vs configs",
+      "track": "ae",
+      "domain": "ae-03",
+      "domain_title": "Debugging data modeling errors",
+      "domain_weight": null,
+      "verified": "2026-09-29",
+      "keywords": [
+        "access",
+        "consequences you can be tested on",
+        "dbt_project.yml",
+        "error",
+        "exposure",
+        "fix-and-verify loop for a yaml error",
+        "macro",
+        "merge",
+        "model",
+        "related",
+        "seed",
+        "snapshot",
+        "source",
+        "test",
+        "the distinction that causes most yaml errors",
+        "trap",
+        "traps",
+        "troubleshooting",
+        "why this is likely on the exam"
+      ],
+      "concepts": [
+        "properties",
+        "configs",
+        "properties.yml",
+        "config()",
+        "dbt_project.yml",
+        "config: selection method",
+        "inherit",
+        "override"
+      ],
+      "sources": [
+        {
+          "title": "source: [Configurations and properties \u2014 dbt Docs",
+          "url": "https://docs.getdbt.com/reference/configs-and-properties"
+        },
+        {
+          "title": "source: [Model properties \u2014 dbt Docs",
+          "url": "https://docs.getdbt.com/reference/model-properties"
+        },
+        {
+          "title": "source: [Add data tests to your DAG \u2014 dbt Docs",
+          "url": "https://docs.getdbt.com/docs/build/data-tests"
+        }
+      ],
+      "related": [
+        "ae/03-debugging-modeling-errors/compiled-code-and-logs",
+        "ae/03-debugging-modeling-errors/fix-and-verify-before-merge"
+      ]
+    },
+    {
+      "id": "ae/04-troubleshooting-pipelines/dag-failure-points",
+      "path": "knowledge/ae/04-troubleshooting-pipelines/dag-failure-points.md",
+      "title": "DAG failure points and selection",
+      "track": "ae",
+      "domain": "ae-04",
+      "domain_title": "Troubleshooting and optimizing dbt pipelines",
+      "domain_weight": null,
+      "verified": "2026-09-29",
+      "keywords": [
+        "`dbt retry`",
+        "access",
+        "dbt clone",
+        "dbt retry",
+        "environment",
+        "error",
+        "graph operator",
+        "model",
+        "re-running just the broken part",
+        "related",
+        "run_results",
+        "source",
+        "test",
+        "trap",
+        "traps",
+        "troubleshooting",
+        "what a failure does to the rest of the dag",
+        "why this is likely on the exam"
+      ],
+      "concepts": [
+        "graph operators",
+        "plus operator",
+        "n-plus",
+        "at operator",
+        "@",
+        "--exclude",
+        "skipping",
+        "on_error",
+        "run_results.json",
+        "dbt retry"
+      ],
+      "sources": [
+        {
+          "title": "source: [Graph operators \u2014 dbt Docs",
+          "url": "https://docs.getdbt.com/reference/node-selection/graph-operators"
+        },
+        {
+          "title": "source: [About dbt build command \u2014 dbt Docs",
+          "url": "https://docs.getdbt.com/reference/commands/build"
+        },
+        {
+          "title": "source: [About dbt retry command \u2014 dbt Docs",
+          "url": "https://docs.getdbt.com/reference/commands/retry"
+        }
+      ],
+      "related": [
+        "ae/04-troubleshooting-pipelines/dbt-clone"
+      ]
+    },
+    {
+      "id": "ae/04-troubleshooting-pipelines/dbt-clone",
+      "path": "knowledge/ae/04-troubleshooting-pipelines/dbt-clone.md",
+      "title": "`dbt clone`",
+      "track": "ae",
+      "domain": "ae-04",
+      "domain_title": "Troubleshooting and optimizing dbt pipelines",
+      "domain_weight": null,
+      "verified": "2026-09-29",
+      "keywords": [
+        "`dbt clone` vs deferral",
+        "access",
+        "ci job",
+        "dbt clone",
+        "dbt retry",
+        "decision rule",
+        "defer",
+        "environment",
+        "error",
+        "incremental",
+        "manifest",
+        "materialization",
+        "merge",
+        "model",
+        "related",
+        "source",
+        "table",
+        "target",
+        "test",
+        "threads",
+        "trap",
+        "traps",
+        "view",
+        "what it does",
+        "what it is useful for",
+        "why this is likely on the exam"
+      ],
+      "concepts": [
+        "dbt clone",
+        "clone materialization",
+        "zero-copy clone",
+        "pointer view",
+        "--state",
+        "--full-refresh",
+        "threads",
+        "blue/green"
+      ],
+      "sources": [
+        {
+          "title": "source: [About dbt clone command \u2014 dbt Docs",
+          "url": "https://docs.getdbt.com/reference/commands/clone"
+        },
+        {
+          "title": "source: [Defer \u2014 dbt Docs",
+          "url": "https://docs.getdbt.com/reference/node-selection/defer"
+        }
+      ],
+      "related": [
+        "ae/04-troubleshooting-pipelines/dag-failure-points"
+      ]
+    },
+    {
+      "id": "ae/05-implementing-tests/test-severity-and-workflow",
+      "path": "knowledge/ae/05-implementing-tests/test-severity-and-workflow.md",
+      "title": "Test severity and the testing workflow",
+      "track": "ae",
+      "domain": "ae-05",
+      "domain_title": "Implementing dbt tests",
+      "domain_weight": null,
+      "verified": "2026-09-29",
+      "keywords": [
+        "`store_failures`",
+        "access",
+        "error",
+        "how a test decides pass / warn / error",
+        "model",
+        "related",
+        "selector",
+        "source",
+        "table",
+        "test",
+        "trap",
+        "traps",
+        "unit test",
+        "where tests fit in the workflow",
+        "why this is likely on the exam"
+      ],
+      "concepts": [
+        "severity",
+        "error_if",
+        "warn_if",
+        "store_failures",
+        "store_failures_as",
+        "--warn-error",
+        "indirect selection",
+        "test_type selector",
+        "arguments"
+      ],
+      "sources": [
+        {
+          "title": "source: [severity, error_if, and warn_if \u2014 dbt Docs",
+          "url": "https://docs.getdbt.com/reference/resource-configs/severity"
+        },
+        {
+          "title": "source: [store_failures \u2014 dbt Docs",
+          "url": "https://docs.getdbt.com/reference/resource-configs/store_failures"
+        },
+        {
+          "title": "source: [About data tests property \u2014 dbt Docs",
+          "url": "https://docs.getdbt.com/reference/resource-properties/data-tests"
+        }
+      ],
+      "related": [
+        "ae/05-implementing-tests/test-types"
+      ]
+    },
+    {
+      "id": "ae/05-implementing-tests/test-types",
+      "path": "knowledge/ae/05-implementing-tests/test-types.md",
+      "title": "Test types: generic, singular, custom generic, unit",
+      "track": "ae",
+      "domain": "ae-05",
+      "domain_title": "Implementing dbt tests",
+      "domain_weight": null,
+      "verified": "2026-09-29",
+      "keywords": [
+        "access",
+        "custom generic tests",
+        "error",
+        "generic test",
+        "incremental",
+        "macro",
+        "materialization",
+        "model",
+        "package",
+        "prerequisites and unsupported cases",
+        "related",
+        "seed",
+        "selector",
+        "singular test",
+        "snapshot",
+        "source",
+        "table",
+        "test",
+        "the families",
+        "trap",
+        "traps",
+        "unit test",
+        "unit tests",
+        "view",
+        "where unit tests run",
+        "why this is likely on the exam"
+      ],
+      "concepts": [
+        "data test",
+        "generic test",
+        "singular test",
+        "custom generic test",
+        "unit test",
+        "not_null",
+        "unique",
+        "relationships",
+        "accepted_values",
+        "test block",
+        "tests/generic",
+        "test_type"
+      ],
+      "sources": [
+        {
+          "title": "source: [Add data tests to your DAG \u2014 dbt Docs",
+          "url": "https://docs.getdbt.com/docs/build/data-tests"
+        },
+        {
+          "title": "source: [Writing custom generic data tests \u2014 dbt Docs",
+          "url": "https://docs.getdbt.com/best-practices/writing-custom-generic-tests"
+        },
+        {
+          "title": "source: [Unit tests \u2014 dbt Docs",
+          "url": "https://docs.getdbt.com/docs/build/unit-tests"
+        }
+      ],
+      "related": [
+        "ae/05-implementing-tests/test-severity-and-workflow"
+      ]
+    },
+    {
+      "id": "ae/06-external-dependencies/exposures",
+      "path": "knowledge/ae/06-external-dependencies/exposures.md",
+      "title": "Exposures",
+      "track": "ae",
+      "domain": "ae-06",
+      "domain_title": "Implementing and maintaining external dependencies",
+      "domain_weight": null,
+      "verified": "2026-09-29",
+      "keywords": [
+        "access",
+        "analysis",
+        "dbt_project.yml",
+        "declaring one",
+        "exposure",
+        "manual vs automatic",
+        "model",
+        "model version",
+        "related",
+        "source",
+        "test",
+        "trap",
+        "traps",
+        "view",
+        "what defining one buys you",
+        "why this is likely on the exam"
+      ],
+      "concepts": [
+        "exposure",
+        "exposures",
+        "type",
+        "owner",
+        "depends_on",
+        "maturity",
+        "label",
+        "url",
+        "exposure: selection method"
+      ],
+      "sources": [
+        {
+          "title": "source: [Add Exposures to your DAG \u2014 dbt Docs",
+          "url": "https://docs.getdbt.com/docs/build/exposures"
+        },
+        {
+          "title": "source: [Exposure properties \u2014 dbt Docs",
+          "url": "https://docs.getdbt.com/reference/exposure-properties"
+        }
+      ],
+      "related": [
+        "ae/06-external-dependencies/source-freshness"
+      ]
+    },
+    {
+      "id": "ae/06-external-dependencies/source-freshness",
+      "path": "knowledge/ae/06-external-dependencies/source-freshness.md",
+      "title": "Source freshness",
+      "track": "ae",
+      "domain": "ae-06",
+      "domain_title": "Implementing and maintaining external dependencies",
+      "domain_weight": null,
+      "verified": "2026-09-29",
+      "keywords": [
+        "access",
+        "adapter",
+        "error",
+        "exposure",
+        "model",
+        "related",
+        "running the check",
+        "source",
+        "table",
+        "test",
+        "the config",
+        "the rules that decide questions",
+        "trap",
+        "traps",
+        "why this is likely on the exam"
+      ],
+      "concepts": [
+        "freshness",
+        "warn_after",
+        "error_after",
+        "loaded_at_field",
+        "loaded_at_query",
+        "filter",
+        "count",
+        "period",
+        "dbt source freshness",
+        "sources.json"
+      ],
+      "sources": [
+        {
+          "title": "source: [freshness \u2014 dbt Docs",
+          "url": "https://docs.getdbt.com/reference/resource-properties/freshness"
+        },
+        {
+          "title": "source: [About dbt source command \u2014 dbt Docs",
+          "url": "https://docs.getdbt.com/reference/commands/source"
+        },
+        {
+          "title": "source: [Add sources to your DAG \u2014 dbt Docs",
+          "url": "https://docs.getdbt.com/docs/build/sources"
+        }
+      ],
+      "related": [
+        "ae/06-external-dependencies/exposures"
+      ]
+    },
+    {
+      "id": "ae/07-dbt-state/dbt-retry",
+      "path": "knowledge/ae/07-dbt-state/dbt-retry.md",
+      "title": "`dbt retry`",
+      "track": "ae",
+      "domain": "ae-07",
+      "domain_title": "Leveraging the dbt state",
+      "domain_weight": null,
+      "verified": "2026-09-29",
+      "keywords": [
+        "access",
+        "dbt clone",
+        "dbt retry",
+        "decision rule",
+        "defer",
+        "environment",
+        "error",
+        "flags",
+        "incremental",
+        "model",
+        "package",
+        "related",
+        "run_results",
+        "selector",
+        "source",
+        "state:modified",
+        "table",
+        "target",
+        "test",
+        "the three cases you can be tested on",
+        "threads",
+        "trap",
+        "traps",
+        "troubleshooting",
+        "vars",
+        "what it does",
+        "why this is likely on the exam"
+      ],
+      "concepts": [
+        "dbt retry",
+        "run_results.json",
+        "point of failure",
+        "no operation",
+        "--threads",
+        "--vars"
+      ],
+      "sources": [
+        {
+          "title": "source: [About dbt retry command \u2014 dbt Docs",
+          "url": "https://docs.getdbt.com/reference/commands/retry"
+        }
+      ],
+      "related": [
+        "ae/07-dbt-state/state-selection"
+      ]
+    },
+    {
+      "id": "ae/07-dbt-state/state-selection",
+      "path": "knowledge/ae/07-dbt-state/state-selection.md",
+      "title": "State and state selection",
+      "track": "ae",
+      "domain": "ae-07",
+      "domain_title": "Leveraging the dbt state",
+      "domain_weight": null,
+      "verified": "2026-09-29",
+      "keywords": [
+        "`state:modified` subselectors",
+        "`state:modified` vs `--defer` vs `--favor-state`",
+        "access",
+        "caveats that decide exam questions",
+        "contract",
+        "defer",
+        "error",
+        "exposure",
+        "group",
+        "macro",
+        "manifest",
+        "materialization",
+        "merge",
+        "model",
+        "persist_docs",
+        "related",
+        "seed",
+        "selector",
+        "slim ci",
+        "source",
+        "state:modified",
+        "target",
+        "test",
+        "the four state selectors",
+        "trap",
+        "traps",
+        "vars",
+        "what does *not* count as modified",
+        "why this is likely on the exam"
+      ],
+      "concepts": [
+        "state",
+        "--state",
+        "state:new",
+        "state:modified",
+        "state:old",
+        "state:unmodified",
+        "state:modified.body",
+        "state:modified.configs",
+        "state:modified.contract",
+        "manifest",
+        "Slim CI"
+      ],
+      "sources": [
+        {
+          "title": "source: [Node selector methods \u2014 dbt Docs",
+          "url": "https://docs.getdbt.com/reference/node-selection/methods"
+        },
+        {
+          "title": "source: [Caveats to state comparison \u2014 dbt Docs",
+          "url": "https://docs.getdbt.com/reference/node-selection/state-comparison-caveats"
+        },
+        {
+          "title": "source: [Defer \u2014 dbt Docs",
+          "url": "https://docs.getdbt.com/reference/node-selection/defer"
+        }
+      ],
+      "related": [
+        "ae/07-dbt-state/dbt-retry"
+      ]
     }
   ]
 }
