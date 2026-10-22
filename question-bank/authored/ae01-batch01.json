@@ -5,7 +5,6 @@
     "blueprint_task": "1.11",
     "qtype": "multiple_choice",
     "difficulty_estimate": "L3",
-
     "stem": "An orders model loads roughly 50 million new rows a day. The upstream system occasionally re-sends a record that was already loaded, and the table must end up with one row per order rather than two. Every record carries a stable `order_id`, and the warehouse supports MERGE. Which incremental configuration meets these requirements?",
     "option_texts": {
       "A": "Configure `incremental_strategy='append'` with `unique_key='order_id'`",
@@ -15,10 +14,10 @@
     },
     "drill_answer": "B",
     "drill_answer_short": "merge with a unique_key — it updates the existing row instead of inserting a second one",
-
     "decision_hinge": "merge inserts records with a unique_key that do not exist yet in the destination table and updates records with keys that do exist, mirroring the logic of SCD1.",
-    "sources": ["https://docs.getdbt.com/docs/build/incremental-strategy"],
-
+    "sources": [
+      "https://docs.getdbt.com/docs/build/incremental-strategy"
+    ],
     "plausible_options": {
       "C": "The upstream system occasionally re-sends a record that was already loaded"
     },
@@ -37,16 +36,16 @@
       "C": "T3: merge without a unique_key silently behaves like the append strategy",
       "D": "T8: scope error — insert_overwrite replaces whole partitions, not individual re-sent rows"
     },
-    "topics": ["ae/01-developing-and-optimizing-models/incremental-models"]
+    "topics": [
+      "ae/01-developing-and-optimizing-models/incremental-models"
+    ]
   },
-
   {
     "id": "draft-ae01-microbatch-required-configs",
     "domain": "ae-01",
     "blueprint_task": "1.14",
     "qtype": "multiple_response",
     "difficulty_estimate": "L2",
-
     "stem": "A team converts a large time-series model to `incremental_strategy='microbatch'`. The model must build without dbt reporting a missing required configuration. Which configs are required for a microbatch model?",
     "option_texts": {
       "A": "`event_time` — the column indicating when the row occurred",
@@ -57,10 +56,10 @@
     },
     "drill_answer": "A,B,C",
     "drill_answer_short": "event_time, begin, and batch_size are the three required microbatch configs",
-
     "decision_hinge": "Several configurations are relevant to microbatch models, and some are required: event_time, begin, and batch_size are required, while lookback and concurrent_batches are optional.",
-    "sources": ["https://docs.getdbt.com/docs/build/incremental-microbatch"],
-
+    "sources": [
+      "https://docs.getdbt.com/docs/build/incremental-microbatch"
+    ],
     "plausible_options": {
       "D": "The model must build without dbt reporting a missing required configuration"
     },
@@ -74,16 +73,16 @@
       "D": "T8: scope error — lookback tunes how far back batches reprocess, defaulting to 1; it is not required to build",
       "E": "T3: concurrent_batches is a real microbatch config but optional, overriding dbt's auto-detection"
     },
-    "topics": ["ae/01-developing-and-optimizing-models/microbatch"]
+    "topics": [
+      "ae/01-developing-and-optimizing-models/microbatch"
+    ]
   },
-
   {
     "id": "draft-ae01-microbatch-upstream-event-time",
     "domain": "ae-01",
     "blueprint_task": "1.14",
     "qtype": "multiple_choice",
     "difficulty_estimate": "L4",
-
     "stem": "A microbatch model named `sessions` joins a large time-series model, `page_views`, to a small dimension model, `customers`. `page_views` configures `event_time`; `customers` does not. Warehouse spend for the daily run is far higher than the team expected, and they must reduce it without changing the join. What accounts for the cost?",
     "option_texts": {
       "A": "dbt collapses to a single batch because one parent lacks `event_time`",
@@ -93,10 +92,10 @@
     },
     "drill_answer": "C",
     "drill_answer_short": "An upstream model without event_time is not filtered, so every batch full-scans it",
-
     "decision_hinge": "For incremental microbatch models, if your upstream models don't have event_time configured, dbt cannot automatically filter them during batch processing and will perform full table scans on every batch run.",
-    "sources": ["https://docs.getdbt.com/docs/build/incremental-microbatch"],
-
+    "sources": [
+      "https://docs.getdbt.com/docs/build/incremental-microbatch"
+    ],
     "plausible_options": {
       "B": "Warehouse spend for the daily run is far higher than the team expected"
     },
@@ -115,57 +114,57 @@
       "B": "T5: right symptom family, wrong cause — concurrency affects peak load, not the volume each batch scans",
       "D": "T3: partition_by groups rows into partitions; event_time defines the time range dbt filters on"
     },
-    "topics": ["ae/01-developing-and-optimizing-models/microbatch"]
+    "topics": [
+      "ae/01-developing-and-optimizing-models/microbatch"
+    ]
   },
-
   {
     "id": "draft-ae01-snapshot-hard-deletes",
     "domain": "ae-01",
     "blueprint_task": "1.10",
     "qtype": "multiple_choice",
     "difficulty_estimate": "L3",
-
     "stem": "A snapshot uses the `timestamp` strategy on a source table where rows are occasionally deleted outright. The snapshot must close out the validity window of a row once it disappears from the source, rather than leaving it marked current. The project runs dbt 1.9 or later. Which config should the team add?",
     "option_texts": {
-      "A": "Set `hard_deletes: invalidate` on the snapshot",
+      "A": "Set `dbt_valid_to_current: '9999-12-31'` on the snapshot",
       "B": "Set `invalidate_hard_deletes=true` on the snapshot",
       "C": "Set `hard_deletes: new_record` on the snapshot",
-      "D": "Set `dbt_valid_to_current: '9999-12-31'` on the snapshot"
+      "D": "Set `hard_deletes: invalidate` on the snapshot"
     },
-    "drill_answer": "A",
+    "drill_answer": "D",
     "drill_answer_short": "hard_deletes: invalidate — the current key that replaced invalidate_hard_deletes",
-
     "decision_hinge": "hard_deletes specifies how to handle deleted rows from the source. Supported options are ignore (default), invalidate (replaces the legacy invalidate_hard_deletes=true), and new_record.",
-    "sources": ["https://docs.getdbt.com/docs/build/snapshots"],
-
+    "sources": [
+      "https://docs.getdbt.com/docs/build/snapshots"
+    ],
     "plausible_options": {
       "C": "The snapshot must close out the validity window of a row once it disappears from the source"
     },
     "eliminated_by": {
+      "A": {
+        "signal": "rows are occasionally deleted outright",
+        "requires_fact": "Set a custom indicator for the value of dbt_valid_to in current snapshot records (like a future date)."
+      },
       "B": {
         "signal": "The project runs dbt 1.9 or later",
         "requires_fact": "Supported options are ignore (default), invalidate (replaces the legacy invalidate_hard_deletes=true), and new_record."
-      },
-      "D": {
-        "signal": "rows are occasionally deleted outright",
-        "requires_fact": "Set a custom indicator for the value of dbt_valid_to in current snapshot records (like a future date)."
       }
     },
     "distractor_traps": {
+      "A": "T2: dbt_valid_to_current changes the sentinel used for current records; it does not detect deletions",
       "B": "T6: stale behaviour — invalidate_hard_deletes=true is the legacy key that hard_deletes replaced in v1.9",
-      "C": "T3: new_record adds a new row recording the deletion instead of closing the existing row",
-      "D": "T2: dbt_valid_to_current changes the sentinel used for current records; it does not detect deletions"
+      "C": "T3: new_record adds a new row recording the deletion instead of closing the existing row"
     },
-    "topics": ["ae/01-developing-and-optimizing-models/snapshots"]
+    "topics": [
+      "ae/01-developing-and-optimizing-models/snapshots"
+    ]
   },
-
   {
     "id": "draft-ae01-empty-dry-run",
     "domain": "ae-01",
     "blueprint_task": "1.12",
     "qtype": "multiple_choice",
     "difficulty_estimate": "L3",
-
     "stem": "An engineer adds three columns to a model and needs to confirm, before opening a pull request, that the model compiles, that its dependencies resolve, and that the built relation has the expected column names and types. The check must avoid expensive reads of the input tables, and no row values are needed. Which command does this?",
     "option_texts": {
       "A": "Run `dbt compile --select my_model`",
@@ -175,14 +174,12 @@
     },
     "drill_answer": "D",
     "drill_answer_short": "dbt run --empty — a schema-only dry run that limits refs and sources to zero rows",
-
     "decision_hinge": "The run command supports the --empty flag for building schema-only dry runs. The --empty flag limits the refs and sources to zero rows. dbt will still execute the model SQL against the target data warehouse but will avoid expensive reads of input data.",
     "sources": [
       "https://docs.getdbt.com/reference/commands/run",
       "https://docs.getdbt.com/reference/commands/show",
       "https://docs.getdbt.com/docs/dbt-versions/core-upgrade/upgrading-to-v1.10"
     ],
-
     "plausible_options": {
       "A": "that the model compiles, that its dependencies resolve"
     },
@@ -201,33 +198,39 @@
       "B": "T2: dbt show previews one node's query result in the terminal rather than validating a build",
       "C": "T3: --sample filters inputs by time to return real rows; --empty reduces them to zero"
     },
-    "topics": ["ae/01-developing-and-optimizing-models/dry-runs-and-sampling"]
+    "topics": [
+      "ae/01-developing-and-optimizing-models/dry-runs-and-sampling"
+    ]
   },
-
   {
     "id": "draft-ae01-sample-flag-blank",
     "domain": "ae-01",
     "blueprint_task": "1.13",
     "qtype": "fill_in_blank",
     "difficulty_estimate": "L2",
-
     "stem": "A developer needs to validate a model's output on a recent slice of data without building the entire model. Available for the `run` and `build` commands, the ____ flag runs dbt in sample mode, generating filtered refs and sources using time-based sampling.",
     "drill_answer": "--sample",
-    "accepted_answers": ["--sample", "sample", "--sample flag", "-sample"],
+    "accepted_answers": [
+      "--sample",
+      "sample",
+      "--sample flag",
+      "-sample"
+    ],
     "drill_answer_short": "--sample",
-
     "decision_hinge": "The --sample flag, available for the run and build commands, helps reduce build times and warehouse costs by running dbt in sample mode. It generates filtered refs and sources using time-based sampling, allowing developers to validate outputs without building entire models.",
-    "sources": ["https://docs.getdbt.com/docs/dbt-versions/core-upgrade/upgrading-to-v1.10"],
-    "topics": ["ae/01-developing-and-optimizing-models/dry-runs-and-sampling"]
+    "sources": [
+      "https://docs.getdbt.com/docs/dbt-versions/core-upgrade/upgrading-to-v1.10"
+    ],
+    "topics": [
+      "ae/01-developing-and-optimizing-models/dry-runs-and-sampling"
+    ]
   },
-
   {
     "id": "draft-ae01-grants-clobber",
     "domain": "ae-01",
     "blueprint_task": "1.9",
     "qtype": "multiple_choice",
     "difficulty_estimate": "L4",
-
     "stem": "A project sets `+grants: {select: ['user_a', 'user_b']}` for all models in `dbt_project.yml`. One model also sets `grants = {'select': ['user_c']}` in its own config block. After that model builds, the team must be able to say which principals hold `select` on it. Which statement is correct?",
     "option_texts": {
       "A": "The model grants `select` to `user_a` and `user_b` only",
@@ -237,10 +240,10 @@
     },
     "drill_answer": "B",
     "drill_answer_short": "user_c only — the more specific config clobbers the project-level grantees",
-
     "decision_hinge": "When you set grants for the same model in multiple places, dbt's default behavior replaces the less-specific set of grantees with the more-specific set of grantees. This merge and clobber behavior updates each privilege when dbt parses your project.",
-    "sources": ["https://docs.getdbt.com/reference/resource-configs/grants"],
-
+    "sources": [
+      "https://docs.getdbt.com/reference/resource-configs/grants"
+    ],
     "plausible_options": {
       "C": "One model also sets `grants = {'select': ['user_c']}` in its own config block"
     },
@@ -256,51 +259,57 @@
       "C": "T3: the addition prefix would produce this, but it must be written as '+select' inside the dictionary",
       "D": "T1: dbt does not treat overlapping grants configs as a conflict; there is no such error"
     },
-    "topics": ["ae/01-developing-and-optimizing-models/grants"]
+    "topics": [
+      "ae/01-developing-and-optimizing-models/grants"
+    ]
   },
-
   {
     "id": "draft-ae01-grants-plus-prefix-blank",
     "domain": "ae-01",
     "blueprint_task": "1.9",
     "qtype": "fill_in_blank",
     "difficulty_estimate": "L3",
-
     "stem": "A model must add `user_c` to the project-level `select` grantees rather than replacing that list entirely. Written inside the model's `grants` dictionary, the privilege key that switches dbt from clobbering to adding is ____.",
     "drill_answer": "'+select'",
-    "accepted_answers": ["'+select'", "+select", "+select:", "+ select"],
+    "accepted_answers": [
+      "'+select'",
+      "+select",
+      "+select:",
+      "+ select"
+    ],
     "drill_answer_short": "'+select' — the + addition prefix on the privilege name",
-
     "decision_hinge": "To add user_c to the existing list of grantees receiving the select privilege rather than replacing that list entirely, use the + addition symbol, prefixing the name of the privilege.",
-    "sources": ["https://docs.getdbt.com/reference/resource-configs/grants"],
-    "topics": ["ae/01-developing-and-optimizing-models/grants"]
+    "sources": [
+      "https://docs.getdbt.com/reference/resource-configs/grants"
+    ],
+    "topics": [
+      "ae/01-developing-and-optimizing-models/grants"
+    ]
   },
-
   {
     "id": "draft-ae01-private-package-dependencies-yml",
     "domain": "ae-01",
     "blueprint_task": "1.7",
     "qtype": "multiple_choice",
     "difficulty_estimate": "L5",
-
     "stem": "A project installs two dbt Hub packages and one private Git package whose specification uses a Jinja-rendered access token. The team wants to adopt cross-project references, which requires `dependencies.yml`, and must keep the private package installable. Which arrangement works?",
     "option_texts": {
-      "A": "Declare the hub packages and cross-project refs in `dependencies.yml`, keeping the private package in `packages.yml`",
+      "A": "Declare everything in `packages.yml`, which also accepts cross-project refs",
       "B": "Declare all three packages and the cross-project refs in `dependencies.yml`",
-      "C": "Declare everything in `packages.yml`, which also accepts cross-project refs",
+      "C": "Declare the hub packages and cross-project refs in `dependencies.yml`, keeping the private package in `packages.yml`",
       "D": "Declare the private package in `dependencies.yml` and leave the two hub packages in `packages.yml`"
     },
-    "drill_answer": "A",
+    "drill_answer": "C",
     "drill_answer_short": "Split them: dependencies.yml cannot hold a private package, because it does not render Jinja",
-
     "decision_hinge": "Private packages are not supported in dependencies.yml because they intentionally don't support Jinja rendering or conditional configuration.",
-    "sources": ["https://docs.getdbt.com/docs/build/packages"],
-
+    "sources": [
+      "https://docs.getdbt.com/docs/build/packages"
+    ],
     "plausible_options": {
       "B": "The team wants to adopt cross-project references, which requires `dependencies.yml`"
     },
     "eliminated_by": {
-      "C": {
+      "A": {
         "signal": "The team wants to adopt cross-project references, which requires `dependencies.yml`",
         "requires_fact": "Use dependencies.yml when you need to set up cross-project references between different dbt projects, especially in a dbt Mesh setup."
       },
@@ -310,20 +319,20 @@
       }
     },
     "distractor_traps": {
+      "A": "T3: packages.yml handles package dependencies only — cross-project refs need dependencies.yml",
       "B": "T6: treats dependencies.yml as a drop-in rename of packages.yml, which breaks the private package",
-      "C": "T3: packages.yml handles package dependencies only — cross-project refs need dependencies.yml",
       "D": "T8: scope error — it puts exactly the one package that cannot live in dependencies.yml there"
     },
-    "topics": ["ae/01-developing-and-optimizing-models/packages"]
+    "topics": [
+      "ae/01-developing-and-optimizing-models/packages"
+    ]
   },
-
   {
     "id": "draft-ae01-build-test-severity",
     "domain": "ae-01",
     "blueprint_task": "1.4",
     "qtype": "multiple_choice",
     "difficulty_estimate": "L4",
-
     "stem": "In a project run with `dbt build`, `model_b` depends on `model_a`. A `unique` test on `model_a` starts failing on a data issue the team cannot fix today, and `model_b` must keep building on schedule while the failure stays visible in the logs. What should the team change?",
     "option_texts": {
       "A": "Set the `unique` test's `store_failures` config to `true`",
@@ -333,13 +342,11 @@
     },
     "drill_answer": "C",
     "drill_answer_short": "Set the test's severity to warn so it no longer blocks downstream models",
-
     "decision_hinge": "Tests on upstream resources will block downstream resources from running, and a test failure will cause those downstream resources to skip entirely. Don't want a test to cause skipping? Adjust its severity or thresholds to warn instead of error.",
     "sources": [
       "https://docs.getdbt.com/reference/commands/build",
       "https://docs.getdbt.com/reference/resource-configs/store_failures"
     ],
-
     "plausible_options": {
       "D": "`model_b` must keep building on schedule while the failure stays visible in the logs"
     },
@@ -358,16 +365,16 @@
       "B": "T4: excluding model_a stops building the very upstream model model_b depends on",
       "D": "T7: over-engineering — abandoning dbt build loses DAG-order execution to work around one test"
     },
-    "topics": ["ae/01-developing-and-optimizing-models/dbt-commands"]
+    "topics": [
+      "ae/01-developing-and-optimizing-models/dbt-commands"
+    ]
   },
-
   {
     "id": "draft-ae01-show-compiles-from-source",
     "domain": "ae-01",
     "blueprint_task": "1.4",
     "qtype": "multiple_choice",
     "difficulty_estimate": "L4",
-
     "stem": "An analyst runs `dbt run --select customers`, then immediately runs `dbt show --select customers`. The previewed rows do not match what a warehouse client returns for the same table, and the team must explain the discrepancy before changing anything. What accounts for it?",
     "option_texts": {
       "A": "dbt show reads the built table but caps the preview at five rows",
@@ -377,10 +384,10 @@
     },
     "drill_answer": "D",
     "drill_answer_short": "dbt show always compiles and runs from source; it never selects the materialized relation",
-
     "decision_hinge": "If previewing a model, dbt will always compile and run the compiled query from source. It will not select from the already-materialized database relation, even if you've just run the model.",
-    "sources": ["https://docs.getdbt.com/reference/commands/show"],
-
+    "sources": [
+      "https://docs.getdbt.com/reference/commands/show"
+    ],
     "plausible_options": {
       "A": "The previewed rows do not match what a warehouse client returns for the same table"
     },
@@ -399,16 +406,16 @@
       "B": "T1: dbt show does not read run_results.json; there is no such preview path",
       "C": "T3: dbt compile is the command that renders SQL without executing it"
     },
-    "topics": ["ae/01-developing-and-optimizing-models/dbt-commands"]
+    "topics": [
+      "ae/01-developing-and-optimizing-models/dbt-commands"
+    ]
   },
-
   {
     "id": "draft-ae01-flag-precedence",
     "domain": "ae-01",
     "blueprint_task": "1.6",
     "qtype": "multiple_choice",
     "difficulty_estimate": "L4",
-
     "stem": "A project sets `flags: {fail_fast: true}` in `dbt_project.yml`. A developer exports `DBT_ENGINE_FAIL_FAST=0` and then runs `dbt build --fail-fast`. The team must predict whether the invocation stops at the first failure. Which setting governs the run?",
     "option_texts": {
       "A": "The environment variable, because it was exported closest to the invocation",
@@ -418,13 +425,11 @@
     },
     "drill_answer": "B",
     "drill_answer_short": "The CLI option wins — the most specific setting takes precedence",
-
     "decision_hinge": "The most specific setting wins. CLI options take the highest precedence, followed by environment variables, then dbt_project.yml, and finally user_settings.yml.",
     "sources": [
       "https://docs.getdbt.com/reference/global-configs/command-line-options",
       "https://docs.getdbt.com/reference/global-configs/about-global-configs"
     ],
-
     "plausible_options": {
       "A": "A developer exports `DBT_ENGINE_FAIL_FAST=0` and then runs `dbt build --fail-fast`"
     },
@@ -443,6 +448,8 @@
       "C": "T8: scope error — project flags are the version-controlled default, which an invocation may override",
       "D": "T2: user_settings.yml holds machine-wide personal preferences and has the lowest precedence"
     },
-    "topics": ["ae/01-developing-and-optimizing-models/project-config-and-flags"]
+    "topics": [
+      "ae/01-developing-and-optimizing-models/project-config-and-flags"
+    ]
   }
 ]

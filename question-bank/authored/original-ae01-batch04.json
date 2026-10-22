@@ -1,0 +1,263 @@
+[
+  {
+    "id": "draft-orig-ae01-empty-vs-sample",
+    "domain": "ae-01",
+    "blueprint_task": "1.13",
+    "qtype": "multiple_choice",
+    "difficulty_estimate": "L3",
+    "stem": "A developer wants to preview plausible output values for a model over a recent time window before a full build, without scanning the entire historical dataset. The developer needs a flag available for `dbt run` and `dbt build` that still executes the model SQL but filters input rows by time rather than returning zero rows. Which flag fits, and why?",
+    "option_texts": {
+      "A": "`--empty`, because it limits refs and sources to zero rows for a recent check while dbt still executes the model SQL",
+      "B": "`--sample`, because it generates filtered refs and sources using time-based sampling to validate outputs over a recent period",
+      "C": "`--limit`, because it modifies the underlying SQL to return only a set number of rows from a single `dbt show` call",
+      "D": "`dbt compile`, because it shows the resulting SQL without touching the warehouse at all"
+    },
+    "drill_answer": "B",
+    "drill_answer_short": "--sample generates time-filtered refs and sources for the run and build commands",
+    "decision_hinge": "The --sample flag, available for the run and build commands, helps reduce build times and warehouse costs by running dbt in sample mode. It generates filtered refs and sources using time-based sampling, allowing developers to validate outputs without building entire models.",
+    "sources": [
+      "https://docs.getdbt.com/docs/dbt-versions/core-upgrade/upgrading-to-v1.10",
+      "https://docs.getdbt.com/reference/commands/run",
+      "https://docs.getdbt.com/reference/commands/show"
+    ],
+    "plausible_options": {
+      "A": "without scanning the entire historical dataset"
+    },
+    "eliminated_by": {
+      "C": {
+        "signal": "a flag available for `dbt run` and `dbt build`",
+        "requires_fact": "The --limit flag modifies the underlying SQL and not just the number of rows displayed, for a single dbt show call, not a project-wide build."
+      },
+      "D": "still executes the model SQL but filters input rows by time rather than returning zero rows"
+    },
+    "distractor_traps": {
+      "A": "T3: confusable sibling — --empty returns zero rows, so there is nothing to preview; --sample filters by time instead",
+      "C": "T8: scope error — --limit previews one node's row count for dbt show, not a filtered build across the DAG",
+      "D": "T4: breaks a stated requirement — dbt compile never executes the model SQL against the warehouse"
+    },
+    "topics": [
+      "ae/01-developing-and-optimizing-models/dry-runs-and-sampling"
+    ]
+  },
+  {
+    "id": "draft-orig-ae01-seed-column-types",
+    "domain": "ae-01",
+    "blueprint_task": "1.4",
+    "qtype": "multiple_choice",
+    "difficulty_estimate": "L2",
+    "stem": "A seed file `warehouse_locations.csv` has a `zipcode` column with values like `00501`. After running `dbt seed`, the leading zero disappears because dbt inferred the column as a numeric type. The team needs the zip codes stored as the original text, preserving leading zeros, without hand-editing the generated DDL. What should they configure?",
+    "option_texts": {
+      "A": "A test on the zipcode column requiring the value to match a 5-digit pattern",
+      "B": "A post-hook on the seed that casts the column to `varchar` after `dbt seed` finishes",
+      "C": "A `column_types` config on the seed, setting `zipcode` to a `varchar` type of the right length",
+      "D": "Rename the CSV column header to `zipcode_text`, which forces dbt to treat it as a string"
+    },
+    "drill_answer": "C",
+    "drill_answer_short": "column_types lets you explicitly set a seed column's datatype, such as varchar for leading zeros",
+    "decision_hinge": "dbt will infer the datatype for each column based on the data in your CSV. You can also explicitly set a datatype using the column_types configuration. If you need to preserve leading zeros, include leading zeros in your seed file, and use the column_types configuration with a varchar datatype of the correct length.",
+    "sources": [
+      "https://docs.getdbt.com/docs/build/seeds"
+    ],
+    "plausible_options": {
+      "B": "without hand-editing the generated DDL"
+    },
+    "eliminated_by": {
+      "A": "After running `dbt seed`, the leading zero disappears because dbt inferred the column as a numeric type",
+      "D": {
+        "signal": "The team needs the zip codes stored as the original text, preserving leading zeros",
+        "requires_fact": "dbt will infer the datatype for each column based on the data in your CSV; you can also explicitly set a datatype using the column_types configuration."
+      }
+    },
+    "distractor_traps": {
+      "A": "T2: wrong layer — a test validates data, it does not change an inferred column type",
+      "B": "T7: over-engineering — a documented config already does this without a hand-written hook",
+      "D": "T1: fabricated — renaming a CSV header does not change how dbt infers its type"
+    },
+    "topics": [
+      "ae/01-developing-and-optimizing-models/dbt-commands"
+    ]
+  },
+  {
+    "id": "draft-orig-ae01-seed-ref-usage",
+    "domain": "ae-01",
+    "blueprint_task": "1.4",
+    "qtype": "multiple_choice",
+    "difficulty_estimate": "L2",
+    "stem": "A CSV file `seed_full_moon_dates.csv` sits in the project's `seeds/` directory. A mart model needs to join against this data and also needs dbt to track the dependency so lineage and selection include the seed. How should the mart model query this data?",
+    "option_texts": {
+      "A": "Reference it with `{{ this }}`, since seeds are always materialized in the model's own schema",
+      "B": "Reference it with `{{ source('seeds', 'seed_full_moon_dates') }}`, since seeds are raw data dbt did not transform",
+      "C": "Query the CSV file path directly in the model's FROM clause",
+      "D": "Reference it with `{{ ref('seed_full_moon_dates') }}`, the same function used for models"
+    },
+    "drill_answer": "D",
+    "drill_answer_short": "A seed is referenced with ref(), the same function used for models",
+    "decision_hinge": "You can run models downstream of a seed using the model selection syntax, and treating the seed like a model.",
+    "sources": [
+      "https://docs.getdbt.com/docs/build/seeds"
+    ],
+    "plausible_options": {
+      "B": "sits in the project's `seeds/` directory"
+    },
+    "eliminated_by": {
+      "A": {
+        "signal": "A mart model needs to join against this data and also needs dbt to track the dependency",
+        "requires_fact": "A seed is referenced using the model selection syntax, treating the seed like a model, and this refers to the current model being built, not every seed in the project."
+      },
+      "C": "also needs dbt to track the dependency so lineage and selection include the seed"
+    },
+    "distractor_traps": {
+      "A": "T1: fabricated — `this` refers to the current model, not an unrelated seed",
+      "B": "T3: confusable sibling — a seed is a dbt-built resource referenced with ref(), unlike a source dbt never builds",
+      "C": "T1: fabricated — querying the file path directly gives dbt no dependency to track"
+    },
+    "topics": [
+      "ae/01-developing-and-optimizing-models/dbt-commands"
+    ]
+  },
+  {
+    "id": "draft-orig-ae01-jinja-comment-syntax",
+    "domain": "ae-01",
+    "blueprint_task": "1.3",
+    "qtype": "multiple_choice",
+    "difficulty_estimate": "L2",
+    "stem": "An engineer adds an explanatory note inside a model's Jinja template and needs the note to disappear completely from the compiled SQL dbt sends to the warehouse; it must not even appear as a SQL comment. Which syntax achieves this, and why?",
+    "option_texts": {
+      "A": "`{# note text #}`, because Jinja comments are removed before the text can execute or output anything",
+      "B": "`-- note text`, because SQL line comments are stripped by dbt before execution",
+      "C": "`{% comment %}note text{% endcomment %}`, because the comment tag blocks it from compiling",
+      "D": "`/* note text */`, because block comments are interpreted by Jinja and discarded"
+    },
+    "drill_answer": "A",
+    "drill_answer_short": "Jinja comments use {# ... #} and never reach the compiled SQL",
+    "decision_hinge": "Jinja comments, written as {# ... #}, are used to prevent the text within the comment from executing or outputting a string. Don't use -- for comment.",
+    "sources": [
+      "https://docs.getdbt.com/docs/build/jinja-macros"
+    ],
+    "plausible_options": {
+      "B": "disappear completely from the compiled SQL dbt sends to the warehouse"
+    },
+    "eliminated_by": {
+      "C": "must not even appear as a SQL comment",
+      "D": "must not even appear as a SQL comment"
+    },
+    "distractor_traps": {
+      "B": "T3: confusable sibling — a SQL line comment is valid SQL syntax, not a Jinja construct dbt strips",
+      "C": "T1: fabricated — dbt and Jinja define no such comment tag",
+      "D": "T3: confusable sibling — a SQL block comment still compiles into the SQL text, it is just ignored by the database engine"
+    },
+    "topics": [
+      "ae/01-developing-and-optimizing-models/dbt-commands"
+    ]
+  },
+  {
+    "id": "draft-orig-ae01-dbt-deps-command",
+    "domain": "ae-01",
+    "blueprint_task": "1.7",
+    "qtype": "multiple_choice",
+    "difficulty_estimate": "L1",
+    "stem": "A `packages.yml` file lists two packages, including `dbt-labs/dbt_utils`. After editing this file, the macros from `dbt_utils` are still not resolving in any model. The developer needs the one command that actually pulls those dependencies into the project before anything else will work. Which command is it?",
+    "option_texts": {
+      "A": "`dbt deps`, because it pulls the most recent version of the dependencies listed in packages.yml from git",
+      "B": "`dbt install`, because installing packages is a dedicated dbt command separate from building models",
+      "C": "`dbt run`, because dbt automatically resolves packages.yml dependencies the first time a model builds",
+      "D": "`dbt parse`, because parsing the project triggers package resolution as a side effect"
+    },
+    "drill_answer": "A",
+    "drill_answer_short": "dbt deps pulls the dependencies listed in packages.yml from git",
+    "decision_hinge": "dbt deps pulls the most recent version of the dependencies listed in your packages.yml from git.",
+    "sources": [
+      "https://docs.getdbt.com/reference/commands/deps"
+    ],
+    "plausible_options": {
+      "D": "the macros from `dbt_utils` are still not resolving in any model"
+    },
+    "eliminated_by": {
+      "B": "pulls those dependencies into the project before anything else will work",
+      "C": {
+        "signal": "the macros from `dbt_utils` are still not resolving in any model",
+        "requires_fact": "dbt deps pulls the most recent version of the dependencies listed in your packages.yml from git."
+      }
+    },
+    "distractor_traps": {
+      "B": "T1: fabricated — dbt has no separate `install` command",
+      "C": "T1: fabricated — dbt does not fetch packages automatically during a build command",
+      "D": "T2: wrong layer — parsing reads the project; it does not fetch git dependencies"
+    },
+    "topics": [
+      "ae/01-developing-and-optimizing-models/packages"
+    ]
+  },
+  {
+    "id": "draft-orig-ae01-incremental-this-dedupe",
+    "domain": "ae-01",
+    "blueprint_task": "1.11",
+    "qtype": "multiple_choice",
+    "difficulty_estimate": "L3",
+    "stem": "An incremental model needs to filter for rows created after the most recent run, and the developer wants to query the model's own destination table to find that latest timestamp, without hardcoding a database or schema name. Which Jinja variable lets the model query itself this way inside the `is_incremental()` block?",
+    "option_texts": {
+      "A": "`{{ this }}`, because it is the database representation of the current model and compiles to its own relation",
+      "B": "`{{ ref(this) }}`, because wrapping `this` in `ref()` is required to resolve any relation",
+      "C": "`{{ source(this) }}`, because `this` points at raw data the model depends on",
+      "D": "A hardcoded database and schema name string, since dbt has no built-in way to reference a model's own output"
+    },
+    "drill_answer": "A",
+    "drill_answer_short": "this is the database representation of the current model, useful inside incremental models",
+    "decision_hinge": "this is the database representation of the current model. It is useful when defining a where statement within incremental models, and as such, properties such as this.database and this.schema compile as expected.",
+    "sources": [
+      "https://docs.getdbt.com/reference/dbt-jinja-functions/this"
+    ],
+    "plausible_options": {
+      "B": "query the model's own destination table to find that latest timestamp"
+    },
+    "eliminated_by": {
+      "C": "query the model's own destination table to find that latest timestamp",
+      "D": "without hardcoding a database or schema name"
+    },
+    "distractor_traps": {
+      "B": "T3: confusable sibling — `this` is already a Relation; it does not need to be passed through `ref()`",
+      "C": "T3: confusable sibling — `source()` names externally loaded data, not the current model's own output",
+      "D": "T4: breaks a stated requirement — the stem explicitly rules out hardcoding"
+    },
+    "topics": [
+      "ae/01-developing-and-optimizing-models/incremental-models"
+    ]
+  },
+  {
+    "id": "draft-orig-ae01-microbatch-required-configs",
+    "domain": "ae-01",
+    "blueprint_task": "1.14",
+    "qtype": "multiple_response",
+    "difficulty_estimate": "L2",
+    "stem": "A team converts `fct_page_views`, a large time-series model, to `incremental_strategy='microbatch'`. The build must not fail due to a missing required configuration. Which THREE configs are required for a microbatch model?",
+    "option_texts": {
+      "A": "`event_time`, the column indicating at what time the row occurred",
+      "B": "`begin`, the beginning of time for the microbatch model",
+      "C": "`batch_size`, the granularity of each batch",
+      "D": "`lookback`, how many prior microbatch batches to reprocess for late-arriving records",
+      "E": "`concurrent_batches`, whether batches run in parallel"
+    },
+    "drill_answer": "A,B,C",
+    "drill_answer_short": "event_time, begin, and batch_size are the required microbatch configs",
+    "decision_hinge": "event_time, the column indicating at what time the row occurred, is Required. begin, the beginning of time for the microbatch model, is Required. batch_size, the granularity of your batches, is Required. lookback defaults to 1 and is Optional. concurrent_batches overrides dbt's auto detection and is Optional.",
+    "sources": [
+      "https://docs.getdbt.com/docs/build/incremental-microbatch"
+    ],
+    "plausible_options": {
+      "D": "The build must not fail due to a missing required configuration"
+    },
+    "eliminated_by": {
+      "E": {
+        "signal": "The build must not fail due to a missing required configuration",
+        "requires_fact": "concurrent_batches overrides dbt's auto detection for whether batches run concurrently, and is Optional."
+      }
+    },
+    "distractor_traps": {
+      "D": "T3: confusable sibling — lookback is a real microbatch config, but it is optional and defaults to 1",
+      "E": "T8: scope error — concurrent_batches controls parallelism, not whether a required config is present"
+    },
+    "topics": [
+      "ae/01-developing-and-optimizing-models/microbatch"
+    ]
+  }
+]

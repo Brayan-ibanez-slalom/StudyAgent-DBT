@@ -1,0 +1,152 @@
+[
+  {
+    "id": "draft-orig-ae02-contract-incremental-on-schema-change",
+    "domain": "ae-02",
+    "blueprint_task": "2.1",
+    "qtype": "multiple_choice",
+    "difficulty_estimate": "L4",
+    "stem": "A model carries an enforced contract and is materialized as `incremental`. The platform engineer needs the model to keep building successfully after a new column is added upstream, without breaking the contract. Which `on_schema_change` setting keeps this model compliant, and why?",
+    "option_texts": {
+      "A": "No on_schema_change setting is needed, because an enforced contract alone covers this case",
+      "B": "`ignore` (the default), because an enforced contract does not change how schema drift is handled",
+      "C": "`on_schema_change: sync_all_columns`, because it is the most permissive option and contracts always prefer permissive settings",
+      "D": "`append_new_columns`, because that is one of only two on_schema_change settings dbt allows for this materialization"
+    },
+    "drill_answer": "D",
+    "drill_answer_short": "Contracted incremental models support only append_new_columns or fail for on_schema_change",
+    "decision_hinge": "These places support model contracts: incremental, with on_schema_change: append_new_columns or on_schema_change: fail.",
+    "sources": [
+      "https://docs.getdbt.com/docs/collaborate/govern/model-contracts"
+    ],
+    "plausible_options": {
+      "C": "needs the model to keep building successfully after a new column is added upstream"
+    },
+    "eliminated_by": {
+      "A": "A model carries an enforced contract and is materialized as `incremental`",
+      "B": {
+        "signal": "needs the model to keep building successfully after a new column is added upstream",
+        "requires_fact": "An incremental model supports model contracts only with on_schema_change set to append_new_columns or fail."
+      }
+    },
+    "distractor_traps": {
+      "A": "T1: fabricated — contracted incremental models still require one of the two supported settings",
+      "B": "T1: fabricated — dbt does not consider contracts and schema-change handling independent of each other",
+      "C": "T3: confusable sibling — sync_all_columns is a real setting, but it is not one of the two settings contracts support"
+    },
+    "topics": [
+      "ae/02-model-governance/model-contracts"
+    ]
+  },
+  {
+    "id": "draft-orig-ae01-full-refresh-is-incremental",
+    "domain": "ae-01",
+    "blueprint_task": "1.11",
+    "qtype": "multiple_response",
+    "difficulty_estimate": "L3",
+    "stem": "A team runs `dbt run --full-refresh --select stg_events`. `stg_events` is materialized as incremental and its SQL is wrapped in an `is_incremental()` block that filters for new rows. The team must predict exactly what happens during this invocation. Which TWO statements are correct?",
+    "option_texts": {
+      "A": "`is_incremental()` evaluates to `False` for this run, because the full-refresh flag is set",
+      "B": "dbt drops the existing target table before rebuilding it for all time",
+      "C": "dbt merges new rows into the existing table without dropping it, since `--full-refresh` only changes filtering, not table structure",
+      "D": "`is_incremental()` still evaluates to `True`, because the model is still configured with `materialized='incremental'`, regardless of the full-refresh flag"
+    },
+    "drill_answer": "A,B",
+    "drill_answer_short": "--full-refresh makes is_incremental() return False and drops the table before rebuilding it",
+    "decision_hinge": "The is_incremental() macro will return True only if the full-refresh flag is not passed, among other conditions. The --full-refresh flag will cause dbt to drop the existing target table in the database before rebuilding it for all-time.",
+    "sources": [
+      "https://docs.getdbt.com/docs/build/incremental-models"
+    ],
+    "plausible_options": {
+      "D": "its SQL is wrapped in an `is_incremental()` block that filters for new rows"
+    },
+    "eliminated_by": {
+      "C": {
+        "signal": "runs `dbt run --full-refresh --select stg_events`",
+        "requires_fact": "The --full-refresh flag will cause dbt to drop the existing target table in the database before rebuilding it for all-time."
+      }
+    },
+    "distractor_traps": {
+      "C": "T1: fabricated — --full-refresh does drop and rebuild the table, not merely re-filter it",
+      "D": "T8: scope error — one condition being true does not make is_incremental() return True; all of its conditions must hold"
+    },
+    "topics": [
+      "ae/01-developing-and-optimizing-models/incremental-models"
+    ]
+  },
+  {
+    "id": "draft-orig-ae01-snapshot-check-cols-ignored",
+    "domain": "ae-01",
+    "blueprint_task": "1.10",
+    "qtype": "multiple_choice",
+    "difficulty_estimate": "L4",
+    "stem": "A snapshot `scd_raw_listings` is configured with `strategy: timestamp`, `updated_at: updated_at`. A developer accidentally also adds `check_cols: ['name', 'price']` to the same snapshot config. What happens when the snapshot next runs?",
+    "option_texts": {
+      "A": "dbt raises a compilation error, because `check_cols` and `strategy: timestamp` cannot both be present",
+      "B": "dbt ignores `check_cols`; the snapshot keeps detecting changes using `updated_at` under the `timestamp` strategy",
+      "C": "dbt switches the snapshot to the `check` strategy automatically, since `check_cols` was provided",
+      "D": "dbt uses both `updated_at` and `check_cols` together, detecting a change whenever either one differs"
+    },
+    "drill_answer": "B",
+    "drill_answer_short": "check_cols only applies to the check strategy; a timestamp-strategy snapshot keeps using updated_at",
+    "decision_hinge": "check_cols: if using the check strategy, then the columns to check; only needed if using the check strategy. updated_at: a column that indicates when each record was last updated, used in the timestamp strategy; only needed if using the timestamp strategy.",
+    "sources": [
+      "https://docs.getdbt.com/docs/build/snapshots"
+    ],
+    "plausible_options": {
+      "D": "A developer accidentally also adds `check_cols: ['name', 'price']` to the same snapshot config"
+    },
+    "eliminated_by": {
+      "A": "is configured with `strategy: timestamp`, `updated_at: updated_at`",
+      "C": {
+        "signal": "is configured with `strategy: timestamp`, `updated_at: updated_at`",
+        "requires_fact": "check_cols is only needed if using the check strategy, and updated_at is only needed if using the timestamp strategy; dbt does not switch strategies based on which fields are present."
+      }
+    },
+    "distractor_traps": {
+      "A": "T1: fabricated — dbt does not reject this configuration at compile time",
+      "C": "T1: fabricated — the configured strategy does not change based on which extra fields are present",
+      "D": "T3: confusable sibling — treats the two single-strategy fields as if they combine, when each belongs to a different strategy"
+    },
+    "topics": [
+      "ae/01-developing-and-optimizing-models/snapshots"
+    ]
+  },
+  {
+    "id": "draft-orig-ae01-hook-on-run-start",
+    "domain": "ae-01",
+    "blueprint_task": "1.6",
+    "qtype": "multiple_choice",
+    "difficulty_estimate": "L2",
+    "stem": "A project needs a SQL statement to run once, at the start of `dbt build`, before any individual model is built -- not before or after each model -- and an engineer must choose the correct hook type for this. Which hook fits, and why?",
+    "option_texts": {
+      "A": "`post-hook`, because it executes after a model, seed, or snapshot is built",
+      "B": "`pre-hook`, because it executes before a model is built",
+      "C": "`on-run-start`, because it executes once at the start of commands like `dbt build`, `dbt run`, and `dbt test`",
+      "D": "`on-run-end`, because it executes once per invocation, at the end"
+    },
+    "drill_answer": "C",
+    "drill_answer_short": "on-run-start executes once at the start of commands such as dbt build, not per model",
+    "decision_hinge": "on-run-start is executed at the start of dbt build, dbt compile, dbt docs generate, dbt run, dbt seed, dbt snapshot, or dbt test. pre-hook is executed before a model, seed, or snapshot is built. post-hook is executed after a model, seed or snapshot is built.",
+    "sources": [
+      "https://docs.getdbt.com/docs/build/hooks-operations"
+    ],
+    "plausible_options": {
+      "B": "before any individual model is built"
+    },
+    "eliminated_by": {
+      "A": "not before or after each model",
+      "D": {
+        "signal": "needs a SQL statement to run once, at the start of `dbt build`",
+        "requires_fact": "on-run-start is executed at the start of a command; on-run-end is executed at the end."
+      }
+    },
+    "distractor_traps": {
+      "A": "T4: breaks a stated requirement — post-hook runs after, not before, and still runs per resource",
+      "B": "T8: scope error — pre-hook runs once per model, seed, or snapshot, not once for the whole invocation",
+      "D": "T8: scope error — on-run-end fires once, but at the end, not the start"
+    },
+    "topics": [
+      "ae/01-developing-and-optimizing-models/project-config-and-flags"
+    ]
+  }
+]

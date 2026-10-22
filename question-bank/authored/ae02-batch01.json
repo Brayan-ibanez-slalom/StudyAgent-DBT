@@ -5,106 +5,110 @@
     "blueprint_task": "2.1",
     "qtype": "multiple_choice",
     "difficulty_estimate": "L4",
-
     "stem": "An `incremental` model must carry an enforced contract. Its config currently sets `on_schema_change: ignore` so that unexpected upstream columns are skipped. The contract fails to apply. The team must get the contract enforced while keeping the model incremental. What should they change?",
     "option_texts": {
-      "A": "Set `on_schema_change` to `append_new_columns` or `fail`",
+      "A": "Set `contract: {enforced: false}` and rely on data tests instead",
       "B": "Set `on_schema_change` to `sync_all_columns` only",
       "C": "Set the materialization to `view` and keep `on_schema_change: ignore`",
-      "D": "Set `contract: {enforced: false}` and rely on data tests instead"
+      "D": "Set `on_schema_change` to `append_new_columns` or `fail`"
     },
-    "drill_answer": "A",
+    "drill_answer": "D",
     "drill_answer_short": "Contracts on incremental models require on_schema_change: append_new_columns or fail",
-
     "decision_hinge": "Models materialized as incremental support model contracts with on_schema_change set to append_new_columns or fail.",
-    "sources": ["https://docs.getdbt.com/docs/collaborate/govern/model-contracts"],
-
+    "sources": [
+      "https://docs.getdbt.com/docs/collaborate/govern/model-contracts"
+    ],
     "plausible_options": {
       "B": "so that unexpected upstream columns are skipped"
     },
     "eliminated_by": {
+      "A": {
+        "signal": "An `incremental` model must carry an enforced contract",
+        "requires_fact": "To enforce a model's contract, set enforced: true under the contract configuration."
+      },
       "C": {
         "signal": "The team must get the contract enforced while keeping the model incremental",
         "requires_fact": "view — views offer support for column names and data types, but not constraints."
-      },
-      "D": {
-        "signal": "An `incremental` model must carry an enforced contract",
-        "requires_fact": "To enforce a model's contract, set enforced: true under the contract configuration."
       }
     },
     "distractor_traps": {
+      "A": "T2: data tests check rows after the build; a contract is a build-time guarantee about shape",
       "B": "T3: sync_all_columns is a real on_schema_change value, but contracts accept only append_new_columns or fail",
-      "C": "T4: a view carries names and types but not constraints, and the stem requires the model stay incremental",
-      "D": "T2: data tests check rows after the build; a contract is a build-time guarantee about shape"
+      "C": "T4: a view carries names and types but not constraints, and the stem requires the model stay incremental"
     },
-    "topics": ["ae/02-model-governance/model-contracts"]
+    "topics": [
+      "ae/02-model-governance/model-contracts"
+    ]
   },
-
   {
     "id": "draft-ae02-constraints-need-table-or-incremental",
     "domain": "ae-02",
     "blueprint_task": "2.3",
     "qtype": "multiple_choice",
     "difficulty_estimate": "L4",
-
     "stem": "A team adds a `not_null` constraint to a column in a model's YAML, but dbt never submits it to the platform. The model is materialized as `view`, its `contract` is `enforced: true`, and `data_type` is declared for every column. The team must get the constraint applied at the platform level. What is blocking it?",
     "option_texts": {
-      "A": "The model is a `view`, and constraints need `table` or `incremental`",
+      "A": "The YAML declares `data_type` but the contract is not enforced",
       "B": "The model has no `unique` constraint to anchor the `not_null` one",
-      "C": "The YAML declares `data_type` but the contract is not enforced",
+      "C": "The model is a `view`, and constraints need `table` or `incremental`",
       "D": "The platform treats `not_null` as definable but not enforced"
     },
-    "drill_answer": "A",
+    "drill_answer": "C",
     "drill_answer_short": "Constraints only work on table and incremental models, never on a view",
-
     "decision_hinge": "Constraints only work on table and incremental models. Constraints are never applied on ephemeral models or those materialized as view.",
-    "sources": ["https://docs.getdbt.com/reference/resource-properties/constraints"],
-
+    "sources": [
+      "https://docs.getdbt.com/reference/resource-properties/constraints"
+    ],
     "plausible_options": {
       "D": "dbt never submits it to the platform"
     },
     "eliminated_by": {
+      "A": {
+        "signal": "its `contract` is `enforced: true`",
+        "requires_fact": "To use constraints, your model must declare and enforce a contract. This means you need to explicitly define the data_type for every column in your model's schema configuration."
+      },
       "B": {
         "signal": "A team adds a `not_null` constraint to a column in a model's YAML",
         "requires_fact": "The structure of a constraint is: type (required): one of not_null, unique, primary_key, foreign_key, check, custom."
-      },
-      "C": {
-        "signal": "its `contract` is `enforced: true`",
-        "requires_fact": "To use constraints, your model must declare and enforce a contract. This means you need to explicitly define the data_type for every column in your model's schema configuration."
       }
     },
     "distractor_traps": {
+      "A": "T5: right prerequisite, wrong symptom — the stem already states the contract is enforced",
       "B": "T1: there is no rule that a not_null constraint must be anchored by a unique constraint",
-      "C": "T5: right prerequisite, wrong symptom — the stem already states the contract is enforced",
       "D": "T3: definable-but-not-enforced is a real platform category, but it would not stop dbt submitting the constraint"
     },
-    "topics": ["ae/02-model-governance/constraints"]
+    "topics": [
+      "ae/02-model-governance/constraints"
+    ]
   },
-
   {
     "id": "draft-ae02-multiple-primary-keys-blank",
     "domain": "ae-02",
     "blueprint_task": "2.3",
     "qtype": "fill_in_blank",
     "difficulty_estimate": "L3",
-
     "stem": "A model needs more than one `primary_key` constraint. Because multiple column-level `primary_key` constraints are not supported, those constraints must instead be defined at the ____ level.",
     "drill_answer": "model",
-    "accepted_answers": ["model", "model level", "the model"],
+    "accepted_answers": [
+      "model",
+      "model level",
+      "the model"
+    ],
     "drill_answer_short": "model level",
-
     "decision_hinge": "If you define multiple primary_key constraints for a single model, those must be defined at the model level. Defining multiple primary_key constraints at the column level is not supported.",
-    "sources": ["https://docs.getdbt.com/reference/resource-properties/constraints"],
-    "topics": ["ae/02-model-governance/constraints"]
+    "sources": [
+      "https://docs.getdbt.com/reference/resource-properties/constraints"
+    ],
+    "topics": [
+      "ae/02-model-governance/constraints"
+    ]
   },
-
   {
     "id": "draft-ae02-warn-unenforced",
     "domain": "ae-02",
     "blueprint_task": "2.3",
     "qtype": "multiple_choice",
     "difficulty_estimate": "L4",
-
     "stem": "A Snowflake project defines a `primary_key` constraint for documentation purposes. Every run logs a warning that the constraint is not enforced, and the team must silence that warning without removing the constraint or changing the platform. What should they set?",
     "option_texts": {
       "A": "Set `warn_unsupported: False` on the constraint",
@@ -114,13 +118,11 @@
     },
     "drill_answer": "B",
     "drill_answer_short": "warn_unenforced: False — the platform supports the constraint but does not enforce it",
-
     "decision_hinge": "Set warn_unenforced to False to skip warnings for constraints that are supported by your platform but not enforced, like primary_key in Snowflake.",
     "sources": [
       "https://docs.getdbt.com/reference/resource-properties/constraints",
       "https://docs.getdbt.com/reference/commands/build"
     ],
-
     "plausible_options": {
       "A": "Every run logs a warning that the constraint is not enforced"
     },
@@ -139,16 +141,16 @@
       "C": "T2: severity belongs to tests, not to platform constraints",
       "D": "T4: disabling the contract removes the constraint's prerequisite, which the stem forbids"
     },
-    "topics": ["ae/02-model-governance/constraints"]
+    "topics": [
+      "ae/02-model-governance/constraints"
+    ]
   },
-
   {
     "id": "draft-ae02-latest-version-resolution",
     "domain": "ae-02",
     "blueprint_task": "2.2",
     "qtype": "multiple_choice",
     "difficulty_estimate": "L4",
-
     "stem": "A versioned model `dim_customers` has `latest_version: 2`, with `v1`, `v2`, and a newly added `v3`. A downstream model uses `ref('dim_customers')` with no version pin, and the team must know which relation it will read. Which version does that ref resolve to?",
     "option_texts": {
       "A": "Version 1, the oldest one still inside its deprecation window",
@@ -158,10 +160,10 @@
     },
     "drill_answer": "B",
     "drill_answer_short": "v2 — an unpinned ref resolves to whatever latest_version names",
-
     "decision_hinge": "Because v2 is the latest version, it gets some special treatment: it can be defined in a file without a suffix, and ref('dim_customers') will resolve to v2 if a version pin is not specified.",
-    "sources": ["https://docs.getdbt.com/docs/collaborate/govern/model-versions"],
-
+    "sources": [
+      "https://docs.getdbt.com/docs/collaborate/govern/model-versions"
+    ],
     "plausible_options": {
       "C": "with `v1`, `v2`, and a newly added `v3`"
     },
@@ -180,18 +182,22 @@
       "C": "T3: the highest number is the prerelease; latest_version is what decides",
       "D": "T1: dbt gives prerelease versions no precedence — it logs that one exists and keeps resolving to latest"
     },
-    "topics": ["ae/02-model-governance/model-versions"]
+    "topics": [
+      "ae/02-model-governance/model-versions"
+    ]
   },
-
   {
     "id": "draft-ae02-version-file-naming-match",
     "domain": "ae-02",
     "blueprint_task": "2.2",
     "qtype": "matching",
     "difficulty_estimate": "L3",
-
     "stem": "A versioned model must follow dbt's standard file-naming convention. `dim_customers` sets `latest_version: 2` and defines v1, v2, and v3. Match each version to the file name dbt expects.",
-    "match_left": ["prerelease version 3", "latest version 2", "old version 1"],
+    "match_left": [
+      "prerelease version 3",
+      "latest version 2",
+      "old version 1"
+    ],
     "match_right": [
       "dim_customers_v3.sql",
       "dim_customers_v2.sql or dim_customers.sql",
@@ -205,56 +211,59 @@
       "old version 1": "dim_customers_v1.sql"
     },
     "drill_answer_short": "Only the latest version may drop the suffix and live in dim_customers.sql",
-
     "decision_hinge": "The prerelease version 3 is defined in dim_customers_v3.sql, the latest version 2 in dim_customers_v2.sql or dim_customers.sql, and version 1 in dim_customers_v1.sql.",
-    "sources": ["https://docs.getdbt.com/docs/collaborate/govern/model-versions"],
-    "topics": ["ae/02-model-governance/model-versions"]
+    "sources": [
+      "https://docs.getdbt.com/docs/collaborate/govern/model-versions"
+    ],
+    "topics": [
+      "ae/02-model-governance/model-versions"
+    ]
   },
-
   {
     "id": "draft-ae02-deprecation-date-blank",
     "domain": "ae-02",
     "blueprint_task": "2.2",
     "qtype": "fill_in_blank",
     "difficulty_estimate": "L2",
-
     "stem": "A model owner must communicate a timeline for retiring a mature model, so that consumers have a window to migrate. dbt 1.6 introduced first-class support for deprecating models by specifying a ____ property in the model's YAML.",
     "drill_answer": "deprecation_date",
-    "accepted_answers": ["deprecation_date", "deprecation date"],
+    "accepted_answers": [
+      "deprecation_date",
+      "deprecation date"
+    ],
     "drill_answer_short": "deprecation_date",
-
     "decision_hinge": "dbt 1.6 introduced first-class support for deprecating models by specifying a deprecation_date.",
-    "sources": ["https://docs.getdbt.com/docs/collaborate/govern/model-versions"],
-    "topics": ["ae/02-model-governance/model-versions"]
+    "sources": [
+      "https://docs.getdbt.com/docs/collaborate/govern/model-versions"
+    ],
+    "topics": [
+      "ae/02-model-governance/model-versions"
+    ]
   },
-
   {
     "id": "draft-ae02-contract-vs-neighbours-domc",
     "domain": "ae-02",
     "blueprint_task": "2.1",
     "qtype": "domc",
     "difficulty_estimate": "L4",
-
     "stem": "A model owner must guarantee that a published model's column names and data types will not change without notice. Only one of the following delivers that guarantee at build time. Accept or reject each option in turn.",
     "option_texts": {
       "A": "Add a `unique` data test on the model's primary key",
       "B": "Set `deprecation_date` on the model",
-      "C": "Set `contract: {enforced: true}` with `data_type` on every column",
+      "C": "Add a `not_null` column constraint without declaring a contract",
       "D": "Add the model to a group with `access: public`",
-      "E": "Add a `not_null` column constraint without declaring a contract"
+      "E": "Set `contract: {enforced: true}` with `data_type` on every column"
     },
-    "drill_answer": "C",
+    "drill_answer": "E",
     "drill_answer_short": "An enforced contract with data_type on every column is the build-time guarantee",
-
     "decision_hinge": "To enforce a model's contract, set enforced: true under the contract configuration. When enforced, your contract must include every column's name and data_type.",
     "sources": [
       "https://docs.getdbt.com/docs/collaborate/govern/model-contracts",
       "https://docs.getdbt.com/reference/resource-properties/deprecation_date",
       "https://docs.getdbt.com/docs/collaborate/govern/model-access"
     ],
-
     "plausible_options": {
-      "E": "column names and data types will not change without notice"
+      "C": "column names and data types will not change without notice"
     },
     "eliminated_by": {
       "A": {
@@ -273,9 +282,11 @@
     "distractor_traps": {
       "A": "T2: a data test checks rows after the build; a contract guarantees the shape at build time",
       "B": "T3: deprecation_date signals a lifecycle end date, not a structural guarantee",
-      "D": "T3: access controls who may ref the model, not what its columns are",
-      "E": "T5: right family, wrong completeness — a constraint needs a declared and enforced contract to reach the platform"
+      "C": "T5: right family, wrong completeness — a constraint needs a declared and enforced contract to reach the platform",
+      "D": "T3: access controls who may ref the model, not what its columns are"
     },
-    "topics": ["ae/02-model-governance/model-contracts"]
+    "topics": [
+      "ae/02-model-governance/model-contracts"
+    ]
   }
 ]

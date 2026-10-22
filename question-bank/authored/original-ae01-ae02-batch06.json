@@ -1,0 +1,191 @@
+[
+  {
+    "id": "draft-orig-ae02-contract-preflight-check",
+    "domain": "ae-02",
+    "blueprint_task": "2.1",
+    "qtype": "multiple_choice",
+    "difficulty_estimate": "L3",
+    "stem": "A model declares an enforced contract with a `data_type` for every column. Before the model builds, the platform engineer needs to know exactly what dbt checks to decide whether the build is allowed to proceed. What does dbt verify, and when?",
+    "option_texts": {
+      "A": "A check that the column order in the SQL `select` statement exactly matches the YAML spec order",
+      "B": "A check that every column has a passing `not_null` test, run immediately after the model builds, as part of the contract",
+      "C": "A check that the compiled SQL contains no syntax errors, run during `dbt parse`, before the model is even selected to build",
+      "D": "A preflight check that the model's query returns columns with names and data types matching the contract, independent of column order, before the model builds"
+    },
+    "drill_answer": "D",
+    "drill_answer_short": "A preflight check verifies column names and data types match the contract before the model builds",
+    "decision_hinge": "dbt will run a preflight check to ensure that the model's query will return a set of columns with names and data types matching the ones you have defined. This check is agnostic to the order of columns specified in your model (SQL) or YAML spec.",
+    "sources": [
+      "https://docs.getdbt.com/docs/collaborate/govern/model-contracts"
+    ],
+    "plausible_options": {
+      "B": "the platform engineer needs to know exactly what dbt checks to decide whether the build is allowed to proceed"
+    },
+    "eliminated_by": {
+      "A": {
+        "signal": "needs to know exactly what dbt checks to decide whether the build is allowed to proceed",
+        "requires_fact": "This check is agnostic to the order of columns specified in your model (SQL) or YAML spec."
+      },
+      "C": {
+        "signal": "the platform engineer needs to know exactly what dbt checks to decide whether the build is allowed to proceed",
+        "requires_fact": "dbt will run a preflight check to ensure that the model's query will return a set of columns with names and data types matching the ones you have defined, before the model builds."
+      }
+    },
+    "distractor_traps": {
+      "A": "T4: breaks a stated fact — the preflight check explicitly ignores column order",
+      "B": "T2: wrong layer — a data test checks rows after a build; the contract preflight check runs before the build",
+      "C": "T8: scope error — dbt parse checks that Jinja and YAML are syntactically valid, not that columns match a contract"
+    },
+    "topics": [
+      "ae/02-model-governance/model-contracts"
+    ]
+  },
+  {
+    "id": "draft-orig-ae02-deprecation-date-effect",
+    "domain": "ae-02",
+    "blueprint_task": "2.2",
+    "qtype": "multiple_choice",
+    "difficulty_estimate": "L4",
+    "stem": "A model sets `deprecation_date: 2026-01-01 00:00:00.00+00:00`. The model also has an enforced contract. A downstream team keeps referencing it well past that date, and the platform engineer needs to know what dbt actually does as a result, today, without anyone manually deleting anything. What happens?",
+    "option_texts": {
+      "A": "`dbt run` automatically skips building the model once its deprecation date has passed",
+      "B": "dbt generates a warning whenever the project references the deprecated model, and blocks deleting the model until after its deprecation date",
+      "C": "dbt automatically deletes the model definition once the deprecation date passes, deleting lingering downstream references along with it",
+      "D": "Nothing happens unless the engineer manually runs a separate deprecation command"
+    },
+    "drill_answer": "B",
+    "drill_answer_short": "dbt warns on reference to a deprecated model and blocks deleting a contracted one before its deprecation date",
+    "decision_hinge": "If your model has an enforced contract, you cannot delete the model until after the deprecation_date has passed. When a project references a model that's slated for deprecation or the deprecation date has passed, a warning is generated.",
+    "sources": [
+      "https://docs.getdbt.com/reference/resource-properties/deprecation_date"
+    ],
+    "plausible_options": {
+      "C": "A downstream team keeps referencing it well past that date"
+    },
+    "eliminated_by": {
+      "A": "The model also has an enforced contract",
+      "D": {
+        "signal": "A downstream team keeps referencing it well past that date",
+        "requires_fact": "When a project references a model that's slated for deprecation or the deprecation date has passed, a warning is generated."
+      }
+    },
+    "distractor_traps": {
+      "A": "T1: fabricated — deprecation_date does not make dbt skip building a model",
+      "C": "T3: confusable sibling — an enforced contract blocks deletion before the deprecation date, the opposite of forcing it",
+      "D": "T1: fabricated — the warning is automatic, not triggered by a separate command"
+    },
+    "topics": [
+      "ae/02-model-governance/model-versions"
+    ]
+  },
+  {
+    "id": "draft-orig-ae02-constraints-snowflake",
+    "domain": "ae-02",
+    "blueprint_task": "2.3",
+    "qtype": "multiple_response",
+    "difficulty_estimate": "L4",
+    "stem": "A Snowflake model defines column-level constraints under an enforced contract: `not_null`, `primary_key`, `foreign_key`, and `unique`. The data governance lead needs to know which of these Snowflake will actually stop a bad row from being written, versus which ones are recorded as metadata only. Which TWO statements are correct?",
+    "option_texts": {
+      "A": "`not_null` is enforced on Snowflake; the model fails to build if a row violates it",
+      "B": "`primary_key` is definable but not enforced on Snowflake; a model can still build with duplicate keys",
+      "C": "`unique` is enforced on Snowflake just like `primary_key`, so duplicate values always cause the build to fail",
+      "D": "`check` is definable but not enforced on Snowflake, unlike `not_null`, which is enforced"
+    },
+    "drill_answer": "A,B",
+    "drill_answer_short": "On Snowflake, not_null is enforced; primary_key is definable but only enforced as metadata",
+    "decision_hinge": "On Snowflake: not_null is Definable and Enforced. primary_key is Definable but not Enforced. foreign_key is Definable but not Enforced. unique is Definable but not Enforced. check is not Definable and not Enforced.",
+    "sources": [
+      "https://docs.getdbt.com/reference/resource-properties/constraints"
+    ],
+    "plausible_options": {
+      "D": "which of these Snowflake will actually stop a bad row from being written, versus which ones are recorded as metadata only"
+    },
+    "eliminated_by": {
+      "C": {
+        "signal": "which of these Snowflake will actually stop a bad row from being written",
+        "requires_fact": "On Snowflake, the unique constraint is Definable but not Enforced."
+      }
+    },
+    "distractor_traps": {
+      "C": "T1: fabricated — unique is metadata-only on Snowflake, it does not stop the build",
+      "D": "T3: confusable sibling — check is not even definable on Snowflake, unlike primary_key and foreign_key"
+    },
+    "topics": [
+      "ae/02-model-governance/constraints"
+    ]
+  },
+  {
+    "id": "draft-orig-ae02-model-versions-latest",
+    "domain": "ae-02",
+    "blueprint_task": "2.2",
+    "qtype": "multiple_choice",
+    "difficulty_estimate": "L3",
+    "stem": "A model `dim_customers` defines three versions in its YAML: v1, v2, and v3, with no `latest_version` property set anywhere. A downstream model calls `{{ ref('dim_customers') }}` with no version argument. The team needs to know exactly which version this resolves to. Which version does it build against, and why?",
+    "option_texts": {
+      "A": "Whichever version was most recently built in the warehouse, since `ref()` resolves to existing objects regardless of `latest_version`",
+      "B": "v1, because dbt always defaults an unversioned ref() to the first version defined",
+      "C": "v3, because without an explicit `latest_version`, the numerically greatest version is treated as latest",
+      "D": "All three versions at once, since an unversioned `ref()` fans out to every defined version"
+    },
+    "drill_answer": "C",
+    "drill_answer_short": "Without an explicit latest_version, the numerically greatest version number is latest",
+    "decision_hinge": "If latest_version is not specified explicitly, the latest_version would be the numerically greatest version.",
+    "sources": [
+      "https://docs.getdbt.com/docs/collaborate/govern/model-versions"
+    ],
+    "plausible_options": {
+      "B": "defines three versions in its YAML: v1, v2, and v3, with no `latest_version` property set anywhere"
+    },
+    "eliminated_by": {
+      "A": {
+        "signal": "calls `{{ ref('dim_customers') }}` with no version argument",
+        "requires_fact": "If latest_version is not specified explicitly, the latest_version would be the numerically greatest version, based on the project's version declarations, not warehouse build history."
+      },
+      "D": "calls `{{ ref('dim_customers') }}` with no version argument"
+    },
+    "distractor_traps": {
+      "A": "T1: fabricated — ref() resolution for versions is based on declared version numbers, not recent build activity",
+      "B": "T3: confusable sibling — version order in YAML does not decide which one is latest; the version number does",
+      "D": "T1: fabricated — an unversioned ref() resolves to exactly one version"
+    },
+    "topics": [
+      "ae/02-model-governance/model-versions"
+    ]
+  },
+  {
+    "id": "draft-orig-ae01-packages-vs-dependencies",
+    "domain": "ae-01",
+    "blueprint_task": "1.7",
+    "qtype": "multiple_response",
+    "difficulty_estimate": "L4",
+    "stem": "A dbt project needs cross-project references between two separate dbt projects, a dbt Mesh setup, and also wants to keep using a private Git package whose spec needs a Jinja-rendered Git token. The platform engineer must decide which dependency file(s) to use for each need. Which TWO statements are correct?",
+    "option_texts": {
+      "A": "Cross-project references for a dbt Mesh setup belong in `dependencies.yml`",
+      "B": "The private Git package with a Jinja-rendered token must stay in `packages.yml`, because `dependencies.yml` does not support Jinja rendering",
+      "C": "Renaming `packages.yml` to `dependencies.yml` is always safe for cross-project references and private Jinja-rendered packages alike, regardless of what the package specs contain",
+      "D": "`dependencies.yml` is simply the newer name for `packages.yml` for both cross-project references and private Jinja-rendered packages, so a project should use only one or the other"
+    },
+    "drill_answer": "A,B",
+    "drill_answer_short": "Mesh cross-project refs go in dependencies.yml; a Jinja-rendered private package must stay in packages.yml",
+    "decision_hinge": "Use dependencies.yml when you need to set up cross-project references between different dbt projects, especially in a dbt Mesh setup. Private packages are not supported in dependencies.yml because they intentionally don't support Jinja rendering or conditional configuration.",
+    "sources": [
+      "https://docs.getdbt.com/docs/build/packages"
+    ],
+    "plausible_options": {
+      "C": "The platform engineer must decide which dependency file(s) to use for each need"
+    },
+    "eliminated_by": {
+      "D": {
+        "signal": "The platform engineer must decide which dependency file(s) to use for each need",
+        "requires_fact": "A project can consolidate both into a single dependencies.yml file; private packages that use Jinja rendering must stay in packages.yml, so dependencies.yml is not simply a renamed replacement."
+      }
+    },
+    "distractor_traps": {
+      "C": "T8: scope error — that rename is safe only when the package specs do not rely on Jinja rendering",
+      "D": "T1: fabricated — a project can keep both files, each for a different kind of dependency"
+    },
+    "topics": [
+      "ae/01-developing-and-optimizing-models/packages"
+    ]
+  }
+]

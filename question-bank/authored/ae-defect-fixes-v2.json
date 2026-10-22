@@ -5,48 +5,47 @@
     "blueprint_task": "1.7",
     "qtype": "multiple_choice",
     "difficulty_estimate": "L5",
-
     "stem": "A project installs two dbt Hub packages and one private Git package whose specification uses a Jinja-rendered access token. The team wants to adopt cross-project references, which requires `dependencies.yml`, and must keep the private package installable. Which arrangement of files works?",
     "option_texts": {
-      "A": "Declare the hub packages and cross-project refs in `dependencies.yml`, keeping the private package in `packages.yml`",
+      "A": "Declare the private package in `dependencies.yml` and leave the two hub packages listed in `packages.yml`",
       "B": "Declare all three packages and the cross-project refs in `dependencies.yml`",
       "C": "Declare everything in `packages.yml`, which also accepts cross-project refs",
-      "D": "Declare the private package in `dependencies.yml` and leave the two hub packages listed in `packages.yml`"
+      "D": "Declare the hub packages and cross-project refs in `dependencies.yml`, keeping the private package in `packages.yml`"
     },
-    "drill_answer": "A",
+    "drill_answer": "D",
     "drill_answer_short": "Split them: dependencies.yml cannot hold a private package, because it does not render Jinja",
-
     "decision_hinge": "Private packages are not supported in dependencies.yml because they intentionally don't support Jinja rendering or conditional configuration.",
-    "sources": ["https://docs.getdbt.com/docs/build/packages"],
-
+    "sources": [
+      "https://docs.getdbt.com/docs/build/packages"
+    ],
     "plausible_options": {
       "B": "The team wants to adopt cross-project references, which requires `dependencies.yml`"
     },
     "eliminated_by": {
+      "A": {
+        "signal": "one private Git package whose specification uses a Jinja-rendered access token",
+        "requires_fact": "Private packages are not supported in dependencies.yml because they intentionally don't support Jinja rendering or conditional configuration."
+      },
       "C": {
         "signal": "The team wants to adopt cross-project references, which requires `dependencies.yml`",
         "requires_fact": "Use dependencies.yml when you need to set up cross-project references between different dbt projects, especially in a dbt Mesh setup."
-      },
-      "D": {
-        "signal": "one private Git package whose specification uses a Jinja-rendered access token",
-        "requires_fact": "Private packages are not supported in dependencies.yml because they intentionally don't support Jinja rendering or conditional configuration."
       }
     },
     "distractor_traps": {
+      "A": "T8: scope error — it puts exactly the one package that cannot live in dependencies.yml there",
       "B": "T6: treats dependencies.yml as a drop-in rename of packages.yml, which breaks the private package",
-      "C": "T3: packages.yml handles package dependencies only — cross-project refs need dependencies.yml",
-      "D": "T8: scope error — it puts exactly the one package that cannot live in dependencies.yml there"
+      "C": "T3: packages.yml handles package dependencies only — cross-project refs need dependencies.yml"
     },
-    "topics": ["ae/01-developing-and-optimizing-models/packages"]
+    "topics": [
+      "ae/01-developing-and-optimizing-models/packages"
+    ]
   },
-
   {
     "id": "draft-ae01-show-compiles-from-source-v2",
     "domain": "ae-01",
     "blueprint_task": "1.4",
     "qtype": "multiple_choice",
     "difficulty_estimate": "L4",
-
     "stem": "An analyst runs `dbt run --select customers`, then immediately runs `dbt show --select customers`. The previewed rows do not match what a warehouse client returns for the same table, and the team must explain the discrepancy before changing anything. What explains the difference?",
     "option_texts": {
       "A": "dbt show reads the built table but caps the preview at five rows",
@@ -56,10 +55,10 @@
     },
     "drill_answer": "D",
     "drill_answer_short": "dbt show always compiles and runs from source; it never selects the materialized relation",
-
     "decision_hinge": "If previewing a model, dbt will always compile and run the compiled query from source. It will not select from the already-materialized database relation, even if you've just run the model.",
-    "sources": ["https://docs.getdbt.com/reference/commands/show"],
-
+    "sources": [
+      "https://docs.getdbt.com/reference/commands/show"
+    ],
     "plausible_options": {
       "A": "The previewed rows do not match what a warehouse client returns for the same table"
     },
@@ -78,57 +77,57 @@
       "B": "T1: dbt show does not read run_results.json; there is no such preview path",
       "C": "T3: dbt compile is the command that renders SQL without executing it"
     },
-    "topics": ["ae/01-developing-and-optimizing-models/dbt-commands"]
+    "topics": [
+      "ae/01-developing-and-optimizing-models/dbt-commands"
+    ]
   },
-
   {
     "id": "draft-ae06-loaded-at-mutually-exclusive-v2",
     "domain": "ae-06",
     "blueprint_task": "6.2",
     "qtype": "multiple_choice",
     "difficulty_estimate": "L4",
-
     "stem": "A source sets both `loaded_at_field` and `loaded_at_query` on the same table, expecting dbt to fall back from one to the other. The project must parse cleanly before the next deploy. What actually happens?",
     "option_texts": {
-      "A": "A parse error, because setting both on one resource is not allowed",
+      "A": "Clean parsing, but the `filter` clause is then silently ignored",
       "B": "A parse warning, after which `loaded_at_query` takes precedence",
       "C": "Clean parsing, because `loaded_at_field` is used only when adapter metadata is unavailable",
-      "D": "Clean parsing, but the `filter` clause is then silently ignored"
+      "D": "A parse error, because setting both on one resource is not allowed"
     },
-    "drill_answer": "A",
+    "drill_answer": "D",
     "drill_answer_short": "Setting both loaded_at_query and loaded_at_field on one resource is a parse error",
-
     "decision_hinge": "Setting both loaded_at_query and loaded_at_field on the same resource is a parse error.",
-    "sources": ["https://docs.getdbt.com/reference/resource-properties/freshness"],
-
+    "sources": [
+      "https://docs.getdbt.com/reference/resource-properties/freshness"
+    ],
     "plausible_options": {
       "B": "expecting dbt to fall back from one to the other"
     },
     "eliminated_by": {
+      "A": {
+        "signal": "The project must parse cleanly before the next deploy",
+        "requires_fact": "filter adds a WHERE clause to the freshness query to limit data scanned, and does not apply to loaded_at_query."
+      },
       "C": {
         "signal": "A source sets both `loaded_at_field` and `loaded_at_query` on the same table",
         "requires_fact": "loaded_at_field is the column dbt queries to determine the most recent loaded timestamp, required when adapter metadata is unavailable."
-      },
-      "D": {
-        "signal": "The project must parse cleanly before the next deploy",
-        "requires_fact": "filter adds a WHERE clause to the freshness query to limit data scanned, and does not apply to loaded_at_query."
       }
     },
     "distractor_traps": {
+      "A": "T2: the filter caveat is about loaded_at_query's scan, not about parsing",
       "B": "T3: dbt defines no precedence between the two — it refuses to parse instead",
-      "C": "T5: the metadata-unavailable rule is real but describes when loaded_at_field is needed, not this conflict",
-      "D": "T2: the filter caveat is about loaded_at_query's scan, not about parsing"
+      "C": "T5: the metadata-unavailable rule is real but describes when loaded_at_field is needed, not this conflict"
     },
-    "topics": ["ae/06-external-dependencies/source-freshness"]
+    "topics": [
+      "ae/06-external-dependencies/source-freshness"
+    ]
   },
-
   {
     "id": "draft-ae07-tags-not-modified-v2",
     "domain": "ae-07",
     "blueprint_task": "7.1",
     "qtype": "multiple_choice",
     "difficulty_estimate": "L5",
-
     "stem": "A pull request edits only the `tags` value on one model and a column-level `meta` value on another. A Slim CI job selects `state:modified` against the production manifest and builds nothing. The team must explain the empty run. Why was nothing built?",
     "option_texts": {
       "A": "The comparison manifest was stale, so both edits look unchanged",
@@ -138,13 +137,11 @@
     },
     "drill_answer": "C",
     "drill_answer_short": "tags and meta are metadata-only and deliberately do not trigger state:modified",
-
     "decision_hinge": "dbt treats tags and meta as metadata-only fields, not modifications, at both the resource and column level. Changing a tags or meta value doesn't trigger state:modified, because these fields don't affect how dbt materializes the resource.",
     "sources": [
       "https://docs.getdbt.com/reference/node-selection/state-comparison-caveats",
       "https://docs.getdbt.com/reference/node-selection/methods"
     ],
-
     "plausible_options": {
       "D": "A Slim CI job selects `state:modified` against the production manifest and builds nothing"
     },
@@ -163,50 +160,50 @@
       "B": "T1: column-level edits do participate — a column description counts when persist_docs is on",
       "D": "T3: persist_docs governs descriptions specifically, not every YAML-only edit"
     },
-    "topics": ["ae/07-dbt-state/state-selection"]
+    "topics": [
+      "ae/07-dbt-state/state-selection"
+    ]
   },
-
   {
     "id": "draft-ae07-large-seed-state-v2",
     "domain": "ae-07",
     "blueprint_task": "7.1",
     "qtype": "multiple_choice",
     "difficulty_estimate": "L5",
-
     "stem": "A 4 MiB seed file has several rows corrected, with no rename. The CI job runs `--select state:modified --state prod` and the seed is not rebuilt. The team must get the corrected rows into the warehouse on this run. What explains this outcome?",
     "option_texts": {
-      "A": "dbt compares only the seed's file path above 1 MiB, so edits are invisible",
+      "A": "dbt needs `--full-refresh` before any seed is eligible for state selection",
       "B": "dbt excludes seeds from state comparison and only ever compares models",
       "C": "dbt hashes seed contents at every file size, so the hash must be unchanged",
-      "D": "dbt needs `--full-refresh` before any seed is eligible for state selection"
+      "D": "dbt compares only the seed's file path above 1 MiB, so edits are invisible"
     },
-    "drill_answer": "A",
+    "drill_answer": "D",
     "drill_answer_short": "Above 1 MiB dbt falls back to comparing the seed's file path, not its contents",
-
     "decision_hinge": "dbt stores a file hash of seed files that are under 1 MiB in size. If a seed file is over 1 MiB in size, dbt cannot compare its contents and will raise a warning as such. Instead, dbt will use only the seed's file path to detect changes.",
     "sources": [
       "https://docs.getdbt.com/reference/node-selection/state-comparison-caveats",
       "https://docs.getdbt.com/reference/commands/run"
     ],
-
     "plausible_options": {
       "C": "A 4 MiB seed file has several rows corrected, with no rename"
     },
     "eliminated_by": {
+      "A": {
+        "signal": "The team must get the corrected rows into the warehouse on this run",
+        "requires_fact": "If you provide the --full-refresh flag to dbt run, dbt will treat incremental models as table models."
+      },
       "B": {
         "signal": "The CI job runs `--select state:modified --state prod` and the seed is not rebuilt",
         "requires_fact": "If the contents of these seeds is modified, the seed will be included in state:modified."
-      },
-      "D": {
-        "signal": "The team must get the corrected rows into the warehouse on this run",
-        "requires_fact": "If you provide the --full-refresh flag to dbt run, dbt will treat incremental models as table models."
       }
     },
     "distractor_traps": {
+      "A": "T2: full-refresh governs rebuild behaviour, not eligibility for state selection",
       "B": "T1: seeds are covered by state comparison; it is the size that changes the method",
-      "C": "T8: scope error — content hashing is real, but it only applies below the 1 MiB limit",
-      "D": "T2: full-refresh governs rebuild behaviour, not eligibility for state selection"
+      "C": "T8: scope error — content hashing is real, but it only applies below the 1 MiB limit"
     },
-    "topics": ["ae/07-dbt-state/state-selection"]
+    "topics": [
+      "ae/07-dbt-state/state-selection"
+    ]
   }
 ]

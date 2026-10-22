@@ -1,7 +1,7 @@
 {
   "version": 1,
-  "count": 60,
-  "updated_at": "2026-09-30",
+  "count": 97,
+  "updated_at": "2026-10-22",
   "entries": [
     {
       "url": "https://docs.getdbt.com/docs/build/incremental-models",
@@ -481,6 +481,302 @@
       "title": "Add Exposures to your DAG | dbt Developer Hub",
       "fetched_at": "2026-09-30",
       "sha256": "bf26652c01fee407aca039d5edad5e71a7d8d93cd33a6b74f4b274f21ba30124",
+      "source": "mcp-cache_fetch"
+    },
+    {
+      "url": "https://docs.getdbt.com/reference/dbt-jinja-functions/var",
+      "path": "sources/cache/_raw/docs.getdbt.com/reference/dbt-jinja-functions/var.txt",
+      "title": "About var function | dbt Developer Hub",
+      "fetched_at": "2026-10-22",
+      "sha256": "0fb054545f7053d9e816539d59cf0d90faf7b5518e994995b52818b044331baa",
+      "source": "mcp-cache_fetch"
+    },
+    {
+      "url": "https://docs.getdbt.com/reference/model-configs#configuring-models",
+      "path": "sources/cache/_raw/docs.getdbt.com/reference/model-configs.txt",
+      "title": "Model configurations | dbt Developer Hub",
+      "fetched_at": "2026-10-22",
+      "sha256": "52a31cdcb979172e2e54124bd5928449a862118f2f517fb6770e7fe5bfd86afd",
+      "source": "mcp-cache_fetch"
+    },
+    {
+      "url": "https://docs.getdbt.com/docs/build/incremental-models#how-do-i-rebuild-an-incremental-model",
+      "path": "sources/cache/_raw/docs.getdbt.com/docs/build/incremental-models.txt",
+      "title": "Configure incremental models | dbt Developer Hub",
+      "fetched_at": "2026-10-22",
+      "sha256": "98953bbd10a725f0c0d393e31fccaea446cc554d07a51198b05ddc3e13499f55",
+      "source": "mcp-cache_fetch"
+    },
+    {
+      "url": "https://docs.getdbt.com/reference/dbt-jinja-functions/env_var",
+      "path": "sources/cache/_raw/docs.getdbt.com/reference/dbt-jinja-functions/env_var.txt",
+      "title": "About env_var function | dbt Developer Hub",
+      "fetched_at": "2026-10-22",
+      "sha256": "c95d5424d55c1b1683bff2d91b317318c6985fb951b2a92e8a2673d167e00295",
+      "source": "mcp-cache_fetch"
+    },
+    {
+      "url": "https://docs.getdbt.com/best-practices/how-we-structure/3-intermediate",
+      "path": "sources/cache/_raw/docs.getdbt.com/best-practices/how-we-structure/3-intermediate.txt",
+      "title": "Intermediate: Purpose-built transformation steps | dbt Developer Hub",
+      "fetched_at": "2026-10-22",
+      "sha256": "9eb96a4b838a3d8440b592d2cd7bb441064a1b8b20ca3cd425656ce624bd652d",
+      "source": "mcp-cache_fetch"
+    },
+    {
+      "url": "https://docs.getdbt.com/docs/collaborate/govern/model-contracts#how-are-contracts-enforced",
+      "path": "sources/cache/_raw/docs.getdbt.com/docs/collaborate/govern/model-contracts.txt",
+      "title": "Model contracts | dbt Developer Hub",
+      "fetched_at": "2026-10-22",
+      "sha256": "ddf7f4f86d1935fe575ffbf62d69b3c82978ef35375af94a74d208c4863bc704",
+      "source": "mcp-cache_fetch"
+    },
+    {
+      "url": "https://docs.getdbt.com/docs/build/materializations#ephemeral",
+      "path": "sources/cache/_raw/docs.getdbt.com/docs/build/materializations.txt",
+      "title": "Materializations | dbt Developer Hub",
+      "fetched_at": "2026-10-22",
+      "sha256": "d63f838f11e81a9f05de87780c490cf25094ce601c0685fed2954d623177ce01",
+      "source": "mcp-cache_fetch"
+    },
+    {
+      "url": "https://github.com/dbt-labs/dbt-utils#generate_surrogate_key",
+      "path": "sources/cache/_raw/github.com/dbt-labs/dbt-utils.txt",
+      "title": "GitHub - dbt-labs/dbt-utils: Utility functions for dbt projects. · GitHub",
+      "fetched_at": "2026-10-22",
+      "sha256": "e3ebc0bad9cd5ec784a7a39e4efbd8989aaae0c0af1006ea85471343fc9da301",
+      "source": "mcp-cache_fetch"
+    },
+    {
+      "url": "https://docs.getdbt.com/docs/build/snapshots#snapshot-configurations",
+      "path": "sources/cache/_raw/docs.getdbt.com/docs/build/snapshots.txt",
+      "title": "Add snapshots to your DAG | dbt Developer Hub",
+      "fetched_at": "2026-10-22",
+      "sha256": "7eb8b62ca0fa028fec3595449cdc04ddc500f82d663664313efb8081fab4cc3b",
+      "source": "mcp-cache_fetch"
+    },
+    {
+      "url": "https://docs.getdbt.com/docs/build/jinja-macros#jinja",
+      "path": "sources/cache/_raw/docs.getdbt.com/docs/build/jinja-macros.txt",
+      "title": "Jinja and macros | dbt Developer Hub",
+      "fetched_at": "2026-10-22",
+      "sha256": "a39aef6bfe956fa39facc73fa5dd1dc41e0b2aafa8ef882666525aba81853a52",
+      "source": "mcp-cache_fetch"
+    },
+    {
+      "url": "https://docs.getdbt.com/reference/resource-configs/pre-hook-post-hook",
+      "path": "sources/cache/_raw/docs.getdbt.com/reference/resource-configs/pre-hook-post-hook.txt",
+      "title": "pre-hook & post-hook | dbt Developer Hub",
+      "fetched_at": "2026-10-22",
+      "sha256": "bfd7372fd1ef6f714ccc4b39487d257aaf17b446e78a0cbe063650eb42021692",
+      "source": "mcp-cache_fetch"
+    },
+    {
+      "url": "https://docs.getdbt.com/docs/build/sql-models",
+      "path": "sources/cache/_raw/docs.getdbt.com/docs/build/sql-models.txt",
+      "title": "SQL models | dbt Developer Hub",
+      "fetched_at": "2026-10-22",
+      "sha256": "22bd2501ce6a01735249ddcf24d4473b099797d31bf606ac8529804aad761157",
+      "source": "mcp-cache_fetch"
+    },
+    {
+      "url": "https://docs.getdbt.com/reference/commands/deps",
+      "path": "sources/cache/_raw/docs.getdbt.com/reference/commands/deps.txt",
+      "title": "About dbt deps command | dbt Developer Hub",
+      "fetched_at": "2026-10-22",
+      "sha256": "af67274ac9513d204b5e507ecbfb65c8f920555997f08e5747d6fef777d95946",
+      "source": "mcp-cache_fetch"
+    },
+    {
+      "url": "https://docs.getdbt.com/reference/dbt-jinja-functions/this",
+      "path": "sources/cache/_raw/docs.getdbt.com/reference/dbt-jinja-functions/this.txt",
+      "title": "about this | dbt Developer Hub",
+      "fetched_at": "2026-10-22",
+      "sha256": "1f28dedcd1dc60f9be128225b471959132df086156c3cbf894c6150718e11e44",
+      "source": "mcp-cache_fetch"
+    },
+    {
+      "url": "https://docs.getdbt.com/reference/global-configs/behavior-changes",
+      "path": "sources/cache/_raw/docs.getdbt.com/reference/global-configs/behavior-changes.txt",
+      "title": "About behavior changes | dbt Developer Hub",
+      "fetched_at": "2026-10-22",
+      "sha256": "f8473fe94fa6d5f36be8adc4056091891edec9ef6fe9f440daf227284640f4d1",
+      "source": "mcp-cache_fetch"
+    },
+    {
+      "url": "https://docs.getdbt.com/docs/build/seeds",
+      "path": "sources/cache/_raw/docs.getdbt.com/docs/build/seeds.txt",
+      "title": "Add Seeds to your DAG | dbt Developer Hub",
+      "fetched_at": "2026-10-22",
+      "sha256": "f02f56846ae06734021d41feca613eb1b23f691b7e3a34a711bc75619956f76a",
+      "source": "mcp-cache_fetch"
+    },
+    {
+      "url": "https://docs.getdbt.com/guides/debug-errors#compiled-sql",
+      "path": "sources/cache/_raw/docs.getdbt.com/guides/debug-errors.txt",
+      "title": "Debug errors | dbt Developer Hub",
+      "fetched_at": "2026-10-22",
+      "sha256": "d991860d5013e04cede2e5f2f3a073b6e2f6b6da9b9cd147927606ac3b77cf75",
+      "source": "mcp-cache_fetch"
+    },
+    {
+      "url": "https://docs.getdbt.com/guides/debug-errors#types-of-errors",
+      "path": "sources/cache/_raw/docs.getdbt.com/guides/debug-errors.txt",
+      "title": "Debug errors | dbt Developer Hub",
+      "fetched_at": "2026-10-22",
+      "sha256": "d991860d5013e04cede2e5f2f3a073b6e2f6b6da9b9cd147927606ac3b77cf75",
+      "source": "mcp-cache_fetch"
+    },
+    {
+      "url": "https://docs.getdbt.com/docs/build/custom-schemas",
+      "path": "sources/cache/_raw/docs.getdbt.com/docs/build/custom-schemas.txt",
+      "title": "Custom schemas | dbt Developer Hub",
+      "fetched_at": "2026-10-22",
+      "sha256": "27554ce4f37db9f86349d06f45d4a0d5af18863d61996b4799b82305bb13cd91",
+      "source": "mcp-cache_fetch"
+    },
+    {
+      "url": "https://docs.getdbt.com/docs/build/jinja-macros#jinja-basics",
+      "path": "sources/cache/_raw/docs.getdbt.com/docs/build/jinja-macros.txt",
+      "title": "Jinja and macros | dbt Developer Hub",
+      "fetched_at": "2026-10-22",
+      "sha256": "a39aef6bfe956fa39facc73fa5dd1dc41e0b2aafa8ef882666525aba81853a52",
+      "source": "mcp-cache_fetch"
+    },
+    {
+      "url": "https://docs.getdbt.com/guides/debug-errors",
+      "path": "sources/cache/_raw/docs.getdbt.com/guides/debug-errors.txt",
+      "title": "Debug errors | dbt Developer Hub",
+      "fetched_at": "2026-10-22",
+      "sha256": "d991860d5013e04cede2e5f2f3a073b6e2f6b6da9b9cd147927606ac3b77cf75",
+      "source": "mcp-cache_fetch"
+    },
+    {
+      "url": "https://docs.getdbt.com/docs/running-a-dbt-project/using-threads",
+      "path": "sources/cache/_raw/docs.getdbt.com/docs/running-a-dbt-project/using-threads.txt",
+      "title": "Using threads | dbt Developer Hub",
+      "fetched_at": "2026-10-22",
+      "sha256": "f027fd1e3c67fb82a2ec4dc850ec9359bc2b9735122d0e957642add81444f16d",
+      "source": "mcp-cache_fetch"
+    },
+    {
+      "url": "https://docs.getdbt.com/docs/build/data-tests#singular-data-tests",
+      "path": "sources/cache/_raw/docs.getdbt.com/docs/build/data-tests.txt",
+      "title": "Add data tests to your DAG | dbt Developer Hub",
+      "fetched_at": "2026-10-22",
+      "sha256": "6917aa174a6c9dab2e56eb2d9c763d87819aa341d10e6b7e08562011b91318c1",
+      "source": "mcp-cache_fetch"
+    },
+    {
+      "url": "https://docs.getdbt.com/reference/dbt-jinja-functions/log",
+      "path": "sources/cache/_raw/docs.getdbt.com/reference/dbt-jinja-functions/log.txt",
+      "title": "log | dbt Developer Hub",
+      "fetched_at": "2026-10-22",
+      "sha256": "35cf10a28e57fcd8532f2c0d77b6dac5f4f992a67617d719299675d4ee0e2ca1",
+      "source": "mcp-cache_fetch"
+    },
+    {
+      "url": "https://docs.getdbt.com/reference/resource-properties/data-tests#accepted_values",
+      "path": "sources/cache/_raw/docs.getdbt.com/reference/resource-properties/data-tests.txt",
+      "title": "About data tests property | dbt Developer Hub",
+      "fetched_at": "2026-10-22",
+      "sha256": "9042284e1e6296ae42fc2e7236dcb5149737d16af97cf6379cada70fb34d2712",
+      "source": "mcp-cache_fetch"
+    },
+    {
+      "url": "https://docs.getdbt.com/reference/resource-properties/data-tests#relationships",
+      "path": "sources/cache/_raw/docs.getdbt.com/reference/resource-properties/data-tests.txt",
+      "title": "About data tests property | dbt Developer Hub",
+      "fetched_at": "2026-10-22",
+      "sha256": "9042284e1e6296ae42fc2e7236dcb5149737d16af97cf6379cada70fb34d2712",
+      "source": "mcp-cache_fetch"
+    },
+    {
+      "url": "https://docs.getdbt.com/reference/artifacts/manifest-json",
+      "path": "sources/cache/_raw/docs.getdbt.com/reference/artifacts/manifest-json.txt",
+      "title": "Manifest JSON file | dbt Developer Hub",
+      "fetched_at": "2026-10-22",
+      "sha256": "5fd95299a6878f2f3fbb53af3b752f340365e6169db898f45c844569c8641b48",
+      "source": "mcp-cache_fetch"
+    },
+    {
+      "url": "https://docs.getdbt.com/docs/build/data-tests#generic-data-tests",
+      "path": "sources/cache/_raw/docs.getdbt.com/docs/build/data-tests.txt",
+      "title": "Add data tests to your DAG | dbt Developer Hub",
+      "fetched_at": "2026-10-22",
+      "sha256": "6917aa174a6c9dab2e56eb2d9c763d87819aa341d10e6b7e08562011b91318c1",
+      "source": "mcp-cache_fetch"
+    },
+    {
+      "url": "https://docs.getdbt.com/docs/collaborate/documentation#the-lineage-graph",
+      "path": "sources/cache/_raw/docs.getdbt.com/docs/collaborate/documentation.txt",
+      "title": "About documentation | dbt Developer Hub",
+      "fetched_at": "2026-10-22",
+      "sha256": "06f28bb4d9d3029d67ba4a6e0e3a4a7208b42e90ce796c06b77811c5160b3eb7",
+      "source": "mcp-cache_fetch"
+    },
+    {
+      "url": "https://docs.getdbt.com/reference/project-configs/asset-paths",
+      "path": "sources/cache/_raw/docs.getdbt.com/reference/project-configs/asset-paths.txt",
+      "title": "asset-paths | dbt Developer Hub",
+      "fetched_at": "2026-10-22",
+      "sha256": "3b125dca32dbf9cf58429526f6f3618a9229a006e12042d74e628e5b620ad7ba",
+      "source": "mcp-cache_fetch"
+    },
+    {
+      "url": "https://docs.getdbt.com/reference/resource-configs/persist_docs",
+      "path": "sources/cache/_raw/docs.getdbt.com/reference/resource-configs/persist_docs.txt",
+      "title": "persist_docs | dbt Developer Hub",
+      "fetched_at": "2026-10-22",
+      "sha256": "b266a0ad1146c05230a90515642c3ffdefe9f72bb064693b3615312d301e22b0",
+      "source": "mcp-cache_fetch"
+    },
+    {
+      "url": "https://docs.getdbt.com/docs/collaborate/documentation#adding-descriptions-to-your-project",
+      "path": "sources/cache/_raw/docs.getdbt.com/docs/collaborate/documentation.txt",
+      "title": "About documentation | dbt Developer Hub",
+      "fetched_at": "2026-10-22",
+      "sha256": "06f28bb4d9d3029d67ba4a6e0e3a4a7208b42e90ce796c06b77811c5160b3eb7",
+      "source": "mcp-cache_fetch"
+    },
+    {
+      "url": "https://docs.getdbt.com/docs/build/sources#source-freshness",
+      "path": "sources/cache/_raw/docs.getdbt.com/docs/build/sources.txt",
+      "title": "Add sources to your DAG | dbt Developer Hub",
+      "fetched_at": "2026-10-22",
+      "sha256": "e3934236f62c512efc9756eb0921dab0770f7abc124dd36b93241f2b78dc2967",
+      "source": "mcp-cache_fetch"
+    },
+    {
+      "url": "https://docs.getdbt.com/docs/collaborate/documentation#using-docs-blocks",
+      "path": "sources/cache/_raw/docs.getdbt.com/docs/collaborate/documentation.txt",
+      "title": "About documentation | dbt Developer Hub",
+      "fetched_at": "2026-10-22",
+      "sha256": "06f28bb4d9d3029d67ba4a6e0e3a4a7208b42e90ce796c06b77811c5160b3eb7",
+      "source": "mcp-cache_fetch"
+    },
+    {
+      "url": "https://docs.getdbt.com/reference/artifacts/run-results-json",
+      "path": "sources/cache/_raw/docs.getdbt.com/reference/artifacts/run-results-json.txt",
+      "title": "Run results JSON file | dbt Developer Hub",
+      "fetched_at": "2026-10-22",
+      "sha256": "c4a7f339afb5b91d5677a8ca3d0c5179f159ff52812820e93e6cedafdd76f973",
+      "source": "mcp-cache_fetch"
+    },
+    {
+      "url": "https://docs.getdbt.com/reference/node-selection/set-operators",
+      "path": "sources/cache/_raw/docs.getdbt.com/reference/node-selection/set-operators.txt",
+      "title": "Set operators | dbt Developer Hub",
+      "fetched_at": "2026-10-22",
+      "sha256": "2691443683e2a5e016d7b7e5e1d7f5c5602d6cfb8227776e116e17c8ae43c6a7",
+      "source": "mcp-cache_fetch"
+    },
+    {
+      "url": "https://docs.getdbt.com/reference/node-selection/methods#the-state-method",
+      "path": "sources/cache/_raw/docs.getdbt.com/reference/node-selection/methods.txt",
+      "title": "Node selector methods | dbt Developer Hub",
+      "fetched_at": "2026-10-22",
+      "sha256": "13d026a18f5444d2c8d7f25d872219d4f325b20044a88e5e361e7daec85a1d7f",
       "source": "mcp-cache_fetch"
     }
   ]

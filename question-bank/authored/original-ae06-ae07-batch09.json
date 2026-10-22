@@ -1,0 +1,458 @@
+[
+  {
+    "id": "draft-orig-ae07-retry-no-recorded-nodes",
+    "domain": "ae-07",
+    "blueprint_task": "7.2",
+    "qtype": "multiple_choice",
+    "difficulty_estimate": "L4",
+    "stem": "A `dbt build` run fails immediately due to a warehouse connection error, before any model, seed, or snapshot has started executing. The developer fixes the connection issue and runs `dbt retry`. The team needs to know what actually happens. What's the outcome?",
+    "option_texts": {
+      "A": "`dbt retry` runs nothing, because no nodes were executed before the failure, so there is nothing recorded to retry from",
+      "B": "`dbt retry` re-runs the entire original selection from scratch, since the connection error invalidated the whole invocation",
+      "C": "`dbt retry` automatically switches to `--full-refresh` before rebuilding, to guarantee a clean rebuild after a connection failure",
+      "D": "`dbt retry` fails with an error, since there is no prior successful run it can resume"
+    },
+    "drill_answer": "A",
+    "drill_answer_short": "With no nodes executed before the failure, retry has nothing recorded to retry from and runs nothing",
+    "decision_hinge": "Retry re-executes the last invocation from the point of failure. If no nodes are executed before the failure, for example a run failed early due to a warehouse connection or permission error, retry won't run anything since there are no recorded nodes to retry from.",
+    "sources": [
+      "https://docs.getdbt.com/reference/commands/retry"
+    ],
+    "plausible_options": {
+      "D": "before any model, seed, or snapshot has started executing"
+    },
+    "eliminated_by": {
+      "B": "The developer fixes the connection issue and runs `dbt retry`",
+      "C": {
+        "signal": "before any model, seed, or snapshot has started executing",
+        "requires_fact": "If no nodes are executed before the failure, retry won't run anything since there are no recorded nodes to retry from."
+      }
+    },
+    "distractor_traps": {
+      "B": "T1: fabricated \u2014 retry resumes from the point of failure, it does not restart the whole selection",
+      "C": "T1: fabricated \u2014 retry never changes the materialization strategy of the original command",
+      "D": "T3: confusable sibling \u2014 retry does not error here, it simply has nothing recorded to retry, which is distinct from the already-succeeded no-op case"
+    },
+    "topics": [
+      "ae/07-dbt-state/dbt-retry"
+    ]
+  },
+  {
+    "id": "draft-orig-ae07-state-comparison-artifact",
+    "domain": "ae-07",
+    "blueprint_task": "7.1",
+    "qtype": "multiple_choice",
+    "difficulty_estimate": "L2",
+    "stem": "A CI job runs `dbt build --select state:modified --state path/to/prod/`. The platform engineer needs to know which artifact file dbt actually reads from that `--state` path to decide what counts as modified. Which artifact is it?",
+    "option_texts": {
+      "A": "`manifest.json`, because dbt uses this file for state comparison, representing a previous version of the project",
+      "B": "`run_results.json`, because it records the status of every node from the last invocation",
+      "C": "`catalog.json`, because it describes the warehouse objects dbt can compare against",
+      "D": "`sources.json`, because source freshness results are what state comparison checks"
+    },
+    "drill_answer": "A",
+    "drill_answer_short": "state:modified compares against manifest.json, a representation of a previous project version",
+    "decision_hinge": "The state method is used to select nodes by comparing them against a previous version of the same project, which is represented by a manifest. The file path of the comparison manifest must be specified via the --state flag.",
+    "sources": [
+      "https://docs.getdbt.com/reference/node-selection/methods"
+    ],
+    "plausible_options": {
+      "B": "to decide what counts as modified"
+    },
+    "eliminated_by": {
+      "C": "The platform engineer needs to know which artifact file dbt actually reads from that `--state` path",
+      "D": {
+        "signal": "to decide what counts as modified",
+        "requires_fact": "The state method is used to select nodes by comparing them against a previous version of the same project, which is represented by a manifest."
+      }
+    },
+    "distractor_traps": {
+      "B": "T3: confusable sibling \u2014 run_results.json records pass/fail status, it is not what state comparison reads",
+      "C": "T1: fabricated \u2014 catalog.json is not read for state-based node selection",
+      "D": "T1: fabricated \u2014 source freshness results are a separate concern from state comparison"
+    },
+    "topics": [
+      "ae/07-dbt-state/state-selection"
+    ]
+  },
+  {
+    "id": "draft-orig-ae07-state-artifact-fib",
+    "domain": "ae-07",
+    "blueprint_task": "7.1",
+    "qtype": "fill_in_blank",
+    "difficulty_estimate": "L2",
+    "stem": "The `--state` flag points dbt at a directory containing artifacts from a previous invocation. For state-based node selection such as `state:modified` to work, that directory must contain a specific JSON artifact representing the prior project. Name that required file: ____",
+    "accepted_answers": [
+      "manifest.json",
+      "manifest"
+    ],
+    "drill_answer": "manifest.json",
+    "drill_answer_short": "manifest.json is the artifact state comparison reads from the --state directory",
+    "decision_hinge": "The state method is used to select nodes by comparing them against a previous version of the same project, which is represented by a manifest. The file path of the comparison manifest must be specified via the --state flag.",
+    "sources": [
+      "https://docs.getdbt.com/reference/node-selection/methods"
+    ],
+    "topics": [
+      "ae/07-dbt-state/state-selection"
+    ]
+  },
+  {
+    "id": "draft-orig-ae07-run-results-status",
+    "domain": "ae-07",
+    "blueprint_task": "7.1",
+    "qtype": "multiple_choice",
+    "difficulty_estimate": "L2",
+    "stem": "After a `dbt build` finishes, a monitoring script needs the pass, fail, or error status for every node that actually executed in that specific invocation. Which artifact file should the script read, and why?",
+    "option_texts": {
+      "A": "`run_results.json`, because it contains timing and status info, including dbt's interpretation of runtime success, failure, or error, for each executed node",
+      "B": "`manifest.json`, because it lists the executed status every resource in the project last reported",
+      "C": "`sources.json`, because that file aggregates the executed status for every resource type, not only sources",
+      "D": "The `logs/dbt.log` file, since it is the only place dbt records whether a node ultimately passed"
+    },
+    "drill_answer": "A",
+    "drill_answer_short": "run_results.json records status per executed node for a specific invocation",
+    "decision_hinge": "This file contains information about a completed invocation of dbt, including timing and status info for each node that was executed. status: dbt's interpretation of runtime success, failure, or error.",
+    "sources": [
+      "https://docs.getdbt.com/reference/artifacts/run-results-json"
+    ],
+    "plausible_options": {
+      "B": "After a `dbt build` finishes"
+    },
+    "eliminated_by": {
+      "C": "needs the pass, fail, or error status for every node that actually executed in that specific invocation",
+      "D": {
+        "signal": "needs the pass, fail, or error status for every node that actually executed",
+        "requires_fact": "This file contains information about a completed invocation of dbt, including timing and status info for each node that was executed."
+      }
+    },
+    "distractor_traps": {
+      "B": "T3: confusable sibling \u2014 manifest.json represents the project's resources, not per-invocation pass/fail status",
+      "C": "T1: fabricated \u2014 sources.json is a freshness-specific artifact, not a general status report",
+      "D": "T2: wrong layer \u2014 the log file is unstructured text, not the structured per-node status artifact"
+    },
+    "topics": [
+      "ae/07-dbt-state/state-selection"
+    ]
+  },
+  {
+    "id": "draft-orig-ae07-set-operators",
+    "domain": "ae-07",
+    "blueprint_task": "7.1",
+    "qtype": "multiple_response",
+    "difficulty_estimate": "L3",
+    "stem": "A command passes two expressions to `--select`. The build engineer needs to know exactly how dbt combines them when a space separates the two, versus when a comma with no space separates them. Which TWO statements are correct?",
+    "option_texts": {
+      "A": "A space between the two selector expressions is a union: any resource matching either expression is selected",
+      "B": "A comma with no space between the two selector expressions is an intersection: a resource must match both to be selected",
+      "C": "A comma between two selector expressions always means exclusion, removing matches of the second expression from the first",
+      "D": "The order of the two comma-separated selector expressions changes which resources end up in the final intersection"
+    },
+    "drill_answer": "A,B",
+    "drill_answer_short": "A space is a union (OR); a comma with no space is an intersection (AND)",
+    "decision_hinge": "A union merges the node sets from several selector expressions; this behaves like OR across the arguments. Use commas with no spaces between arguments to define an intersection; a resource must satisfy all comma-separated arguments to remain in the final set. The order of comma-separated arguments does not change the final set.",
+    "sources": [
+      "https://docs.getdbt.com/reference/node-selection/set-operators"
+    ],
+    "plausible_options": {
+      "D": "exactly how dbt combines them when a space separates the two, versus when a comma with no space separates them"
+    },
+    "eliminated_by": {
+      "C": "versus when a comma with no space separates them"
+    },
+    "distractor_traps": {
+      "C": "T1: fabricated \u2014 dbt's selection syntax has no comma-as-exclusion rule",
+      "D": "T3: confusable sibling \u2014 order matters in some contexts, but the documentation explicitly says it does not change an intersection's final set"
+    },
+    "topics": [
+      "ae/07-dbt-state/state-selection"
+    ]
+  },
+  {
+    "id": "draft-orig-ae07-slim-ci-workflow",
+    "domain": "ae-07",
+    "blueprint_task": "7.1",
+    "qtype": "multiple_choice",
+    "difficulty_estimate": "L2",
+    "stem": "A team sets up a CI job so that opening a pull request (PR) triggers a build in a temporary schema. The PR modifies exactly one model. The platform engineer needs to know exactly what gets built and tested for this PR, as distinct from a full nightly job, including whether that one model's downstream dependents are built too. What is actually built and tested?",
+    "option_texts": {
+      "A": "Only the modified data assets in the pull request and their downstream dependencies, in a temporary schema unique to that PR",
+      "B": "Every model, seed, and snapshot in the entire project, rebuilt from scratch in the temporary schema",
+      "C": "Only the single file that was changed, with no downstream models included",
+      "D": "Whatever was built in the most recent nightly production run, independent of this request, replayed unchanged"
+    },
+    "drill_answer": "A",
+    "drill_answer_short": "CI builds only the modified assets in the PR plus their downstream dependencies, in a temp schema",
+    "decision_hinge": "When you run a CI job, only the modified data assets in your pull request (PR) and their downstream dependencies are built and tested in a staging schema.",
+    "sources": [
+      "https://docs.getdbt.com/docs/deploy/continuous-integration"
+    ],
+    "plausible_options": {
+      "B": "as distinct from a full nightly job"
+    },
+    "eliminated_by": {
+      "C": "whether that one model's downstream dependents are built too",
+      "D": "triggers a build in a temporary schema"
+    },
+    "distractor_traps": {
+      "B": "T7: over-engineering \u2014 CI is documented to scope down to modified assets plus dependents, not rebuild everything",
+      "C": "T4: breaks a stated fact \u2014 downstream dependencies are explicitly included, not excluded",
+      "D": "T1: fabricated \u2014 a CI run builds the PR's changes, not a replay of a previous production run"
+    },
+    "topics": [
+      "ae/07-dbt-state/state-selection"
+    ]
+  },
+  {
+    "id": "draft-orig-ae07-defer-favor-state-command",
+    "domain": "ae-07",
+    "blueprint_task": "7.1",
+    "qtype": "multiple_choice",
+    "difficulty_estimate": "L4",
+    "stem": "A CI job must build only `state:modified` resources, but any `ref()` they make to unselected, unbuilt parent models must resolve to the production versions of those parents instead of failing. The team needs the exact command-line combination that achieves this against a `prod-artifacts` directory. Which combination is correct?",
+    "option_texts": {
+      "A": "`dbt build --select state:modified --defer --state path/to/prod-artifacts/`, so unselected nodes not yet built here resolve to production via deferral",
+      "B": "`dbt build --select state:modified --full-refresh`, since full-refresh also resolves any unselected missing upstream parents automatically",
+      "C": "`dbt build --select state:modified --exclude prod-artifacts`, so the build does not try to resolve unselected production objects at all",
+      "D": "`dbt clone --select state:modified --state path/to/prod-artifacts/`, which copies the production parents into the CI schema first"
+    },
+    "drill_answer": "A",
+    "drill_answer_short": "--defer with --state redirects unselected, unbuilt refs to the production manifest",
+    "decision_hinge": "When deferral conditions are met, dbt will resolve ref calls using the state manifest instead, but only if the node isn't among the selected nodes, and it doesn't exist in the database.",
+    "sources": [
+      "https://docs.getdbt.com/reference/node-selection/defer"
+    ],
+    "plausible_options": {
+      "D": "must resolve to the production versions of those parents instead of failing"
+    },
+    "eliminated_by": {
+      "B": "must build only `state:modified` resources",
+      "C": "against a `prod-artifacts` directory"
+    },
+    "distractor_traps": {
+      "B": "T1: fabricated \u2014 full-refresh rebuilds incremental models from scratch, it does not resolve missing upstream parents",
+      "C": "T1: fabricated \u2014 `--exclude` removes resources from selection, it is not a state or deferral mechanism",
+      "D": "T7: over-engineering \u2014 cloning copies objects into the schema; deferral achieves the same ref resolution without copying anything"
+    },
+    "topics": [
+      "ae/07-dbt-state/state-selection"
+    ]
+  },
+  {
+    "id": "draft-orig-ae07-defer-unselected-parent",
+    "domain": "ae-07",
+    "blueprint_task": "7.1",
+    "qtype": "multiple_choice",
+    "difficulty_estimate": "L5",
+    "stem": "A CI run executes `dbt build --select state:modified+ --defer --state ./prod-manifest/`. Only `stg_orders` was modified; `fct_orders` refs `stg_orders` and is selected as a downstream descendant; `dim_customers` is an unrelated, unselected, already-built parent that `fct_orders` also refs. The team needs to know what happens to `dim_customers` during this run. What happens?",
+    "option_texts": {
+      "A": "dbt resolves the `ref()` to `dim_customers` using the production manifest, since it is not among the selected nodes and already exists there",
+      "B": "`dim_customers` is rebuilt anyway, because the trailing `+` after `state:modified` also selects all of its ancestors",
+      "C": "The build fails, because `dim_customers` was not explicitly selected and `--defer` cannot resolve unselected parents",
+      "D": "`dim_customers` is skipped entirely and `fct_orders` builds without any data from it"
+    },
+    "drill_answer": "A",
+    "drill_answer_short": "An unselected parent that already exists in the database gets deferred to the production manifest",
+    "decision_hinge": "When deferral conditions are met, dbt will resolve ref calls using the state manifest instead, but only if the node isn't among the selected nodes, and it doesn't exist in the database (or --favor-state is used).",
+    "sources": [
+      "https://docs.getdbt.com/reference/node-selection/defer"
+    ],
+    "plausible_options": {
+      "B": "`fct_orders` refs `stg_orders` and is selected as a downstream descendant"
+    },
+    "eliminated_by": {
+      "C": {
+        "signal": "is an unrelated, unselected, already-built parent that `fct_orders` also refs",
+        "requires_fact": "When deferral conditions are met, dbt resolves ref calls using the state manifest instead, when the node isn't among the selected nodes and it doesn't exist in the database."
+      },
+      "D": "`fct_orders` refs `stg_orders` and is selected as a downstream descendant"
+    },
+    "distractor_traps": {
+      "B": "T3: confusable sibling \u2014 a trailing `+` selects descendants of the modified node, not ancestors of every node it references",
+      "C": "T4: breaks a stated fact \u2014 resolving an unselected, already-built parent via the state manifest is exactly what deferral does",
+      "D": "T1: fabricated \u2014 dbt does not silently drop an unselected parent's data"
+    },
+    "topics": [
+      "ae/07-dbt-state/state-selection"
+    ]
+  },
+  {
+    "id": "draft-orig-ae07-state-modified-detects",
+    "domain": "ae-07",
+    "blueprint_task": "7.1",
+    "qtype": "multiple_response",
+    "difficulty_estimate": "L4",
+    "stem": "A pull request changes a model's `materialized` config from `view` to `table`, and separately adds a new `meta: {owner: data-team}` entry to an unrelated model, with no other changes anywhere. The reviewer needs to know which of these two changes `state:modified` actually detects by default. Which TWO statements are correct?",
+    "option_texts": {
+      "A": "The materialization change is detected, because any config change can affect how the model is built",
+      "B": "The `meta` change is NOT detected, because dbt treats `meta` as metadata only and it does not trigger `state:modified`",
+      "C": "The `meta` change is detected, because any property change in a YAML file counts as a modification",
+      "D": "Neither change is detected, because `state:modified` only tracks config changes made directly in raw `.sql` files"
+    },
+    "drill_answer": "A,B",
+    "drill_answer_short": "A materialized config change is detected; a meta-only change is not",
+    "decision_hinge": "Changes to tags and meta, whether set at the resource level or on individual columns in a YAML file, don't count as modifications and will not trigger state:modified. Any other config change counts as a modification, because that config could affect materialization.",
+    "sources": [
+      "https://docs.getdbt.com/reference/node-selection/state-comparison-caveats"
+    ],
+    "plausible_options": {
+      "C": "adds a new `meta: {owner: data-team}` entry to an unrelated model"
+    },
+    "eliminated_by": {
+      "D": "changes a model's `materialized` config from `view` to `table`"
+    },
+    "distractor_traps": {
+      "C": "T3: confusable sibling \u2014 most YAML property changes do count, but tags and meta are an explicit, documented exception",
+      "D": "T1: fabricated \u2014 a config change in YAML, not only raw SQL edits, triggers state:modified"
+    },
+    "topics": [
+      "ae/07-dbt-state/state-selection"
+    ]
+  },
+  {
+    "id": "draft-orig-ae07-state-modified-plus-suffix",
+    "domain": "ae-07",
+    "blueprint_task": "7.1",
+    "qtype": "multiple_choice",
+    "difficulty_estimate": "L3",
+    "stem": "A CI selector is written as `state:modified+`. The reviewer needs to know exactly what the trailing `+` contributes here, beyond selecting the modified nodes themselves. What does it add?",
+    "option_texts": {
+      "A": "All descendants (downstream dependencies) of each modified node, because a trailing `+` expands a selection to include descendants",
+      "B": "Enhanced, more verbose logging output for every modified node, with no change to which nodes are selected",
+      "C": "All ancestors (upstream dependencies) of each modified node",
+      "D": "Nothing additional; a trailing `+` after `state:modified` is a no-op kept only for readability"
+    },
+    "drill_answer": "A",
+    "drill_answer_short": "A trailing + adds descendants of the matched nodes to the selection",
+    "decision_hinge": "Placed after a model/resource, the + operator includes the resource itself and all its descendants (downstream dependencies). Placed before, it includes ancestors (upstream dependencies) instead.",
+    "sources": [
+      "https://docs.getdbt.com/reference/node-selection/graph-operators"
+    ],
+    "plausible_options": {
+      "C": "exactly what the trailing `+` contributes here"
+    },
+    "eliminated_by": {
+      "B": "beyond selecting the modified nodes themselves",
+      "D": {
+        "signal": "beyond selecting the modified nodes themselves",
+        "requires_fact": "Placed after a model/resource, the + operator includes the resource itself and all its descendants (downstream dependencies)."
+      }
+    },
+    "distractor_traps": {
+      "B": "T1: fabricated \u2014 + changes which nodes are selected, it is not a logging-verbosity switch",
+      "C": "T3: confusable sibling \u2014 a leading + adds ancestors; a trailing + adds descendants instead",
+      "D": "T4: breaks a stated fact \u2014 a trailing + does change the selection by adding descendants"
+    },
+    "topics": [
+      "ae/07-dbt-state/state-selection"
+    ]
+  },
+  {
+    "id": "draft-orig-ae06-source-freshness-requirements",
+    "domain": "ae-06",
+    "blueprint_task": "6.2",
+    "qtype": "multiple_response",
+    "difficulty_estimate": "L4",
+    "stem": "A team configures source freshness for a table but sets only `warn_after: {count: 12}`, leaving the time unit out, and configures no explicit way for dbt to find the last-loaded timestamp. They need to know which TWO documented consequences follow. Which TWO are correct?",
+    "option_texts": {
+      "A": "The missing time unit only issues a parse warning at first, and the real failure surfaces later, when the freshness check actually runs",
+      "B": "Without an explicit timestamp source, dbt falls back to needing adapter metadata to find the most recent loaded timestamp",
+      "C": "dbt raises a hard parse error about the freshness config immediately and refuses to run anything else in the project, regardless of timestamp source",
+      "D": "The missing time unit is automatically filled in using a default period dbt assumes for freshness checks, regardless of the explicit timestamp source configured"
+    },
+    "drill_answer": "A,B",
+    "drill_answer_short": "count without period only warns at parse time; no loaded_at field requires adapter metadata",
+    "decision_hinge": "count without period parses with only a warning, so the failure surfaces later, at check time. loaded_at_field is required when adapter metadata is unavailable.",
+    "sources": [
+      "https://docs.getdbt.com/reference/resource-properties/freshness"
+    ],
+    "plausible_options": {
+      "C": "leaving the time unit out"
+    },
+    "eliminated_by": {
+      "D": "sets only `warn_after: {count: 12}`"
+    },
+    "distractor_traps": {
+      "C": "T8: scope error \u2014 the documented behaviour is a parse warning, not a hard error that halts the project",
+      "D": "T1: fabricated \u2014 dbt does not auto-fill a missing time unit with a default period"
+    },
+    "topics": [
+      "ae/06-external-dependencies/source-freshness"
+    ]
+  },
+  {
+    "id": "draft-orig-ae06-exposure-owner-required",
+    "domain": "ae-06",
+    "blueprint_task": "6.1",
+    "qtype": "multiple_choice",
+    "difficulty_estimate": "L3",
+    "stem": "A team declares a new exposure in YAML for a dashboard, listing a `name`, a `type`, and `depends_on` referencing two models. The reviewer notices the `owner` property is missing entirely. The team needs to know whether this exposure is valid as written. Is it, and why?",
+    "option_texts": {
+      "A": "No, because `owner` is a required property, satisfied by either a `name` or an `email` under it",
+      "B": "Yes, because the `owner` property is optional metadata used only for documentation purposes",
+      "C": "No, because `depends_on` must reference a `source`, not models, for any exposure",
+      "D": "Yes, as long as the exposure's `name` contains spaces or capital letters for readability"
+    },
+    "drill_answer": "A",
+    "drill_answer_short": "owner is required on an exposure, satisfied by name or email",
+    "decision_hinge": "Required: name, a unique exposure name written in snake case; owner, name or email required, additional properties allowed.",
+    "sources": [
+      "https://docs.getdbt.com/docs/build/exposures"
+    ],
+    "plausible_options": {
+      "B": "The reviewer notices the `owner` property is missing entirely"
+    },
+    "eliminated_by": {
+      "C": "listing a `name`, a `type`, and `depends_on` referencing two models",
+      "D": {
+        "signal": "The team needs to know whether this exposure is valid as written",
+        "requires_fact": "Required: name, a unique exposure name written in snake case."
+      }
+    },
+    "distractor_traps": {
+      "B": "T3: confusable sibling \u2014 some exposure properties are optional metadata, but owner is explicitly required",
+      "C": "T1: fabricated \u2014 depends_on commonly references models, not only sources",
+      "D": "T1: fabricated \u2014 name must be snake case; spaces and capitals belong in the separate label property"
+    },
+    "topics": [
+      "ae/06-external-dependencies/exposures"
+    ]
+  },
+  {
+    "id": "draft-orig-ae06-plus-exposure-selection",
+    "domain": "ae-06",
+    "blueprint_task": "6.1",
+    "qtype": "multiple_choice",
+    "difficulty_estimate": "L3",
+    "stem": "A command runs `dbt build --select +exposure:weekly_kpis`. The exposure `weekly_kpis` depends on two models, each with their own separate upstream chains. The release manager needs to know exactly which resources this builds. What gets built?",
+    "option_texts": {
+      "A": "Every model upstream of `weekly_kpis`, following both of its dependency chains back to their sources, plus the exposure's direct parents",
+      "B": "Only `weekly_kpis`'s two direct parent models, not anything further up either chain",
+      "C": "Every model in the project, since an exposure like `weekly_kpis` can depend on anything upstream",
+      "D": "Nothing is built; `exposure:weekly_kpis` only supports `dbt test` and `dbt ls` across both upstream chains, never `dbt build`"
+    },
+    "drill_answer": "A",
+    "drill_answer_short": "+exposure:name selects the exposure's full upstream lineage, not just its direct parents",
+    "decision_hinge": "dbt run --select +exposure:weekly_kpis runs all models that feed into the weekly_kpis exposure.",
+    "sources": [
+      "https://docs.getdbt.com/reference/node-selection/methods"
+    ],
+    "plausible_options": {
+      "B": "each with their own separate upstream chains"
+    },
+    "eliminated_by": {
+      "C": "The release manager needs to know exactly which resources this builds",
+      "D": {
+        "signal": "The release manager needs to know exactly which resources this builds",
+        "requires_fact": "dbt run --select +exposure:weekly_kpis runs all models that feed into the weekly_kpis exposure."
+      }
+    },
+    "distractor_traps": {
+      "B": "T3: confusable sibling \u2014 the leading + traverses the full upstream chain, not just the direct parents",
+      "C": "T1: fabricated \u2014 the + operator scopes to the exposure's own lineage, not the whole project",
+      "D": "T1: fabricated \u2014 exposure selectors work with dbt build just like other selection methods"
+    },
+    "topics": [
+      "ae/06-external-dependencies/exposures"
+    ]
+  }
+]

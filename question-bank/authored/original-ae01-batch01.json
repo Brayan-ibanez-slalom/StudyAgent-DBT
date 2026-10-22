@@ -1,0 +1,68 @@
+[
+  {
+    "id": "draft-orig-ae01-graph-plus-upstream",
+    "domain": "ae-01",
+    "blueprint_task": "1.5",
+    "qtype": "multiple_choice",
+    "difficulty_estimate": "L3",
+    "stem": "A deployment job runs `dbt build --select +fct_shipments`. `fct_shipments` has two upstream parents, `stg_orders` and `stg_warehouses`, and no models depend on `fct_shipments` downstream. The release manager must confirm exactly which nodes this selector touches before approving the job. Which nodes are included?",
+    "option_texts": {
+      "A": "Only fct_shipments itself, with no ancestors or descendants added",
+      "B": "fct_shipments plus its upstream ancestors, and nothing downstream of it",
+      "C": "fct_shipments plus its downstream descendants, and nothing upstream of it",
+      "D": "Every model in the project that is connected to fct_shipments through any path"
+    },
+    "drill_answer": "B",
+    "drill_answer_short": "+ placed before a resource selects the resource and its upstream ancestors",
+    "decision_hinge": "Placed before a model/resource, the + operator includes the resource itself and all its ancestors (upstream dependencies). Placed after a model/resource, + includes the resource itself and all its descendants (downstream dependencies).",
+    "sources": ["https://docs.getdbt.com/reference/node-selection/graph-operators"],
+    "plausible_options": {
+      "C": "no models depend on `fct_shipments` downstream"
+    },
+    "eliminated_by": {
+      "A": "`fct_shipments` has two upstream parents, `stg_orders` and `stg_warehouses`",
+      "D": {
+        "signal": "must confirm exactly which nodes this selector touches",
+        "requires_fact": "The + operator expands your selection to include ancestors or descendants of a resource; it works for individual models, tags, and other resources, not the entire project."
+      }
+    },
+    "distractor_traps": {
+      "A": "T4: breaks a stated requirement \u2014 ignores the two upstream parents the stem already names",
+      "C": "T3: confusable sibling \u2014 treats a leading + as if it were a trailing + (descendants instead of ancestors)",
+      "D": "T8: scope error \u2014 the operator traverses one resource's lineage, not the whole project"
+    },
+    "topics": ["ae/04-troubleshooting-pipelines/dag-failure-points"]
+  },
+  {
+    "id": "draft-orig-ae01-ephemeral-two-facts",
+    "domain": "ae-01",
+    "blueprint_task": "1.2",
+    "qtype": "multiple_response",
+    "difficulty_estimate": "L2",
+    "stem": "A lightweight model renames two columns early in the DAG and feeds exactly one downstream model. It is currently materialized as ephemeral. An analyst wants to understand what that materialization actually does before deciding whether to change it. Which TWO statements about ephemeral models are accurate?",
+    "option_texts": {
+      "A": "An ephemeral model is interpolated into its consuming model's query as a common table expression, so it never exists as a database object",
+      "B": "An ephemeral model can be queried directly from a BI tool once the project has been built once",
+      "C": "An ephemeral model cannot carry an enforced model contract, because there is no relation in the warehouse to enforce anything against",
+      "D": "An ephemeral model automatically refreshes downstream consumers on a schedule the warehouse controls, independent of dbt runs"
+    },
+    "drill_answer": "A,C",
+    "drill_answer_short": "Ephemeral models are interpolated as CTEs and cannot carry enforced contracts",
+    "decision_hinge": "An ephemeral model is not built directly into the database. Instead, dbt interpolates the code from this model into dependent models as a common table expression. Ephemeral materialization does not support model contracts, since there is no database relation to enforce a contract against.",
+    "sources": ["https://docs.getdbt.com/docs/build/materializations"],
+    "plausible_options": {
+      "B": "feeds exactly one downstream model"
+    },
+    "eliminated_by": {
+      "D": {
+        "signal": "It is currently materialized as ephemeral",
+        "requires_fact": "An ephemeral model creates no database objects at all; a materialized view is the materialization that a database can refresh on a cadence without a dbt run."
+      }
+    },
+    "distractor_traps": {
+      "B": "T3: confusable sibling \u2014 a view or table can be queried directly; an ephemeral model has no relation to query",
+      "D": "T3: confusable sibling \u2014 that scheduled-refresh behaviour describes a materialized view, not ephemeral"
+    },
+    "topics": ["ae/01-developing-and-optimizing-models/materializations"]
+  }
+]

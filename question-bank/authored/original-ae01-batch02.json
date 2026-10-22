@@ -1,0 +1,156 @@
+[
+  {
+    "id": "draft-orig-ae01-python-model-return",
+    "domain": "ae-01",
+    "blueprint_task": "1.8",
+    "qtype": "multiple_choice",
+    "difficulty_estimate": "L2",
+    "stem": "A data platform team is building a `customer_churn_score` model whose transformation logic is easier to express with a Python DataFrame library than with SQL. The warehouse supports dbt Python models, and the team needs to know what the `model()` function must ultimately return so the model builds correctly. What must the function return?",
+    "option_texts": {
+      "A": "Nothing explicit, because dbt infers the output schema from the function's type hints",
+      "B": "A compiled SELECT statement string that dbt wraps and executes against the warehouse",
+      "C": "One DataFrame per upstream dbt source or model referenced, rather than a single combined DataFrame",
+      "D": "A single DataFrame, which dbt saves as a table in the data warehouse when the model runs"
+    },
+    "drill_answer": "D",
+    "drill_answer_short": "The model() function must return a single DataFrame, saved as a table",
+    "decision_hinge": "The model() function must return a single DataFrame. When you run a Python model, the full result of the final DataFrame will be saved as a table in your data warehouse.",
+    "sources": [
+      "https://docs.getdbt.com/docs/build/python-models"
+    ],
+    "plausible_options": {
+      "B": "whose transformation logic is easier to express with a Python DataFrame library than with SQL"
+    },
+    "eliminated_by": {
+      "A": "needs to know what the `model()` function must ultimately return so the model builds correctly",
+      "C": {
+        "signal": "needs to know what the `model()` function must ultimately return so the model builds correctly",
+        "requires_fact": "The model() function must return a single DataFrame, not a list of DataFrames per source or model referenced."
+      }
+    },
+    "distractor_traps": {
+      "A": "T1: fabricated — dbt does not infer a schema from Python type hints",
+      "B": "T3: confusable sibling — a SQL model compiles to a final select statement; a Python model returns a DataFrame object instead",
+      "C": "T1: fabricated — dbt does not expect one DataFrame per upstream reference"
+    },
+    "topics": [
+      "ae/01-developing-and-optimizing-models/materializations"
+    ]
+  },
+  {
+    "id": "draft-orig-ae01-ref-vs-source",
+    "domain": "ae-01",
+    "blueprint_task": "1.1",
+    "qtype": "multiple_choice",
+    "difficulty_estimate": "L2",
+    "stem": "A staging model needs to read directly from a raw Fivetran-loaded table that no dbt model builds, while a separate mart model needs to build on top of a dbt model that already exists in the DAG. The developer must pick the right Jinja function for each case so dbt's lineage graph and node selection stay accurate. Which pairing is correct?",
+    "option_texts": {
+      "A": "Use `ref()` for both, since `ref()` resolves any table name regardless of who built it",
+      "B": "Use `source()` for the Fivetran-loaded table and `ref()` for the dbt-built model",
+      "C": "Use `source()` for both, since `source()` can point at any table including ones dbt builds",
+      "D": "Use `ref()` for the Fivetran-loaded table and `source()` for the dbt-built model"
+    },
+    "drill_answer": "B",
+    "drill_answer_short": "source() names raw loaded data; ref() points at a model, seed, or snapshot dbt built",
+    "decision_hinge": "Sources make it possible to name and describe the data loaded into your warehouse by your Extract and Load tools, referenced using the source() function. The ref() function returns a Relation for a model, seed, or snapshot, and creates dependencies between the referenced node and the current model.",
+    "sources": [
+      "https://docs.getdbt.com/docs/build/sources",
+      "https://docs.getdbt.com/reference/dbt-jinja-functions/ref"
+    ],
+    "plausible_options": {
+      "A": "The developer must pick the right Jinja function for each case so dbt's lineage graph and node selection stay accurate"
+    },
+    "eliminated_by": {
+      "C": {
+        "signal": "needs to read directly from a raw Fivetran-loaded table that no dbt model builds",
+        "requires_fact": "Sources make it possible to name and describe the data loaded into your warehouse by your Extract and Load tools; the ref() function returns a Relation for a model, seed, or snapshot that dbt builds."
+      },
+      "D": "needs to build on top of a dbt model that already exists in the DAG"
+    },
+    "distractor_traps": {
+      "A": "T3: confusable sibling — ref() only resolves dbt-built models, seeds, and snapshots, not arbitrary raw tables",
+      "C": "T3: confusable sibling — source() names externally loaded data; it is not a substitute for ref() on dbt-built models",
+      "D": "T4: breaks a stated requirement — swaps the two functions for the two described cases"
+    },
+    "topics": [
+      "ae/01-developing-and-optimizing-models/dbt-commands"
+    ]
+  },
+  {
+    "id": "draft-orig-ae01-vars-cli-precedence",
+    "domain": "ae-01",
+    "blueprint_task": "1.6",
+    "qtype": "multiple_choice",
+    "difficulty_estimate": "L3",
+    "stem": "A model filters rows using `var(\"region\", \"us\")`. The project's `dbt_project.yml` sets `vars: {region: us}` as a project-wide default, and a release engineer must get the Friday backfill run to process the `eu` region without editing any project files. Which approach gets the Friday run to use `eu`, and why?",
+    "option_texts": {
+      "A": "Set `region: eu` inside `profiles.yml`, because that satisfies the requirement without touching project files",
+      "B": "Edit the `region` default inside the model's `var()` call, because the function argument always wins",
+      "C": "Pass `--vars '{\"region\": \"eu\"}'` on the command line, because CLI vars override the project's default variable values at runtime",
+      "D": "Rename the project variable to `region_eu` for this run, because dbt prefers the most recently defined variable name"
+    },
+    "drill_answer": "C",
+    "drill_answer_short": "--vars on the command line overrides dbt_project.yml variable defaults at runtime",
+    "decision_hinge": "Variables defined in dbt_project.yml act as project-wide defaults. You can override them at runtime using the --vars command-line argument, for example when testing with a different date range or running models with environment-specific settings without changing your model logic.",
+    "sources": [
+      "https://docs.getdbt.com/reference/dbt-jinja-functions/var"
+    ],
+    "plausible_options": {
+      "A": "without editing any project files"
+    },
+    "eliminated_by": {
+      "B": "without editing any project files",
+      "D": {
+        "signal": "must get the Friday backfill run to process the `eu` region",
+        "requires_fact": "The var() function returns the value defined in your project or passed using --vars, based on precedence; dbt does not select a variable by how recently it was named."
+      }
+    },
+    "distractor_traps": {
+      "A": "T2: wrong layer — profiles.yml is a connection file dbt does not use to resolve var() values",
+      "B": "T4: breaks a stated requirement — editing the model's inline default is still editing a project file",
+      "D": "T1: fabricated — dbt has no recency rule for variable names"
+    },
+    "topics": [
+      "ae/01-developing-and-optimizing-models/project-config-and-flags"
+    ]
+  },
+  {
+    "id": "draft-orig-ae01-env-var-vs-var-profiles",
+    "domain": "ae-01",
+    "blueprint_task": "1.6",
+    "qtype": "multiple_choice",
+    "difficulty_estimate": "L4",
+    "stem": "A platform team wants a connection detail to flip between environments by reading an environment variable, and they need it to resolve correctly inside `profiles.yml`, which dbt reads before compiling any Jinja elsewhere in the project. Which function can they use inside `profiles.yml` for this, and why?",
+    "option_texts": {
+      "A": "Neither function works in profiles.yml, so only hard-coded values are allowed there",
+      "B": "`var()`, because it reads the same underlying value as `env_var()` and only differs in syntax",
+      "C": "Either function works identically in profiles.yml, since both are evaluated at the same stage of the dbt run",
+      "D": "`env_var()`, because it is available anywhere dbt processes Jinja code, including profiles.yml"
+    },
+    "drill_answer": "D",
+    "drill_answer_short": "env_var() works anywhere dbt processes Jinja, including profiles.yml; var() does not",
+    "decision_hinge": "env_var is available anywhere dbt processes Jinja code, including the profiles.yml file. The var() function does not work in configuration files that dbt reads before compilation, such as profiles.yml.",
+    "sources": [
+      "https://docs.getdbt.com/reference/dbt-jinja-functions/env_var",
+      "https://docs.getdbt.com/reference/dbt-jinja-functions/var"
+    ],
+    "plausible_options": {
+      "B": "which dbt reads before compiling any Jinja elsewhere in the project"
+    },
+    "eliminated_by": {
+      "A": "wants a connection detail to flip between environments by reading an environment variable",
+      "C": {
+        "signal": "which dbt reads before compiling any Jinja elsewhere in the project",
+        "requires_fact": "The var() function does not work in configuration files that dbt reads before compilation, such as profiles.yml, while env_var is available anywhere dbt processes Jinja code."
+      }
+    },
+    "distractor_traps": {
+      "A": "T1: fabricated — dbt does support an environment-variable function in profiles.yml",
+      "B": "T3: confusable sibling — var() and env_var() read different sources and are restricted in different places",
+      "C": "T4: breaks a stated requirement — profiles.yml is read before compilation, a stage where var() does not work"
+    },
+    "topics": [
+      "ae/01-developing-and-optimizing-models/project-config-and-flags"
+    ]
+  }
+]

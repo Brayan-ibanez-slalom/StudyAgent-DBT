@@ -1,0 +1,47 @@
+[
+  {
+    "id": "draft-orig-ae01-is-incremental-fib",
+    "domain": "ae-01",
+    "blueprint_task": "1.11",
+    "qtype": "fill_in_blank",
+    "difficulty_estimate": "L2",
+    "stem": "A model is configured with `materialized='incremental'`. Its SQL must stay valid whether the run is incremental or not, and the team needs the name of the built-in Jinja macro that evaluates to `True` only when the destination table already exists, the full-refresh flag was not passed, and the model is configured as incremental. Name the macro, with parentheses: ____",
+    "accepted_answers": ["is_incremental()", "is_incremental"],
+    "drill_answer": "is_incremental()",
+    "drill_answer_short": "is_incremental() returns True only when all three conditions hold",
+    "decision_hinge": "The is_incremental() macro will return True if all of the following conditions are met: the model already exists as a table in the database, the full-refresh flag is not passed, and the running model is configured with materialized='incremental'.",
+    "sources": ["https://docs.getdbt.com/docs/build/incremental-models"],
+    "topics": ["ae/01-developing-and-optimizing-models/incremental-models"]
+  },
+  {
+    "id": "draft-orig-ae01-config-precedence",
+    "domain": "ae-01",
+    "blueprint_task": "1.6",
+    "qtype": "multiple_choice",
+    "difficulty_estimate": "L3",
+    "stem": "A model's `.sql` file has a `{{ config(materialized='view') }}` block. The model also has a `schema.yml` config property setting a different materialization, and the project's `dbt_project.yml` sets a project-wide default materialization plus a folder-level override, and all three layers disagree on the materialization. The team must determine which one dbt actually builds. Which layer wins, and why?",
+    "option_texts": {
+      "A": "dbt builds the model as the `schema.yml` property states, because a `.yml` resource property is the innermost layer dbt reads",
+      "B": "dbt builds the model as the in-file block states, because that layer is nested deepest and wins over the schema property and project settings",
+      "C": "dbt builds the model as the project-wide default states, because `dbt_project.yml` settings apply to every model regardless of folder",
+      "D": "dbt raises a compilation error, because the layers disagree and dbt cannot resolve the conflict on its own"
+    },
+    "drill_answer": "B",
+    "drill_answer_short": "The in-file config() block is the most specific layer and always wins",
+    "decision_hinge": "Model configurations are applied hierarchically: a config() Jinja macro within a model file takes precedence over a config resource property in a .yml file, which takes precedence over the project YAML file; the most specific configuration always takes precedence, and in the project YAML file a subdirectory takes precedence over the entire project.",
+    "sources": ["https://docs.getdbt.com/reference/model-configs"],
+    "plausible_options": {
+      "A": "also has a `schema.yml` config property setting a different materialization"
+    },
+    "eliminated_by": {
+      "C": "the project's `dbt_project.yml` sets a project-wide default materialization plus a folder-level override",
+      "D": "and all three layers disagree on the materialization"
+    },
+    "distractor_traps": {
+      "A": "T3: confusable sibling \u2014 the resource property is real but sits between the in-file config block and the project file in the precedence order, not above the in-file block",
+      "C": "T8: scope error \u2014 a project-wide default is the least specific layer, not a tiebreaker",
+      "D": "T1: fabricated \u2014 dbt resolves config precedence deterministically; a conflicting hierarchy is not a parse failure"
+    },
+    "topics": ["ae/01-developing-and-optimizing-models/materializations"]
+  }
+]
