@@ -123,26 +123,26 @@
     "difficulty_estimate": "L2",
     "stem": "An engineer adds an explanatory note inside a model's Jinja template and needs the note to disappear completely from the compiled SQL dbt sends to the warehouse; it must not even appear as a SQL comment. Which syntax achieves this, and why?",
     "option_texts": {
-      "A": "`{# note text #}`, because Jinja comments are removed before the text can execute or output anything",
-      "B": "`-- note text`, because SQL line comments are stripped by dbt before execution",
+      "A": "`-- note text`, because SQL line comments are stripped by dbt before execution",
+      "B": "`{# note text #}`, because Jinja comments are removed before the text can execute or output anything",
       "C": "`{% comment %}note text{% endcomment %}`, because the comment tag blocks it from compiling",
       "D": "`/* note text */`, because block comments are interpreted by Jinja and discarded"
     },
-    "drill_answer": "A",
+    "drill_answer": "B",
     "drill_answer_short": "Jinja comments use {# ... #} and never reach the compiled SQL",
     "decision_hinge": "Jinja comments, written as {# ... #}, are used to prevent the text within the comment from executing or outputting a string. Don't use -- for comment.",
     "sources": [
       "https://docs.getdbt.com/docs/build/jinja-macros"
     ],
     "plausible_options": {
-      "B": "disappear completely from the compiled SQL dbt sends to the warehouse"
+      "A": "disappear completely from the compiled SQL dbt sends to the warehouse"
     },
     "eliminated_by": {
       "C": "must not even appear as a SQL comment",
       "D": "must not even appear as a SQL comment"
     },
     "distractor_traps": {
-      "B": "T3: confusable sibling — a SQL line comment is valid SQL syntax, not a Jinja construct dbt strips",
+      "A": "T3: confusable sibling — a SQL line comment is valid SQL syntax, not a Jinja construct dbt strips",
       "C": "T1: fabricated — dbt and Jinja define no such comment tag",
       "D": "T3: confusable sibling — a SQL block comment still compiles into the SQL text, it is just ignored by the database engine"
     },
@@ -158,12 +158,12 @@
     "difficulty_estimate": "L1",
     "stem": "A `packages.yml` file lists two packages, including `dbt-labs/dbt_utils`. After editing this file, the macros from `dbt_utils` are still not resolving in any model. The developer needs the one command that actually pulls those dependencies into the project before anything else will work. Which command is it?",
     "option_texts": {
-      "A": "`dbt deps`, because it pulls the most recent version of the dependencies listed in packages.yml from git",
+      "A": "`dbt run`, because dbt automatically resolves packages.yml dependencies the first time a model builds",
       "B": "`dbt install`, because installing packages is a dedicated dbt command separate from building models",
-      "C": "`dbt run`, because dbt automatically resolves packages.yml dependencies the first time a model builds",
+      "C": "`dbt deps`, because it pulls the most recent version of the dependencies listed in packages.yml from git",
       "D": "`dbt parse`, because parsing the project triggers package resolution as a side effect"
     },
-    "drill_answer": "A",
+    "drill_answer": "C",
     "drill_answer_short": "dbt deps pulls the dependencies listed in packages.yml from git",
     "decision_hinge": "dbt deps pulls the most recent version of the dependencies listed in your packages.yml from git.",
     "sources": [
@@ -173,15 +173,15 @@
       "D": "the macros from `dbt_utils` are still not resolving in any model"
     },
     "eliminated_by": {
-      "B": "pulls those dependencies into the project before anything else will work",
-      "C": {
+      "A": {
         "signal": "the macros from `dbt_utils` are still not resolving in any model",
         "requires_fact": "dbt deps pulls the most recent version of the dependencies listed in your packages.yml from git."
-      }
+      },
+      "B": "pulls those dependencies into the project before anything else will work"
     },
     "distractor_traps": {
+      "A": "T1: fabricated — dbt does not fetch packages automatically during a build command",
       "B": "T1: fabricated — dbt has no separate `install` command",
-      "C": "T1: fabricated — dbt does not fetch packages automatically during a build command",
       "D": "T2: wrong layer — parsing reads the project; it does not fetch git dependencies"
     },
     "topics": [
@@ -196,12 +196,12 @@
     "difficulty_estimate": "L3",
     "stem": "An incremental model needs to filter for rows created after the most recent run, and the developer wants to query the model's own destination table to find that latest timestamp, without hardcoding a database or schema name. Which Jinja variable lets the model query itself this way inside the `is_incremental()` block?",
     "option_texts": {
-      "A": "`{{ this }}`, because it is the database representation of the current model and compiles to its own relation",
+      "A": "A hardcoded database and schema name string, since dbt has no built-in way to reference a model's own output",
       "B": "`{{ ref(this) }}`, because wrapping `this` in `ref()` is required to resolve any relation",
       "C": "`{{ source(this) }}`, because `this` points at raw data the model depends on",
-      "D": "A hardcoded database and schema name string, since dbt has no built-in way to reference a model's own output"
+      "D": "`{{ this }}`, because it is the database representation of the current model and compiles to its own relation"
     },
-    "drill_answer": "A",
+    "drill_answer": "D",
     "drill_answer_short": "this is the database representation of the current model, useful inside incremental models",
     "decision_hinge": "this is the database representation of the current model. It is useful when defining a where statement within incremental models, and as such, properties such as this.database and this.schema compile as expected.",
     "sources": [
@@ -211,13 +211,13 @@
       "B": "query the model's own destination table to find that latest timestamp"
     },
     "eliminated_by": {
-      "C": "query the model's own destination table to find that latest timestamp",
-      "D": "without hardcoding a database or schema name"
+      "A": "without hardcoding a database or schema name",
+      "C": "query the model's own destination table to find that latest timestamp"
     },
     "distractor_traps": {
+      "A": "T4: breaks a stated requirement — the stem explicitly rules out hardcoding",
       "B": "T3: confusable sibling — `this` is already a Relation; it does not need to be passed through `ref()`",
-      "C": "T3: confusable sibling — `source()` names externally loaded data, not the current model's own output",
-      "D": "T4: breaks a stated requirement — the stem explicitly rules out hardcoding"
+      "C": "T3: confusable sibling — `source()` names externally loaded data, not the current model's own output"
     },
     "topics": [
       "ae/01-developing-and-optimizing-models/incremental-models"

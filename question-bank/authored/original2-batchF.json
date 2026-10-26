@@ -1,0 +1,324 @@
+[
+  {
+    "id": "draft-orig2-ae05-unit-test-given-block",
+    "domain": "ae-05",
+    "blueprint_task": "5.1",
+    "qtype": "multiple_choice",
+    "difficulty_estimate": "L2",
+    "stem": "A unit test YAML definition for `dim_customers` has both a `given:` block and an `expect:` block. A developer needs to know exactly which of the two actually supplies the mock input rows for the test's referenced models, versus which one states what the model should produce. What does `given` specify?",
+    "option_texts": {
+      "A": "The mock input rows for each `ref()` or `source()` listed under it, which the model's logic then transforms",
+      "B": "The expected output rows that the model should produce after transformation",
+      "C": "A list of column names the test should ignore when comparing actual and expected output",
+      "D": "The warehouse connection details the unit test should use instead of the project's default target"
+    },
+    "drill_answer": "A",
+    "drill_answer_short": "given supplies the mock input data; expect supplies the expected output",
+    "decision_hinge": "given: # the mock data for your inputs - input: ref('stg_customers'). expect: # the expected output given the inputs above.",
+    "sources": [
+      "https://docs.getdbt.com/reference/resource-properties/unit-tests"
+    ],
+    "plausible_options": {
+      "B": "versus which one states what the model should produce"
+    },
+    "eliminated_by": {
+      "C": "needs to know exactly which of the two actually supplies the mock input rows for the test's referenced models",
+      "D": "needs to know exactly which of the two actually supplies the mock input rows for the test's referenced models"
+    },
+    "distractor_traps": {
+      "B": "T3: confusable sibling \u2014 that is exactly what the expect block specifies, not given",
+      "C": "T1: fabricated \u2014 unit tests have no documented column-ignore list under given",
+      "D": "T1: fabricated \u2014 given supplies mock data rows, not connection configuration"
+    },
+    "topics": [
+      "ae/05-implementing-tests/test-types"
+    ]
+  },
+  {
+    "id": "draft-orig2-ae05-unit-test-advantage",
+    "domain": "ae-05",
+    "blueprint_task": "5.1",
+    "qtype": "multiple_choice",
+    "difficulty_estimate": "L3",
+    "stem": "A team wants a genuine, documented advantage of unit tests over traditional data tests like `not_null` and `unique`, specifically around catching a logic bug before it ever reaches real data. What is that documented advantage?",
+    "option_texts": {
+      "A": "Unit tests validate modeling logic against a small set of static inputs before the full model is ever materialized in production",
+      "B": "Unit tests run faster before anything else, because they skip compiling any SQL at all",
+      "C": "Unit tests replace the need for data tests entirely, since they check the same things more efficiently",
+      "D": "Unit tests automatically test every model in the project without being explicitly defined anywhere"
+    },
+    "drill_answer": "A",
+    "drill_answer_short": "Unit tests validate logic against static inputs before the model is materialized, unlike data tests",
+    "decision_hinge": "Unit tests allow you to validate your SQL modeling logic on a small set of static inputs before you materialize your full model in production. Historically, dbt's data tests could only be executed after building a model.",
+    "sources": [
+      "https://docs.getdbt.com/docs/build/unit-tests"
+    ],
+    "plausible_options": {
+      "C": "specifically around catching a logic bug before it ever reaches real data"
+    },
+    "eliminated_by": {
+      "B": "A team wants a genuine, documented advantage of unit tests over traditional data tests",
+      "D": "A team wants a genuine, documented advantage of unit tests over traditional data tests"
+    },
+    "distractor_traps": {
+      "B": "T1: fabricated \u2014 unit tests still compile and run SQL against the static fixture rows",
+      "C": "T3: confusable sibling \u2014 unit tests and data tests check different things at different times; neither makes the other redundant",
+      "D": "T1: fabricated \u2014 unit tests must be explicitly defined in a YAML file under model-paths"
+    },
+    "topics": [
+      "ae/05-implementing-tests/test-types"
+    ]
+  },
+  {
+    "id": "draft-orig2-ae05-schema-yml-vs-standalone-tests",
+    "domain": "ae-05",
+    "blueprint_task": "5.1",
+    "qtype": "multiple_choice",
+    "difficulty_estimate": "L2",
+    "stem": "A project has `unique` and `not_null` declared under a column in `schema.yml`, and also has a `.sql` file in `tests/` with a single `select` statement. A developer needs to know the fundamental difference in how dbt treats these two kinds of definitions. What's the real difference?",
+    "option_texts": {
+      "A": "The `schema.yml` entries are generic tests built from a parameterized `test` block; the standalone file is a singular test, which is just the raw SQL that returns failing rows",
+      "B": "The `schema.yml` entries only run during `dbt build`, while standalone SQL files only run during `dbt test`",
+      "C": "The standalone SQL file must also declare `model` and `column_name` as arguments, just like a generic test",
+      "D": "Both are functionally identical; dbt simply stores one in YAML and one in SQL for organizational preference"
+    },
+    "drill_answer": "A",
+    "drill_answer_short": "schema.yml entries are generic tests from a test block; the standalone file is a singular test with no block",
+    "decision_hinge": "A generic data test is defined in a test block, which contains a parameterized query and accepts arguments. A singular data test is the exact SQL that will return failing records, defined in a .sql file, typically in your tests directory.",
+    "sources": [
+      "https://docs.getdbt.com/docs/build/data-tests"
+    ],
+    "plausible_options": {
+      "D": "the fundamental difference in how dbt treats these two kinds of definitions"
+    },
+    "eliminated_by": {
+      "B": "has `unique` and `not_null` declared under a column in `schema.yml`, and also has a `.sql` file in `tests/`",
+      "C": {
+        "signal": "has `unique` and `not_null` declared under a column in `schema.yml`, and also has a `.sql` file in `tests/`",
+        "requires_fact": "A singular data test is the exact SQL that will return failing records; only a generic test's test block accepts model and column_name as arguments."
+      }
+    },
+    "distractor_traps": {
+      "B": "T1: fabricated \u2014 both generic and singular tests run under either dbt test or dbt build, the command does not depend on which kind it is",
+      "C": "T4: breaks a stated fact \u2014 a singular test needs no test block and no declared arguments at all",
+      "D": "T3: confusable sibling \u2014 the two formats have genuinely different mechanics, not just a different file location"
+    },
+    "topics": [
+      "ae/05-implementing-tests/test-types"
+    ]
+  },
+  {
+    "id": "draft-orig2-ae05-accepted-values-true-statements",
+    "domain": "ae-05",
+    "blueprint_task": "5.1",
+    "qtype": "multiple_response",
+    "difficulty_estimate": "L2",
+    "stem": "A column is tested with `accepted_values: values: ['t', 'f']`, written at the top level without an `arguments:` key. A reviewer needs to evaluate two claims about this configuration against current dbt documentation. Which TWO statements are correct?",
+    "option_texts": {
+      "A": "This top-level form still works as a supported alias, though nesting `values` under `arguments:` is the currently recommended form",
+      "B": "`accepted_values` only validates non-null values in the column; null values are not checked against the list",
+      "C": "`accepted_values` also requires every value listed in the arguments against the column to appear at least once",
+      "D": "Writing `values` outside an `arguments:` block like this causes an immediate parse error on all current dbt versions"
+    },
+    "drill_answer": "A,B",
+    "drill_answer_short": "Top-level values still works (older form); accepted_values only checks non-null values",
+    "decision_hinge": "accepted_values: arguments: values is available in v1.10.5 and higher; older versions can set the argument name as the top-level property. This data test validates that all of the non-null values present in a column are present in a supplied list.",
+    "sources": [
+      "https://docs.getdbt.com/docs/build/data-tests"
+    ],
+    "plausible_options": {
+      "C": "written at the top level without an `arguments:` key"
+    },
+    "eliminated_by": {
+      "D": "written at the top level without an `arguments:` key"
+    },
+    "distractor_traps": {
+      "C": "T8: scope error \u2014 the test checks that present values are allowed, not that every allowed value must appear",
+      "D": "T6: stale behaviour \u2014 the top-level form is older but still supported as an alias, not rejected outright"
+    },
+    "topics": [
+      "ae/05-implementing-tests/test-types"
+    ]
+  },
+  {
+    "id": "draft-orig2-ae05-custom-test-via-package",
+    "domain": "ae-05",
+    "blueprint_task": "5.1",
+    "qtype": "multiple_choice",
+    "difficulty_estimate": "L3",
+    "stem": "A model-level test compares row counts between two models, using a generic test macro that is not one of dbt's four built-in tests, and that the team never wrote themselves. The team needs to know the documented, current source of additional generic tests like this one. Where do they come from?",
+    "option_texts": {
+      "A": "Additional generic tests have been open-sourced in packages, such as the `dbt-utils` package, which you make available in your project through package management",
+      "B": "dbt automatically ships every possible additional generic test out of the box, so none of them ever come from a package",
+      "C": "Such a test can only exist if the team wrote it themselves as a custom generic test in `macros/`",
+      "D": "dbt Cloud exclusively provides these additional tests, and they are unavailable in dbt Core projects"
+    },
+    "drill_answer": "A",
+    "drill_answer_short": "Additional generic tests are open-sourced in packages like dbt-utils, installed via packages.yml",
+    "decision_hinge": "Out of the box, dbt ships with unique, not_null, accepted_values, and relationships. Some additional generic tests have been open-sourced in the dbt-utils package. Check out the docs on packages to learn how to make these tests available in your project.",
+    "sources": [
+      "https://docs.getdbt.com/docs/build/data-tests"
+    ],
+    "plausible_options": {
+      "C": "that the team never wrote themselves"
+    },
+    "eliminated_by": {
+      "B": "that is not one of dbt's four built-in tests, and that the team never wrote themselves",
+      "D": "that is not one of dbt's four built-in tests, and that the team never wrote themselves"
+    },
+    "distractor_traps": {
+      "B": "T4: breaks a stated fact \u2014 the stem says this test is not one of the four dbt ships out of the box",
+      "C": "T3: confusable sibling \u2014 a team can write its own custom generic test, but packages are the other documented source, and the stem rules out self-authorship",
+      "D": "T1: fabricated \u2014 package-sourced generic tests are available in dbt Core, not exclusive to dbt Cloud"
+    },
+    "topics": [
+      "ae/05-implementing-tests/test-types"
+    ]
+  },
+  {
+    "id": "draft-orig2-ae05-severity-filter-config",
+    "domain": "ae-05",
+    "blueprint_task": "5.3",
+    "qtype": "multiple_choice",
+    "difficulty_estimate": "L3",
+    "stem": "A `unique` test on `order_id` needs to run only against rows where `order_id > 21`, ignoring older rows entirely, while still keeping its default `severity`. The team needs the correct config key for this narrowing, not a property that happens to sound similar. Which config achieves it?",
+    "option_texts": {
+      "A": "`where`, a framework option nested under `config` that adds a filter clause limiting which rows the test considers",
+      "B": "`filter`, a property available on every generic test for limiting which rows it scans",
+      "C": "`limit`, which caps the number of failing rows returned without changing which rows are scanned",
+      "D": "`severity`, since adjusting this config also narrows which rows a test evaluates"
+    },
+    "drill_answer": "A",
+    "drill_answer_short": "where is the documented config for narrowing which rows a data test considers",
+    "decision_hinge": "You can add a config block for options like severity or where. unique: config: where: \"order_id > 21\". The config and where clause are optional.",
+    "sources": [
+      "https://docs.getdbt.com/reference/resource-properties/data-tests"
+    ],
+    "plausible_options": {
+      "B": "needs to run only against rows where `order_id > 21`, ignoring older rows entirely"
+    },
+    "eliminated_by": {
+      "C": "needs the correct config key for this narrowing, not a property that happens to sound similar",
+      "D": {
+        "signal": "while still keeping its default `severity`",
+        "requires_fact": "You can add a config block for options like severity or where; where is the documented key for limiting which rows a test considers, separate from severity."
+      }
+    },
+    "distractor_traps": {
+      "B": "T3: confusable sibling \u2014 dbt's documented row-filtering config for generic tests is named where, not filter",
+      "C": "T3: confusable sibling \u2014 a row-count limit on failures is a different concern from which rows feed into the test query",
+      "D": "T3: confusable sibling \u2014 severity decides pass/warn/error, it does not change which rows a test scans"
+    },
+    "topics": [
+      "ae/05-implementing-tests/test-types"
+    ]
+  },
+  {
+    "id": "draft-orig2-ae05-store-failures-vs-store-failures-as",
+    "domain": "ae-05",
+    "blueprint_task": "5.3",
+    "qtype": "multiple_choice",
+    "difficulty_estimate": "L4",
+    "stem": "A team sets both `store_failures: true` and `store_failures_as: \"view\"` on the same test. They need to know which of the two configs actually wins, and what it controls that the other one doesn't. What's the real relationship between them?",
+    "option_texts": {
+      "A": "`store_failures_as` takes precedence and controls the storage format (ephemeral, table, or view); `store_failures` only controls whether failures are stored at all",
+      "B": "`store_failures` takes precedence and controls over `store_failures_as` whenever both are set on the same test",
+      "C": "The two configs are redundant aliases that each control the same setting, so setting both has no additional effect",
+      "D": "`store_failures_as` only applies to singular tests, while `store_failures` only applies to generic tests"
+    },
+    "drill_answer": "A",
+    "drill_answer_short": "store_failures_as takes precedence and sets the storage format; store_failures only toggles storing at all",
+    "decision_hinge": "store_failures_as is an optional config that specifies how test failures should be stored. If store_failures is also configured, store_failures_as takes precedence. The three supported values are ephemeral, table, and view.",
+    "sources": [
+      "https://docs.getdbt.com/reference/resource-configs/store_failures_as"
+    ],
+    "plausible_options": {
+      "C": "They need to know which of the two configs actually wins, and what it controls that the other one doesn't"
+    },
+    "eliminated_by": {
+      "B": "A team sets both `store_failures: true` and `store_failures_as: \"view\"` on the same test",
+      "D": {
+        "signal": "A team sets both `store_failures: true` and `store_failures_as: \"view\"` on the same test",
+        "requires_fact": "You can configure store_failures_as in all the same places as store_failures, including singular tests and generic tests, so neither is restricted to only one test kind."
+      }
+    },
+    "distractor_traps": {
+      "B": "T4: breaks a stated fact \u2014 store_failures_as is documented as taking precedence, not store_failures",
+      "C": "T3: confusable sibling \u2014 the two configs are related but control different things: whether to store, and in what format",
+      "D": "T1: fabricated \u2014 both configs are available in all the same places, not split by test kind"
+    },
+    "topics": [
+      "ae/05-implementing-tests/test-severity-and-workflow"
+    ]
+  },
+  {
+    "id": "draft-orig2-ae05-unit-test-incremental-modes",
+    "domain": "ae-05",
+    "blueprint_task": "5.1",
+    "qtype": "multiple_choice",
+    "difficulty_estimate": "L5",
+    "stem": "A team wants to unit test an incremental model's logic for handling late-arriving data, and needs this to work for both a from-scratch build and an already-incremental run, without hand-rolling two separate test files. What testing approach does dbt actually document for this?",
+    "option_texts": {
+      "A": "Override the output of macros, vars, or environment variables in the unit test config to exercise the model in both full-refresh and incremental modes",
+      "B": "Unit tests cannot be applied to incremental models at all; only data tests can validate them",
+      "C": "Write two separate unit test files, one hardcoded for full-refresh and one hardcoded for incremental mode, since dbt cannot parameterize this",
+      "D": "Unit test only the final materialized table's shape, since unit tests cannot evaluate incremental logic before a build"
+    },
+    "drill_answer": "A",
+    "drill_answer_short": "Unit tests can override macros, vars, or env vars to exercise both full-refresh and incremental modes",
+    "decision_hinge": "When configuring your unit test, you can override the output of macros, vars, or environment variables. This enables you to unit test your incremental models in full refresh and incremental modes.",
+    "sources": [
+      "https://docs.getdbt.com/docs/build/unit-tests"
+    ],
+    "plausible_options": {
+      "D": "needs this to work for both a from-scratch build and an already-incremental run"
+    },
+    "eliminated_by": {
+      "B": "wants to unit test an incremental model's logic for handling late-arriving data",
+      "C": "without hand-rolling two separate test files"
+    },
+    "distractor_traps": {
+      "B": "T1: fabricated \u2014 dbt explicitly documents unit testing incremental models",
+      "C": "T4: breaks a stated requirement \u2014 the stem rules out hand-rolling two separate test files",
+      "D": "T3: confusable sibling \u2014 unit tests validate modeling logic on static inputs before a build, which is exactly what enables testing incremental behavior pre-materialization"
+    },
+    "topics": [
+      "ae/05-implementing-tests/test-types"
+    ]
+  },
+  {
+    "id": "draft-orig2-ae05-accepted-values-new-value-fails",
+    "domain": "ae-05",
+    "blueprint_task": "5.1",
+    "qtype": "multiple_choice",
+    "difficulty_estimate": "L2",
+    "stem": "A `room_type` column is tested with `accepted_values: arguments: values: ['Entire home/apt', 'Private room', 'Shared room', 'Hotel room']`. A new row arrives with `room_type = 'Boat'`, a value not in that list. The team needs to know exactly what the next `dbt test` run reports for this column.",
+    "option_texts": {
+      "A": "The test fails, returning the `Boat` row as a failing record, since its value is not in the supplied list",
+      "B": "The test automatically adds `Boat` to the accepted list going forward, so the next run passes",
+      "C": "The test passes, since `accepted_values` only checks the first value it finds in the column",
+      "D": "The test silently skips any row whose value was not already present when the test was first defined"
+    },
+    "drill_answer": "A",
+    "drill_answer_short": "A value outside the supplied list is returned as a failing row by accepted_values",
+    "decision_hinge": "accepted_values validates that all of the non-null values present in a column are present in a supplied list of values. Data tests return a set of failing records; if a value disproves the assertion, that row is a failure.",
+    "sources": [
+      "https://docs.getdbt.com/docs/build/data-tests"
+    ],
+    "plausible_options": {
+      "D": "A new row arrives with `room_type = 'Boat'`, a value not in that list"
+    },
+    "eliminated_by": {
+      "B": "The team needs to know exactly what the next `dbt test` run reports for this column",
+      "C": "The team needs to know exactly what the next `dbt test` run reports for this column"
+    },
+    "distractor_traps": {
+      "B": "T1: fabricated \u2014 accepted_values never mutates its own configured list based on incoming data",
+      "C": "T1: fabricated \u2014 accepted_values checks every non-null value in the column, not just the first one found",
+      "D": "T3: confusable sibling \u2014 the test re-evaluates the full column on every run, it does not grandfather in pre-existing values"
+    },
+    "topics": [
+      "ae/05-implementing-tests/test-types"
+    ]
+  }
+]

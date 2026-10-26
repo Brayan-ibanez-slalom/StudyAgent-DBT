@@ -1,0 +1,221 @@
+[
+  {
+    "id": "draft-orig2-ae06-freshness-command-before-pipeline",
+    "domain": "ae-06",
+    "blueprint_task": "6.2",
+    "qtype": "multiple_choice",
+    "difficulty_estimate": "L3",
+    "stem": "Before running the nightly pipeline, a team wants to verify that the Airbnb source tables received new data within their configured time window, and they want the command that is documented as the current, recommended way to do this, not the legacy one kept only for backward compatibility. Which command should they run?",
+    "option_texts": {
+      "A": "`dbt freshness`, the current top-level command for checking every source and model with freshness configured",
+      "B": "`dbt source freshness`, since it is the only command dbt has ever currently configured for this check",
+      "C": "`dbt test`, since freshness checks are currently configured as a category of data test",
+      "D": "`dbt build`, since building a model automatically re-validates its current source freshness first"
+    },
+    "drill_answer": "A",
+    "drill_answer_short": "dbt freshness is the current, recommended command checking both sources and models",
+    "decision_hinge": "Run dbt freshness to check every source and model with freshness configured. dbt source freshness is a legacy command that checks freshness for sources only; it's still supported for backward compatibility, but dbt freshness is recommended going forward.",
+    "sources": [
+      "https://docs.getdbt.com/reference/commands/source"
+    ],
+    "plausible_options": {
+      "B": "the command that is documented as the current, recommended way to do this, not the legacy one kept only for backward compatibility"
+    },
+    "eliminated_by": {
+      "C": "verify that the Airbnb source tables received new data within their configured time window",
+      "D": "verify that the Airbnb source tables received new data within their configured time window"
+    },
+    "distractor_traps": {
+      "B": "T6: stale behaviour \u2014 dbt source freshness still exists, but it is the legacy, sources-only predecessor, not the current recommendation",
+      "C": "T3: confusable sibling \u2014 freshness checks are a distinct mechanism from data tests, with their own dedicated command",
+      "D": "T1: fabricated \u2014 building a model does not automatically run a freshness check against its sources"
+    },
+    "topics": [
+      "ae/06-external-dependencies/source-freshness"
+    ]
+  },
+  {
+    "id": "draft-orig2-ae01-threads-parallelism",
+    "domain": "ae-01",
+    "blueprint_task": "1.6",
+    "qtype": "multiple_choice",
+    "difficulty_estimate": "L2",
+    "stem": "A DAG has many dimension models that are independent of each other, meaning none of them depends on another, and the team wants to reduce total run time without changing any model's SQL. Which approach is most likely to help, and why?",
+    "option_texts": {
+      "A": "Increase the number of threads, since threads represent the maximum number of paths through the graph dbt may work on at once",
+      "B": "Materialize every independent model as a view, since views always build faster than tables regardless of concurrency",
+      "C": "Split the DAG into two separate dbt projects, one per half of the independent models",
+      "D": "Add a `post-hook` to each model that runs the next model's build, chaining them together manually"
+    },
+    "drill_answer": "A",
+    "drill_answer_short": "More threads let dbt build independent, ready models in parallel",
+    "decision_hinge": "The number of threads represents the maximum number of paths through the graph dbt may work on at once; increasing the number of threads can minimize the run time of your project. With more threads, dbt builds as many ready models in parallel as the graph allows, finishing much sooner.",
+    "sources": [
+      "https://docs.getdbt.com/docs/running-a-dbt-project/using-threads"
+    ],
+    "plausible_options": {
+      "B": "reduce total run time without changing any model's SQL"
+    },
+    "eliminated_by": {
+      "C": "A DAG has many dimension models that are independent of each other",
+      "D": {
+        "signal": "A DAG has many dimension models that are independent of each other",
+        "requires_fact": "The number of threads represents the maximum number of paths through the graph dbt may work on at once; with more threads, dbt builds as many ready models in parallel as the graph allows."
+      }
+    },
+    "distractor_traps": {
+      "B": "T3: confusable sibling \u2014 materialization choice is a separate lever from run-time concurrency, and a view is not inherently faster to build",
+      "C": "T7: over-engineering \u2014 splitting into two projects is a heavier change than increasing a concurrency setting",
+      "D": "T1: fabricated \u2014 dbt already parallelizes independent models through threads, without manual hook chaining"
+    },
+    "topics": [
+      "ae/01-developing-and-optimizing-models/project-config-and-flags"
+    ]
+  },
+  {
+    "id": "draft-orig2-ae04-dbt-clone-true-statement",
+    "domain": "ae-04",
+    "blueprint_task": "4.2",
+    "qtype": "multiple_choice",
+    "difficulty_estimate": "L3",
+    "stem": "A team wants to use `dbt clone` to copy production state into a development schema, on a platform that supports zero-copy cloning. A reviewer needs to pick the one TRUE statement about `dbt clone` out of several plausible-sounding claims. Which statement is TRUE?",
+    "option_texts": {
+      "A": "`dbt clone` requires a `--state` manifest to know which objects to clone from",
+      "B": "`dbt clone` creates a full physical copy of the data in the target schema every time, regardless of platform",
+      "C": "`dbt clone` always overwrites a pre-existing relation in the target schema by default",
+      "D": "`dbt clone` can only be used for incremental models, never for tables built with other materializations"
+    },
+    "drill_answer": "A",
+    "drill_answer_short": "dbt clone clones nodes from a specified state manifest",
+    "decision_hinge": "clone all of my models from specified state to my target schema(s): dbt clone --state path/to/artifacts. By default, dbt clone will not recreate pre-existing relations in the current target. To override this, use the --full-refresh flag.",
+    "sources": [
+      "https://docs.getdbt.com/reference/commands/clone"
+    ],
+    "plausible_options": {
+      "B": "on a platform that supports zero-copy cloning"
+    },
+    "eliminated_by": {
+      "C": {
+        "signal": "wants to use `dbt clone` to copy production state into a development schema",
+        "requires_fact": "By default, dbt clone will not recreate pre-existing relations in the current target; to override this, use the --full-refresh flag."
+      },
+      "D": "wants to use `dbt clone` to copy production state into a development schema"
+    },
+    "distractor_traps": {
+      "B": "T3: confusable sibling \u2014 on a platform with zero-copy cloning, dbt creates a clone rather than a full physical data copy",
+      "C": "T4: breaks a stated fact \u2014 dbt clone will not recreate a pre-existing relation unless --full-refresh is passed",
+      "D": "T1: fabricated \u2014 dbt clone is useful for incremental models in CI, but it is not restricted to that one materialization"
+    },
+    "topics": [
+      "ae/04-troubleshooting-pipelines/dbt-clone"
+    ]
+  },
+  {
+    "id": "draft-orig2-ae04-build-checks-feature",
+    "domain": "ae-04",
+    "blueprint_task": "4.1",
+    "qtype": "multiple_choice",
+    "difficulty_estimate": "L4",
+    "stem": "A team wants every `dbt build` invocation to stop immediately if any model in the project is missing a description, before dbt spends time compiling or running anything. They need to know the name of the dbt build feature designed for exactly this kind of project-standard enforcement. What is it called, and when does it run?",
+    "option_texts": {
+      "A": "Checks: SQL queries run against the dbt Information Schema that stop the build before anything is materialized, unless set to warn",
+      "B": "Tests: generic or singular SQL queries that run only after everything has already been built",
+      "C": "Hooks: `pre-hook` statements that run once per model immediately before that model is built",
+      "D": "Contracts: YAML-declared column guarantees enforced only while a model is actually building, after anything else has started"
+    },
+    "drill_answer": "A",
+    "drill_answer_short": "Checks run before compiling or running any models, stopping the build on a failing check",
+    "decision_hinge": "dbt build runs checks before it compiles or runs any models. Checks are SQL queries you write against the dbt Information Schema to enforce your team's project standards. A failing check stops the build before anything is materialized, unless the check's severity is set to warn.",
+    "sources": [
+      "https://docs.getdbt.com/reference/commands/build"
+    ],
+    "plausible_options": {
+      "C": "stop immediately if any model in the project is missing a description, before dbt spends time compiling or running anything"
+    },
+    "eliminated_by": {
+      "B": "before dbt spends time compiling or running anything",
+      "D": "before dbt spends time compiling or running anything"
+    },
+    "distractor_traps": {
+      "B": "T4: breaks a stated requirement \u2014 tests run after a model builds, not before anything compiles or runs",
+      "C": "T3: confusable sibling \u2014 pre-hooks run per model at build time, not once before the whole build even starts",
+      "D": "T3: confusable sibling \u2014 contracts enforce column shape during a build, they do not enforce project-wide standards like descriptions beforehand"
+    },
+    "topics": [
+      "ae/04-troubleshooting-pipelines/dag-failure-points"
+    ]
+  },
+  {
+    "id": "draft-orig2-ae06-freshness-warn-after-only",
+    "domain": "ae-06",
+    "blueprint_task": "6.2",
+    "qtype": "multiple_choice",
+    "difficulty_estimate": "L3",
+    "stem": "A source freshness config sets only `warn_after`, with no `error_after` anywhere in the block, and both `count` and `period` are provided for `warn_after`. The team needs to know what dbt actually does if `error_after` is never configured at all. What's the outcome?",
+    "option_texts": {
+      "A": "dbt only ever reports a warning for this source, since `error_after` was never configured",
+      "B": "dbt automatically copies the `warn_after` thresholds into `error_after` so errors still fire",
+      "C": "dbt refuses to check this source at all, since both warn_after and error_after are configured as required together",
+      "D": "dbt treats the missing error_after as a parse error that blocks the whole configured source"
+    },
+    "drill_answer": "A",
+    "drill_answer_short": "With only warn_after configured, dbt can only ever warn, never error, on that source",
+    "decision_hinge": "One or both of warn_after and error_after can be provided. If neither is set, dbt will not check freshness for that resource.",
+    "sources": [
+      "https://docs.getdbt.com/reference/resource-properties/freshness"
+    ],
+    "plausible_options": {
+      "C": "with no `error_after` anywhere in the block"
+    },
+    "eliminated_by": {
+      "B": "with no `error_after` anywhere in the block",
+      "D": "with no `error_after` anywhere in the block"
+    },
+    "distractor_traps": {
+      "B": "T1: fabricated \u2014 dbt does not copy one threshold's values into the other",
+      "C": "T3: confusable sibling \u2014 one or both thresholds can be provided, this is not a strict pairing requirement",
+      "D": "T1: fabricated \u2014 an omitted error_after is a valid, documented configuration, not a parse error"
+    },
+    "topics": [
+      "ae/06-external-dependencies/source-freshness"
+    ]
+  },
+  {
+    "id": "draft-orig2-ae04-ci-temp-schema-naming",
+    "domain": "ae-04",
+    "blueprint_task": "4.1",
+    "qtype": "multiple_choice",
+    "difficulty_estimate": "L3",
+    "stem": "A pull request triggers a CI job, and the resulting staging schema in the warehouse needs a name a reviewer can recognize at a glance as belonging to that specific PR, not to production or another PR. What naming convention does dbt actually follow for this temporary schema?",
+    "option_texts": {
+      "A": "`dbt_cloud_pr_<job_id>_<pr_id>`, a unique schema name tied to this specific job and PR",
+      "B": "The same schema name as production, isolated only by a different database rather than a specific schema",
+      "C": "A random UUID with no specific link back to the job or PR, generated fresh on every CI run",
+      "D": "The developer's own personal development schema, reused for every CI run they trigger"
+    },
+    "drill_answer": "A",
+    "drill_answer_short": "CI builds into a schema named dbt_cloud_pr_<job_id>_<pr_id>, unique to that PR",
+    "decision_hinge": "dbt builds and tests models affected by the code change in a temporary schema, unique to the PR. The unique schema name follows the naming convention dbt_cloud_pr_<job_id>_<pr_id>.",
+    "sources": [
+      "https://docs.getdbt.com/docs/deploy/continuous-integration"
+    ],
+    "plausible_options": {
+      "D": "needs a name a reviewer can recognize at a glance as belonging to that specific PR"
+    },
+    "eliminated_by": {
+      "B": "not to production or another PR",
+      "C": {
+        "signal": "needs a name a reviewer can recognize at a glance as belonging to that specific PR",
+        "requires_fact": "The unique schema name follows the naming convention dbt_cloud_pr_<job_id>_<pr_id>, so it is not a disconnected random identifier."
+      }
+    },
+    "distractor_traps": {
+      "B": "T4: breaks a stated fact \u2014 the schema is unique and temporary, not production's own schema under a different database",
+      "C": "T1: fabricated \u2014 the naming convention is deterministic and traceable, not a random UUID",
+      "D": "T3: confusable sibling \u2014 a personal dev schema is a separate, longer-lived concept from a per-PR CI schema"
+    },
+    "topics": [
+      "ae/04-troubleshooting-pipelines/dag-failure-points"
+    ]
+  }
+]

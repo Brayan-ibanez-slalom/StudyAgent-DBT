@@ -7,12 +7,12 @@
     "difficulty_estimate": "L3",
     "stem": "After upgrading dbt Core, a team's CI runs start printing deprecation warnings, but the pipeline still exits successfully. The team wants exactly those deprecation warnings, and only those, to fail CI, without turning every other dbt warning into a hard failure. Which flag achieves this, and why?",
     "option_texts": {
-      "A": "`--warn-error-options`, because it gives granular control over exactly which types of warnings are treated as errors",
+      "A": "Setting both `WARN_ERROR` and `WARN_ERROR_OPTIONS` together, to match exactly what the team wants",
       "B": "`--warn-error`, because it converts all dbt warnings into errors, which is the safest default for CI",
       "C": "`--fail-fast`, because it stops the run the moment a warning appears, which counts as failing CI",
-      "D": "Setting both `WARN_ERROR` and `WARN_ERROR_OPTIONS` together, to match exactly what the team wants"
+      "D": "`--warn-error-options`, because it gives granular control over exactly which types of warnings are treated as errors"
     },
-    "drill_answer": "A",
+    "drill_answer": "D",
     "drill_answer_short": "--warn-error-options promotes only specific named warning types to errors",
     "decision_hinge": "The WARN_ERROR_OPTIONS config or --warn-error-options flag gives you more granular control over exactly which types of warnings are treated as errors. WARN_ERROR and WARN_ERROR_OPTIONS are mutually exclusive; you can only specify one, otherwise you'll see a usage error.",
     "sources": [
@@ -22,16 +22,16 @@
       "C": "The team wants exactly those deprecation warnings, and only those, to fail CI"
     },
     "eliminated_by": {
-      "B": "without turning every other dbt warning into a hard failure",
-      "D": {
+      "A": {
         "signal": "The team wants exactly those deprecation warnings, and only those, to fail CI",
         "requires_fact": "WARN_ERROR and WARN_ERROR_OPTIONS are mutually exclusive; you can only specify one, even across different configuration sources, otherwise you'll see a usage error."
-      }
+      },
+      "B": "without turning every other dbt warning into a hard failure"
     },
     "distractor_traps": {
-      "B": "T4: breaks a stated requirement \u2014 --warn-error turns every warning into an error, not just deprecations",
-      "C": "T3: confusable sibling \u2014 --fail-fast controls when a run stops, not which conditions count as a failure",
-      "D": "T1: fabricated \u2014 dbt rejects this combination as a usage error rather than merging the two"
+      "A": "T1: fabricated — dbt rejects this combination as a usage error rather than merging the two",
+      "B": "T4: breaks a stated requirement — --warn-error turns every warning into an error, not just deprecations",
+      "C": "T3: confusable sibling — --fail-fast controls when a run stops, not which conditions count as a failure"
     },
     "topics": [
       "ae/03-debugging-modeling-errors/behaviour-flags"
@@ -45,28 +45,28 @@
     "difficulty_estimate": "L2",
     "stem": "A developer runs `dbt run -s src_listings` and sees `Compilation Error in model src_listings (models/src/src_listings.sql)` followed by `'soruce' is undefined`. The team needs to identify the step in dbt's process where this kind of error is caught, and the most direct fix. What's going on?",
     "option_texts": {
-      "A": "dbt caught an invalid Jinja reference while parsing the model; the fix is correcting the misspelled `source` call in the SQL file",
-      "B": "The warehouse rejected the compiled SQL because `soruce` is not a valid table name, so the error was caught by the database",
+      "A": "The warehouse rejected the compiled SQL because `soruce` is not a valid table name, so the error was caught by the database",
+      "B": "dbt caught an invalid Jinja reference while parsing the model; the fix is correcting the misspelled `source` call in the SQL file",
       "C": "dbt's dependency graph contains a cycle caused by the misspelled reference",
       "D": "The model's YAML properties file is missing a required key named `soruce`"
     },
-    "drill_answer": "A",
+    "drill_answer": "B",
     "drill_answer_short": "An undefined Jinja name is a parsing-stage Compilation Error, not a database or graph error",
     "decision_hinge": "Parsing: check that the Jinja snippets in .sql files are valid, and that .yml files are valid -- Compilation Error.",
     "sources": [
       "https://docs.getdbt.com/guides/debug-errors"
     ],
     "plausible_options": {
-      "B": "sees `Compilation Error in model src_listings (models/src/src_listings.sql)`"
+      "A": "sees `Compilation Error in model src_listings (models/src/src_listings.sql)`"
     },
     "eliminated_by": {
       "C": "followed by `'soruce' is undefined`",
       "D": "followed by `'soruce' is undefined`"
     },
     "distractor_traps": {
-      "B": "T3: confusable sibling \u2014 a rejected table name at the warehouse would be a Database Error, a later step than this",
-      "C": "T3: confusable sibling \u2014 a cycle is a Dependency Error, a different step than an undefined Jinja name",
-      "D": "T1: fabricated \u2014 the error points at the SQL file's Jinja, not a missing YAML property"
+      "A": "T3: confusable sibling — a rejected table name at the warehouse would be a Database Error, a later step than this",
+      "C": "T3: confusable sibling — a cycle is a Dependency Error, a different step than an undefined Jinja name",
+      "D": "T1: fabricated — the error points at the SQL file's Jinja, not a missing YAML property"
     },
     "topics": [
       "ae/03-debugging-modeling-errors/compiled-code-and-logs"
@@ -80,12 +80,12 @@
     "difficulty_estimate": "L2",
     "stem": "A model named `dim_listings_cleansed` in a project named `airbnb` fails with a cryptic database error. The developer wants to open the exact SQL dbt actually sent to the warehouse for this run, not just the source `.sql` file. Where should they look?",
     "option_texts": {
-      "A": "The `target/run/` directory, which contains the SQL dbt executes to build the model",
+      "A": "The `logs/dbt.log` file, which stores the exact SQL dbt executes for every model",
       "B": "The `target/compiled/` directory, which contains the raw `select` statement before dbt wraps it for execution",
-      "C": "The `logs/dbt.log` file, which stores the exact SQL dbt executes for every model",
+      "C": "The `target/run/` directory, which contains the SQL dbt executes to build the model",
       "D": "The original `models/` source file, since dbt executes the Jinja template directly against the warehouse"
     },
-    "drill_answer": "A",
+    "drill_answer": "C",
     "drill_answer_short": "target/run contains the SQL dbt actually executes to build the model",
     "decision_hinge": "The target/compiled directory contains select statements that you can run in any query editor. The target/run directory contains the SQL dbt executes to build your models. The logs/dbt.log file contains all the queries that dbt runs, and additional logging.",
     "sources": [
@@ -95,16 +95,16 @@
       "B": "wants to open the exact SQL dbt actually sent to the warehouse for this run"
     },
     "eliminated_by": {
-      "C": {
+      "A": {
         "signal": "not just the source `.sql` file",
         "requires_fact": "The target/run directory contains the SQL dbt executes to build your models; the logs/dbt.log file contains all the queries dbt runs plus additional logging, not a single authoritative file per model."
       },
       "D": "not just the source `.sql` file"
     },
     "distractor_traps": {
-      "B": "T3: confusable sibling \u2014 target/compiled holds the select statement before dbt wraps it for the actual run",
-      "C": "T2: wrong layer \u2014 the log file records everything dbt runs, it is not the dedicated per-model file the error points at",
-      "D": "T1: fabricated \u2014 dbt always compiles Jinja to SQL before executing anything"
+      "A": "T2: wrong layer — the log file records everything dbt runs, it is not the dedicated per-model file the error points at",
+      "B": "T3: confusable sibling — target/compiled holds the select statement before dbt wraps it for the actual run",
+      "D": "T1: fabricated — dbt always compiles Jinja to SQL before executing anything"
     },
     "topics": [
       "ae/03-debugging-modeling-errors/compiled-code-and-logs"
@@ -118,12 +118,12 @@
     "difficulty_estimate": "L3",
     "stem": "A dbt invocation fails while dbt is checking that the project's dependency graph has no cycles, after Jinja and YAML have already parsed successfully and before any SQL is sent to the warehouse. The developer needs to name the error type dbt reports for exactly this step. Which error type is it?",
     "option_texts": {
-      "A": "Dependency Error, raised during the graph-validation step that compiles dependencies into a graph and checks it's acyclic",
+      "A": "Runtime Error, raised while dbt initializes and connects to the warehouse",
       "B": "Compilation Error, raised during the parsing step that checks Jinja and YAML validity, before any dependency graph is built",
       "C": "Database Error, raised during the SQL-execution step that runs the models",
-      "D": "Runtime Error, raised while dbt initializes and connects to the warehouse"
+      "D": "Dependency Error, raised during the graph-validation step that compiles dependencies into a graph and checks it's acyclic"
     },
-    "drill_answer": "A",
+    "drill_answer": "D",
     "drill_answer_short": "A cycle in the dependency graph is a Dependency Error, after parsing and before SQL execution",
     "decision_hinge": "Parsing: Compilation Error. Graph validation: compile the dependencies into a graph, check that it's acyclic -- Dependency Error. SQL execution: run the models -- Database Error.",
     "sources": [
@@ -133,16 +133,16 @@
       "B": "after Jinja and YAML have already parsed successfully"
     },
     "eliminated_by": {
-      "C": "before any SQL is sent to the warehouse",
-      "D": {
+      "A": {
         "signal": "checking that the project's dependency graph has no cycles",
         "requires_fact": "Initialize checks that this is a dbt project and that dbt can connect to the warehouse, raising a Runtime Error; graph validation is a separate, later step."
-      }
+      },
+      "C": "before any SQL is sent to the warehouse"
     },
     "distractor_traps": {
-      "B": "T3: confusable sibling \u2014 parsing already succeeded per the stem; this failure happens one step later",
-      "C": "T4: breaks a stated fact \u2014 the stem says this happens before any SQL is sent",
-      "D": "T8: scope error \u2014 Runtime Error covers project initialization and connecting, not graph-cycle checks"
+      "A": "T8: scope error — Runtime Error covers project initialization and connecting, not graph-cycle checks",
+      "B": "T3: confusable sibling — parsing already succeeded per the stem; this failure happens one step later",
+      "C": "T4: breaks a stated fact — the stem says this happens before any SQL is sent"
     },
     "topics": [
       "ae/03-debugging-modeling-errors/compiled-code-and-logs"
@@ -156,12 +156,12 @@
     "difficulty_estimate": "L2",
     "stem": "A model run ends with `Database Error in model customers ... SQL compilation error: syntax error line 14 at position 4 unexpected 'from'`, and the message also names the compiled file's path. The developer needs the fastest documented way to isolate and fix this. What should they do first?",
     "option_texts": {
-      "A": "Open the compiled SQL at the path the error names, and re-execute it in a query editor to isolate the mistake",
-      "B": "Rewrite the model entirely using a different materialization, since Database Errors mean the current one is unsupported",
+      "A": "Rewrite the model entirely using a different materialization, since Database Errors mean the current one is unsupported",
+      "B": "Open the compiled SQL at the path the error names, and re-execute it in a query editor to isolate the mistake",
       "C": "Open `dbt_project.yml` and check for an unexpected top-level key instead of trying to isolate the compiled SQL, since that is the most common Database Error cause",
       "D": "Ignore the error and rerun, since Database Errors are usually warehouse flakiness that resolves itself"
     },
-    "drill_answer": "A",
+    "drill_answer": "B",
     "drill_answer_short": "90% of the time a Database Error is a mistake in the model's SQL; re-run the compiled query to isolate it",
     "decision_hinge": "90% of the time, there's a mistake in the SQL of your model. To fix this, open the compiled SQL and try to re-execute it to isolate the error, for example by copying the compiled query into a query runner and executing it.",
     "sources": [
@@ -171,13 +171,13 @@
       "C": "The developer needs the fastest documented way to isolate and fix this"
     },
     "eliminated_by": {
-      "B": "SQL compilation error: syntax error line 14 at position 4 unexpected 'from'",
+      "A": "SQL compilation error: syntax error line 14 at position 4 unexpected 'from'",
       "D": "the message also names the compiled file's path"
     },
     "distractor_traps": {
-      "B": "T1: fabricated \u2014 a syntax mistake is not evidence the materialization itself is unsupported",
-      "C": "T3: confusable sibling \u2014 an unexpected dbt_project.yml key causes a different error, not a Database Error",
-      "D": "T4: breaks a stated fact \u2014 the documented guidance is that most Database Errors trace to a real SQL mistake"
+      "A": "T1: fabricated — a syntax mistake is not evidence the materialization itself is unsupported",
+      "C": "T3: confusable sibling — an unexpected dbt_project.yml key causes a different error, not a Database Error",
+      "D": "T4: breaks a stated fact — the documented guidance is that most Database Errors trace to a real SQL mistake"
     },
     "topics": [
       "ae/03-debugging-modeling-errors/compiled-code-and-logs"
@@ -209,8 +209,8 @@
       "D": "starts erroring after a new column appears upstream"
     },
     "distractor_traps": {
-      "C": "T3: confusable sibling \u2014 ignore is a real setting, but switching to it blindly does not confirm what actually changed",
-      "D": "T1: fabricated \u2014 a new upstream column is a data and config decision, not a missing YAML key"
+      "C": "T3: confusable sibling — ignore is a real setting, but switching to it blindly does not confirm what actually changed",
+      "D": "T1: fabricated — a new upstream column is a data and config decision, not a missing YAML key"
     },
     "topics": [
       "ae/03-debugging-modeling-errors/fix-and-verify-before-merge"
@@ -243,8 +243,8 @@
       "D": "gets `Relation \"dev_zoltan\".\"src_listings\" does not exist`"
     },
     "distractor_traps": {
-      "C": "T3: confusable sibling \u2014 each developer has their own target schema, so nothing guarantees the relation already exists there",
-      "D": "T1: fabricated \u2014 dbt has no such automatic relation-expiry behaviour"
+      "C": "T3: confusable sibling — each developer has their own target schema, so nothing guarantees the relation already exists there",
+      "D": "T1: fabricated — dbt has no such automatic relation-expiry behaviour"
     },
     "topics": [
       "ae/03-debugging-modeling-errors/compiled-code-and-logs"
@@ -258,12 +258,12 @@
     "difficulty_estimate": "L3",
     "stem": "A macro file fails to compile with `Reached EOF without finding a close tag for macro (searched from line 1)`. The developer needs to know what kind of mistake typically causes this exact message, besides a missing `{% endmacro %}`. What else commonly triggers it?",
     "option_texts": {
-      "A": "Forgetting a closing `}` in a Jinja tag, or closing a `for` loop before closing an enclosing `if` statement",
+      "A": "A `not_null` test failing on a column referenced inside the macro",
       "B": "A missing semicolon at the end of the model's final `select` statement",
-      "C": "A `not_null` test failing on a column referenced inside the macro",
+      "C": "Forgetting a closing `}` in a Jinja tag, or closing a `for` loop before closing an enclosing `if` statement",
       "D": "The warehouse connection timing out while dbt waits for the macro to run"
     },
-    "drill_answer": "A",
+    "drill_answer": "C",
     "drill_answer_short": "Mismatched Jinja tags, like closing a for loop before an enclosing if, also trigger this EOF error",
     "decision_hinge": "This particular example is for a forgotten {% endmacro %} tag, but you can also get errors like this for forgetting a closing }, or closing a for loop before closing an if statement.",
     "sources": [
@@ -273,13 +273,13 @@
       "B": "besides a missing `{% endmacro %}`"
     },
     "eliminated_by": {
-      "C": "A macro file fails to compile with `Reached EOF without finding a close tag for macro (searched from line 1)`",
+      "A": "A macro file fails to compile with `Reached EOF without finding a close tag for macro (searched from line 1)`",
       "D": "fails to compile with `Reached EOF without finding a close tag for macro (searched from line 1)`"
     },
     "distractor_traps": {
-      "B": "T3: confusable sibling \u2014 a SQL punctuation mistake is a different failure mode than an unclosed Jinja tag",
-      "C": "T2: wrong layer \u2014 a failing test runs after a successful build; it cannot cause a compile-time EOF error",
-      "D": "T1: fabricated \u2014 this error happens at parse time, before any connection is needed"
+      "A": "T2: wrong layer — a failing test runs after a successful build; it cannot cause a compile-time EOF error",
+      "B": "T3: confusable sibling — a SQL punctuation mistake is a different failure mode than an unclosed Jinja tag",
+      "D": "T1: fabricated — this error happens at parse time, before any connection is needed"
     },
     "topics": [
       "ae/03-debugging-modeling-errors/compiled-code-and-logs"
@@ -312,8 +312,8 @@
       "D": "A model build fails with a Database Error citing a SQL syntax mistake"
     },
     "distractor_traps": {
-      "C": "T7: over-engineering \u2014 editing a generated file is explicitly discouraged; a real fix belongs in the source model",
-      "D": "T1: fabricated \u2014 deleting logs does not change or regenerate compiled SQL"
+      "C": "T7: over-engineering — editing a generated file is explicitly discouraged; a real fix belongs in the source model",
+      "D": "T1: fabricated — deleting logs does not change or regenerate compiled SQL"
     },
     "topics": [
       "ae/03-debugging-modeling-errors/compiled-code-and-logs"
@@ -327,28 +327,28 @@
     "difficulty_estimate": "L4",
     "stem": "A file `tests/dim_listings_minimum_nights.sql` contains `SELECT * FROM {{ model }} WHERE minimum_nights < 1`, placed directly in the `tests/` directory as a singular test. Running `dbt test` fails with `Compilation Error: 'model' is undefined`. The developer needs the actual cause. What's wrong?",
     "option_texts": {
-      "A": "Singular tests don't receive a `model` variable; only a generic test's `test` block receives `model` as a parameter, so this file should use `ref()` or `source()` directly",
+      "A": "Every singular test file must directly include a `{% test %}` block, which this file is missing",
       "B": "The `tests/` directory only accepts `.yml` files, so `.sql` files placed there are never parsed",
       "C": "`dbt test` must be run with a `--select` flag naming which model `{{ model }}` refers to",
-      "D": "Every singular test file must directly include a `{% test %}` block, which this file is missing"
+      "D": "Singular tests don't receive a `model` variable; only a generic test's `test` block receives `model` as a parameter, so this file should use `ref()` or `source()` directly"
     },
-    "drill_answer": "A",
+    "drill_answer": "D",
     "drill_answer_short": "Only a generic test block receives model as a parameter; singular tests reference models with ref() directly",
     "decision_hinge": "A generic data test is defined in a test block, which contains a parameterized query and accepts arguments such as model and column_name. A singular data test is the exact SQL that will return failing records, using ref and source just like a model, and is placed in the tests directory.",
     "sources": [
       "https://docs.getdbt.com/docs/build/data-tests"
     ],
     "plausible_options": {
-      "D": "placed directly in the `tests/` directory as a singular test"
+      "A": "placed directly in the `tests/` directory as a singular test"
     },
     "eliminated_by": {
       "B": "contains `SELECT * FROM {{ model }} WHERE minimum_nights < 1`, placed directly in the `tests/` directory",
       "C": "Running `dbt test` fails with `Compilation Error: 'model' is undefined`"
     },
     "distractor_traps": {
-      "B": "T1: fabricated \u2014 the tests/ directory is exactly where singular SQL tests belong",
-      "C": "T1: fabricated \u2014 no flag supplies a `model` variable to a singular test",
-      "D": "T3: confusable sibling \u2014 a test block defines a generic test; a singular test needs no test block at all"
+      "A": "T3: confusable sibling — a test block defines a generic test; a singular test needs no test block at all",
+      "B": "T1: fabricated — the tests/ directory is exactly where singular SQL tests belong",
+      "C": "T1: fabricated — no flag supplies a `model` variable to a singular test"
     },
     "topics": [
       "ae/03-debugging-modeling-errors/yaml-properties-vs-configs"
@@ -362,28 +362,28 @@
     "difficulty_estimate": "L2",
     "stem": "A macro calls `{{ log(\"Call your mom!\") }}` and then `{{ log(\"Call your dad!\", info=True) }}`. A developer runs `dbt run` and watches the terminal output directly, without opening any log file. The team needs to know exactly which message(s) appear on screen. What do they see?",
     "option_texts": {
-      "A": "Only \"Call your dad!\", because `info=True` is required for a message to also print to stdout",
-      "B": "Both messages, because `log()` always writes to stdout regardless of the `info` argument",
+      "A": "Both messages, because `log()` always writes to stdout regardless of the `info` argument",
+      "B": "Only \"Call your dad!\", because `info=True` is required for a message to also print to stdout",
       "C": "Neither message, because `log()` only ever writes to the log file, never to the terminal",
       "D": "Only \"Call your mom!\", because the first `log()` call in a macro always takes priority"
     },
-    "drill_answer": "A",
+    "drill_answer": "B",
     "drill_answer_short": "log() writes to stdout only when info=True; otherwise it only writes to the log file",
     "decision_hinge": "log() takes an info argument: if False, write to the log file; if True, write to both the log file and stdout. The default is False.",
     "sources": [
       "https://docs.getdbt.com/reference/dbt-jinja-functions/log"
     ],
     "plausible_options": {
-      "B": "watches the terminal output directly, without opening any log file"
+      "A": "watches the terminal output directly, without opening any log file"
     },
     "eliminated_by": {
       "C": "then `{{ log(\"Call your dad!\", info=True) }}`",
       "D": "runs `dbt run` and watches the terminal output directly"
     },
     "distractor_traps": {
-      "B": "T3: confusable sibling \u2014 the default behaviour writes only to the log file, not the terminal",
-      "C": "T4: breaks a stated fact \u2014 the second call explicitly sets info=True, which does reach stdout",
-      "D": "T1: fabricated \u2014 log() has no such call-order priority rule"
+      "A": "T3: confusable sibling — the default behaviour writes only to the log file, not the terminal",
+      "C": "T4: breaks a stated fact — the second call explicitly sets info=True, which does reach stdout",
+      "D": "T1: fabricated — log() has no such call-order priority rule"
     },
     "topics": [
       "ae/03-debugging-modeling-errors/compiled-code-and-logs"

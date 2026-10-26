@@ -26,8 +26,8 @@
       "D": "without changing what each individual test actually checks"
     },
     "distractor_traps": {
-      "C": "T8: scope error \u2014 severity: warn is a real lever, but it changes what the test reports, and it is not the only way to control skipping",
-      "D": "T1: fabricated \u2014 thread count has no documented effect on skip propagation"
+      "C": "T8: scope error — severity: warn is a real lever, but it changes what the test reports, and it is not the only way to control skipping",
+      "D": "T1: fabricated — thread count has no documented effect on skip propagation"
     },
     "topics": [
       "ae/04-troubleshooting-pipelines/dag-failure-points"
@@ -41,12 +41,12 @@
     "difficulty_estimate": "L3",
     "stem": "Under `dbt build`, `model_b` depends on `model_a`. A `unique` test on `model_a` fails. The release engineer needs to know exactly what happens to `model_b`. What's the outcome?",
     "option_texts": {
-      "A": "`model_b` is skipped entirely, because a test failure on an upstream resource blocks and skips its downstream resources",
+      "A": "`model_b` builds but is flagged with a warning in the run results",
       "B": "`model_b` still builds normally, because only a test failed, not the model itself",
-      "C": "`model_b` builds but is flagged with a warning in the run results",
+      "C": "`model_b` is skipped entirely, because a test failure on an upstream resource blocks and skips its downstream resources",
       "D": "The entire `dbt build` invocation aborts immediately, stopping every other model too"
     },
-    "drill_answer": "A",
+    "drill_answer": "C",
     "drill_answer_short": "A failing test on model_a's unique column causes model_b to skip entirely",
     "decision_hinge": "Tests on upstream resources will block downstream resources from running, and a test failure will cause those downstream resources to skip entirely. E.g. If model_b depends on model_a, and a unique test on model_a fails, then model_b will SKIP.",
     "sources": [
@@ -56,16 +56,16 @@
       "D": "A `unique` test on `model_a` fails"
     },
     "eliminated_by": {
+      "A": "The release engineer needs to know exactly what happens to `model_b`",
       "B": {
         "signal": "A `unique` test on `model_a` fails",
         "requires_fact": "A test failure will cause downstream resources to skip entirely; a failing test is not the same as the model itself continuing to run normally."
-      },
-      "C": "The release engineer needs to know exactly what happens to `model_b`"
+      }
     },
     "distractor_traps": {
-      "B": "T4: breaks a stated fact \u2014 the documented example states this exact scenario causes a skip",
-      "C": "T1: fabricated \u2014 a skip is not the same as a warning tag on a successful build",
-      "D": "T3: confusable sibling \u2014 aborting the whole invocation is --fail-fast behaviour, not the default skip rule"
+      "A": "T1: fabricated — a skip is not the same as a warning tag on a successful build",
+      "B": "T4: breaks a stated fact — the documented example states this exact scenario causes a skip",
+      "D": "T3: confusable sibling — aborting the whole invocation is --fail-fast behaviour, not the default skip rule"
     },
     "topics": [
       "ae/04-troubleshooting-pipelines/dag-failure-points"
@@ -79,12 +79,12 @@
     "difficulty_estimate": "L2",
     "stem": "A team wants to copy their production models into a PR's CI schema cheaply, on a platform that supports zero-copy cloning of tables. They need to know what `dbt clone` actually creates for a model that is materialized as a table in the source environment there. What does it create?",
     "option_texts": {
-      "A": "A clone of the table made via the platform's native cloning feature, rather than copying all the data",
+      "A": "Nothing; zero-copy cloning only works on views, never on tables",
       "B": "A simple pointer view that runs `select * from` the source object, which is what happens without zero-copy cloning support",
       "C": "A brand-new table populated by copying every row through a full `dbt build`, since no platform supports zero-copy cloning for tables",
-      "D": "Nothing; zero-copy cloning only works on views, never on tables"
+      "D": "A clone of the table made via the platform's native cloning feature, rather than copying all the data"
     },
-    "drill_answer": "A",
+    "drill_answer": "D",
     "drill_answer_short": "On a platform with zero-copy cloning, dbt clone creates a true clone of a source table",
     "decision_hinge": "If your data platform supports zero-copy cloning of tables (Snowflake, Databricks, or BigQuery), and this model exists as a table in the source environment, dbt will create it in your target environment as a clone. Otherwise, dbt will create a simple pointer view.",
     "sources": [
@@ -94,16 +94,16 @@
       "B": "on a platform that supports zero-copy cloning of tables"
     },
     "eliminated_by": {
+      "A": "materialized as a table in the source environment there",
       "C": {
         "signal": "wants to copy their production models into a PR's CI schema cheaply",
         "requires_fact": "If your data platform supports zero-copy cloning of tables and this model exists as a table in the source environment, dbt will create it in your target environment as a clone, rather than copying every row."
-      },
-      "D": "materialized as a table in the source environment there"
+      }
     },
     "distractor_traps": {
-      "B": "T3: confusable sibling \u2014 the pointer-view fallback applies when zero-copy cloning is not supported, the opposite of this scenario",
-      "C": "T1: fabricated \u2014 copying every row through a build defeats the stated goal of a cheap clone",
-      "D": "T1: fabricated \u2014 dbt clone works on tables too, exactly when zero-copy cloning is supported"
+      "A": "T1: fabricated — dbt clone works on tables too, exactly when zero-copy cloning is supported",
+      "B": "T3: confusable sibling — the pointer-view fallback applies when zero-copy cloning is not supported, the opposite of this scenario",
+      "C": "T1: fabricated — copying every row through a build defeats the stated goal of a cheap clone"
     },
     "topics": [
       "ae/04-troubleshooting-pipelines/dbt-clone"
@@ -117,28 +117,28 @@
     "difficulty_estimate": "L3",
     "stem": "A column `status` on the `orders` model must only ever contain `'placed'`, `'shipped'`, `'completed'`, or `'returned'`. The team is on a current dbt version and wants the config written in the form the docs now recommend, not the older top-level form. How should the `accepted_values` test be configured?",
     "option_texts": {
-      "A": "Nest the allowed values under an `arguments:` key, with `values: ['placed', 'shipped', 'completed', 'returned']` inside it",
-      "B": "Set `values: ['placed', 'shipped', 'completed', 'returned']` directly as a top-level property of `accepted_values`, with no `arguments:` key",
+      "A": "Set `values: ['placed', 'shipped', 'completed', 'returned']` directly as a top-level property of `accepted_values`, with no `arguments:` key",
+      "B": "Nest the allowed values under an `arguments:` key, with `values: ['placed', 'shipped', 'completed', 'returned']` inside it",
       "C": "Use a `relationships` test instead, since `accepted_values` was renamed in a recent dbt release",
       "D": "List the allowed values as a Python list inside the model's SQL file, not in YAML at all"
     },
-    "drill_answer": "A",
+    "drill_answer": "B",
     "drill_answer_short": "Current dbt nests accepted_values arguments like 'values' under an arguments: key",
     "decision_hinge": "accepted_values: arguments: values: ['placed', 'shipped', 'completed', 'returned'] -- available in v1.10.5 and higher. Older versions can set the argument name as the top-level property.",
     "sources": [
       "https://docs.getdbt.com/docs/build/data-tests"
     ],
     "plausible_options": {
-      "B": "wants the config written in the form the docs now recommend, not the older top-level form"
+      "A": "wants the config written in the form the docs now recommend, not the older top-level form"
     },
     "eliminated_by": {
       "C": "A column `status` on the `orders` model must only ever contain",
       "D": "The team is on a current dbt version and wants the config written in the form the docs now recommend"
     },
     "distractor_traps": {
-      "B": "T6: stale behaviour \u2014 the top-level form still works as an alias, but it is the older form, not the currently recommended one",
-      "C": "T1: fabricated \u2014 accepted_values was not renamed or replaced by relationships",
-      "D": "T1: fabricated \u2014 dbt data tests are configured in YAML, not inline Python lists in SQL files"
+      "A": "T6: stale behaviour — the top-level form still works as an alias, but it is the older form, not the currently recommended one",
+      "C": "T1: fabricated — accepted_values was not renamed or replaced by relationships",
+      "D": "T1: fabricated — dbt data tests are configured in YAML, not inline Python lists in SQL files"
     },
     "topics": [
       "ae/05-implementing-tests/test-types"
@@ -152,19 +152,19 @@
     "difficulty_estimate": "L2",
     "stem": "A team wants a reusable test that can be attached to any column on any model, checking that every value is strictly positive. They write a `{% test %}` block for it. Which two parameters must that block declare to make the test generic across models and columns?",
     "option_texts": {
-      "A": "`model` and `column_name`, the two arguments dbt passes into a generic test block so it can run against any model and column",
+      "A": "`source_name` and `column_name`, since generic tests always test a source rather than a model",
       "B": "`table_name` and `field_name`, because those describe what the test checks in plain English",
-      "C": "`source_name` and `column_name`, since generic tests always test a source rather than a model",
+      "C": "`model` and `column_name`, the two arguments dbt passes into a generic test block so it can run against any model and column",
       "D": "No parameters; dbt infers the model and column from the YAML property where the test is attached"
     },
-    "drill_answer": "A",
+    "drill_answer": "C",
     "drill_answer_short": "A generic test block takes model and column_name as its two parameters",
     "decision_hinge": "A generic data test is defined in a test block, which contains a parameterized query and accepts arguments. There are two arguments, model and column_name, which are then templated into the query, making the data test generic across models and columns.",
     "sources": [
       "https://docs.getdbt.com/docs/build/data-tests"
     ],
     "plausible_options": {
-      "C": "a reusable test that can be attached to any column on any model"
+      "A": "a reusable test that can be attached to any column on any model"
     },
     "eliminated_by": {
       "B": "checking that every value is strictly positive",
@@ -174,9 +174,9 @@
       }
     },
     "distractor_traps": {
-      "B": "T1: fabricated \u2014 dbt's generic test block argument names are model and column_name, not these",
-      "C": "T3: confusable sibling \u2014 the argument is called model even when the test is attached to a source",
-      "D": "T4: breaks a stated fact \u2014 the stem says they write a test block, which requires declared parameters"
+      "A": "T3: confusable sibling — the argument is called model even when the test is attached to a source",
+      "B": "T1: fabricated — dbt's generic test block argument names are model and column_name, not these",
+      "D": "T4: breaks a stated fact — the stem says they write a test block, which requires declared parameters"
     },
     "topics": [
       "ae/05-implementing-tests/test-types"
@@ -190,28 +190,28 @@
     "difficulty_estimate": "L2",
     "stem": "Every `customer_id` value in the `orders` model must already exist as an `id` value in the `customers` model, enforcing referential integrity. Which built-in generic test checks this, and how is it configured?",
     "option_texts": {
-      "A": "`relationships`, configured with `arguments: {to: ref('customers'), field: id}` on the `customer_id` column",
+      "A": "A custom singular test comparing `customer_id` row counts between `orders` and `customers`",
       "B": "`accepted_values`, configured with `arguments: {values: ref('customers')}`",
       "C": "`unique`, because referential integrity is really just uniqueness enforced across two models",
-      "D": "A custom singular test comparing `customer_id` row counts between `orders` and `customers`"
+      "D": "`relationships`, configured with `arguments: {to: ref('customers'), field: id}` on the `customer_id` column"
     },
-    "drill_answer": "A",
+    "drill_answer": "D",
     "drill_answer_short": "relationships checks that a column's values exist as a field in another referenced model",
     "decision_hinge": "relationships: each customer_id in the orders model exists as an id in the customers table, also known as referential integrity. Configured as relationships: arguments: to: ref('customers'), field: id.",
     "sources": [
       "https://docs.getdbt.com/docs/build/data-tests"
     ],
     "plausible_options": {
-      "D": "enforcing referential integrity"
+      "A": "enforcing referential integrity"
     },
     "eliminated_by": {
       "B": "Every `customer_id` value in the `orders` model must already exist as an `id` value in the `customers` model",
       "C": "Every `customer_id` value in the `orders` model must already exist as an `id` value in the `customers` model"
     },
     "distractor_traps": {
-      "B": "T1: fabricated \u2014 accepted_values takes a literal list of values, not a ref() to another model",
-      "C": "T3: confusable sibling \u2014 unique only checks for duplicates within one column, it never compares across models",
-      "D": "T7: over-engineering \u2014 a built-in generic test already covers this exact check"
+      "A": "T7: over-engineering — a built-in generic test already covers this exact check",
+      "B": "T1: fabricated — accepted_values takes a literal list of values, not a ref() to another model",
+      "C": "T3: confusable sibling — unique only checks for duplicates within one column, it never compares across models"
     },
     "topics": [
       "ae/05-implementing-tests/test-types"
@@ -225,19 +225,19 @@
     "difficulty_estimate": "L1",
     "stem": "A reviewer is checking a schema.yml file and needs to flag any test name that is not one of dbt's four built-in generic tests, shipped out of the box. Which of these is NOT one of the four?",
     "option_texts": {
-      "A": "`not_empty`",
-      "B": "`unique`",
+      "A": "`unique`",
+      "B": "`not_empty`",
       "C": "`not_null`",
       "D": "`accepted_values`"
     },
-    "drill_answer": "A",
+    "drill_answer": "B",
     "drill_answer_short": "not_empty is not one of dbt's four built-in generic tests",
     "decision_hinge": "Out of the box, dbt ships with four generic data tests already defined: unique, not_null, accepted_values, and relationships.",
     "sources": [
       "https://docs.getdbt.com/docs/build/data-tests"
     ],
     "eliminated_by": {
-      "B": "needs to flag any test name that is not one of dbt's four built-in generic tests",
+      "A": "needs to flag any test name that is not one of dbt's four built-in generic tests",
       "C": "shipped out of the box",
       "D": {
         "signal": "A reviewer is checking a schema.yml file and needs to flag any test name",
@@ -245,9 +245,9 @@
       }
     },
     "distractor_traps": {
-      "B": "T8: scope error \u2014 unique is one of the four, so it cannot be the odd one out",
-      "C": "T8: scope error \u2014 not_null is one of the four, so it cannot be the odd one out",
-      "D": "T8: scope error \u2014 accepted_values is one of the four, so it cannot be the odd one out"
+      "A": "T8: scope error — unique is one of the four, so it cannot be the odd one out",
+      "C": "T8: scope error — not_null is one of the four, so it cannot be the odd one out",
+      "D": "T8: scope error — accepted_values is one of the four, so it cannot be the odd one out"
     },
     "topics": [
       "ae/05-implementing-tests/test-types"
@@ -261,12 +261,12 @@
     "difficulty_estimate": "L2",
     "stem": "A developer writes `tests/dim_listings_min_nights.sql` as a plain `SELECT * FROM {{ ref('dim_listings_cleansed') }} WHERE minimum_nights < 1`, with no `{% test %}` wrapper and no arguments. They need to know if this file is actually usable as a dbt test without any further wrapping. Is it usable, and why?",
     "option_texts": {
-      "A": "Yes, because a singular data test is simply the SQL that returns failing records, using ref() and source() like a model, needing no test block",
+      "A": "No, because singular tests must be declared in a `data_tests:` YAML property before dbt will run them",
       "B": "No, because every test file, singular or generic, must be wrapped in a `{% test %}...{% endtest %}` block",
-      "C": "No, because singular tests must be declared in a `data_tests:` YAML property before dbt will run them",
+      "C": "Yes, because a singular data test is simply the SQL that returns failing records, using ref() and source() like a model, needing no test block",
       "D": "Yes, but only if the file also defines a `model` and `column_name` argument"
     },
-    "drill_answer": "A",
+    "drill_answer": "C",
     "drill_answer_short": "A singular data test is just the raw SQL that returns failing rows, no test block required",
     "decision_hinge": "The simplest way to define a data test is by writing the exact SQL that will return failing records. We call these singular data tests. Singular data tests placed in the tests directory are automatically executed when running dbt test.",
     "sources": [
@@ -276,16 +276,16 @@
       "D": "with no `{% test %}` wrapper and no arguments"
     },
     "eliminated_by": {
+      "A": "They need to know if this file is actually usable as a dbt test without any further wrapping",
       "B": {
         "signal": "with no `{% test %}` wrapper and no arguments",
         "requires_fact": "A singular data test is simply the SQL that will return failing records, needing no test block."
-      },
-      "C": "They need to know if this file is actually usable as a dbt test without any further wrapping"
+      }
     },
     "distractor_traps": {
-      "B": "T4: breaks a stated fact \u2014 singular tests are documented as needing no test block at all",
-      "C": "T1: fabricated \u2014 singular tests placed in tests/ are discovered and run automatically",
-      "D": "T3: confusable sibling \u2014 model and column_name are generic-test arguments, not a singular-test requirement"
+      "A": "T1: fabricated — singular tests placed in tests/ are discovered and run automatically",
+      "B": "T4: breaks a stated fact — singular tests are documented as needing no test block at all",
+      "D": "T3: confusable sibling — model and column_name are generic-test arguments, not a singular-test requirement"
     },
     "topics": [
       "ae/05-implementing-tests/test-types"
@@ -299,12 +299,12 @@
     "difficulty_estimate": "L3",
     "stem": "A platform team wants every data test in the project to store its failing rows by default, without editing each test individually, and without relying on anyone remembering to pass `--store-failures` on the command line. Where should they set this, and how?",
     "option_texts": {
-      "A": "Under `data_tests: +store_failures: true` in `dbt_project.yml`, setting the default for all tests in the project",
+      "A": "Set `on_schema_change: fail` as the default on every model, which also enables failure storage for its tests",
       "B": "Pass `--store-failures` as a permanent alias baked into every CI job definition, since that is the only way to apply it project-wide",
       "C": "Set `store_failures: true` inside each individual test's `.yml` property, repeated for every test",
-      "D": "Set `on_schema_change: fail` as the default on every model, which also enables failure storage for its tests"
+      "D": "Under `data_tests: +store_failures: true` in `dbt_project.yml`, setting the default for all tests in the project"
     },
-    "drill_answer": "A",
+    "drill_answer": "D",
     "drill_answer_short": "store_failures can be set as a project-wide default in dbt_project.yml",
     "decision_hinge": "Set the default for all tests in a package or project: dbt_project.yml data_tests: +store_failures: true.",
     "sources": [
@@ -314,13 +314,13 @@
       "B": "without relying on anyone remembering to pass `--store-failures` on the command line"
     },
     "eliminated_by": {
-      "C": "without editing each test individually",
-      "D": "store its failing rows by default"
+      "A": "store its failing rows by default",
+      "C": "without editing each test individually"
     },
     "distractor_traps": {
-      "B": "T7: over-engineering \u2014 a project-level config already does this without any CI job changes",
-      "C": "T4: breaks a stated requirement \u2014 the stem explicitly rules out editing each test individually",
-      "D": "T1: fabricated \u2014 on_schema_change has no effect on test failure storage"
+      "A": "T1: fabricated — on_schema_change has no effect on test failure storage",
+      "B": "T7: over-engineering — a project-level config already does this without any CI job changes",
+      "C": "T4: breaks a stated requirement — the stem explicitly rules out editing each test individually"
     },
     "topics": [
       "ae/05-implementing-tests/test-severity-and-workflow"
@@ -334,19 +334,19 @@
     "difficulty_estimate": "L4",
     "stem": "A test is configured with `severity: warn` and a custom `error_if: '> 10'`. The team needs to know exactly how dbt evaluates this test when it returns 15 failing rows. What happens?",
     "option_texts": {
-      "A": "dbt skips the `error_if` condition entirely because severity is `warn`, and jumps straight to evaluating `warn_if` instead",
-      "B": "dbt checks `error_if` first since it is explicitly configured, sees 15 > 10, and returns an error despite `severity: warn`",
+      "A": "dbt checks `error_if` first since it is explicitly configured, sees 15 > 10, and returns an error despite `severity: warn`",
+      "B": "dbt skips the `error_if` condition entirely because severity is `warn`, and jumps straight to evaluating `warn_if` instead",
       "C": "dbt ignores both `error_if` and `warn_if` whenever severity is `warn`, and the test always just warns regardless of the row count",
       "D": "dbt treats the explicit `error_if` as overriding the `severity` setting, always producing an error"
     },
-    "drill_answer": "A",
+    "drill_answer": "B",
     "drill_answer_short": "With severity: warn, dbt skips error_if entirely and jumps straight to warn_if",
     "decision_hinge": "If severity: warn, dbt will skip the error_if condition entirely and jump straight to the warn_if condition (defaulted to !=0). If the warn condition is met, the test warns; if not, the test passes.",
     "sources": [
       "https://docs.getdbt.com/reference/resource-configs/severity"
     ],
     "plausible_options": {
-      "B": "a custom `error_if: '> 10'`"
+      "A": "a custom `error_if: '> 10'`"
     },
     "eliminated_by": {
       "C": {
@@ -356,9 +356,9 @@
       "D": "a custom `error_if: '> 10'`"
     },
     "distractor_traps": {
-      "B": "T3: confusable sibling \u2014 an explicit error_if is only checked first when severity is error, not warn",
-      "C": "T3: confusable sibling \u2014 warn_if is still evaluated under severity: warn, only error_if is skipped",
-      "D": "T1: fabricated \u2014 severity is not overridden by the presence of an explicit error_if"
+      "A": "T3: confusable sibling — an explicit error_if is only checked first when severity is error, not warn",
+      "C": "T3: confusable sibling — warn_if is still evaluated under severity: warn, only error_if is skipped",
+      "D": "T1: fabricated — severity is not overridden by the presence of an explicit error_if"
     },
     "topics": [
       "ae/05-implementing-tests/test-severity-and-workflow"
@@ -372,12 +372,12 @@
     "difficulty_estimate": "L1",
     "stem": "A developer writes a one-off singular test as a `.sql` file and wants `dbt test` to discover and run it automatically, without listing it anywhere else. Where must that file live in the project?",
     "option_texts": {
-      "A": "In the `tests/` directory, as defined by the project's `test-paths` config",
+      "A": "In the `models/` directory, right next to the model it tests",
       "B": "In the `macros/` directory, alongside custom generic test macros",
-      "C": "In the `models/` directory, right next to the model it tests",
+      "C": "In the `tests/` directory, as defined by the project's `test-paths` config",
       "D": "Anywhere in the project; dbt scans every directory for `.sql` files containing a `select` statement"
     },
-    "drill_answer": "A",
+    "drill_answer": "C",
     "drill_answer_short": "Singular tests live in the tests/ directory, defined by test-paths, and are auto-discovered",
     "decision_hinge": "Singular data tests are defined in .sql files, typically in your tests directory, as defined by your test-paths config. Singular data tests placed in the tests directory are automatically executed when running dbt test.",
     "sources": [
@@ -387,16 +387,16 @@
       "B": "writes a one-off singular test as a `.sql` file"
     },
     "eliminated_by": {
-      "C": "wants `dbt test` to discover and run it automatically, without listing it anywhere else",
+      "A": "wants `dbt test` to discover and run it automatically, without listing it anywhere else",
       "D": {
         "signal": "without listing it anywhere else",
         "requires_fact": "Singular data tests are defined in .sql files, typically in your tests directory, as defined by your test-paths config."
       }
     },
     "distractor_traps": {
-      "B": "T3: confusable sibling \u2014 macros/ is where custom generic test definitions live, not singular test files",
-      "C": "T1: fabricated \u2014 dbt does not discover tests by proximity to the model file",
-      "D": "T4: breaks a stated fact \u2014 discovery is scoped to test-paths, not every project directory"
+      "A": "T1: fabricated — dbt does not discover tests by proximity to the model file",
+      "B": "T3: confusable sibling — macros/ is where custom generic test definitions live, not singular test files",
+      "D": "T4: breaks a stated fact — discovery is scoped to test-paths, not every project directory"
     },
     "topics": [
       "ae/05-implementing-tests/test-types"

@@ -1,0 +1,276 @@
+[
+  {
+    "id": "draft-orig2-ae01-generate-schema-name",
+    "domain": "ae-01",
+    "blueprint_task": "1.6",
+    "qtype": "multiple_choice",
+    "difficulty_estimate": "L2",
+    "stem": "A dbt project builds a model configured with `schema: marketing` into a resulting schema like `analytics_marketing`, where `analytics` is the developer's target schema. An engineer needs to know which macro actually controls that full resulting schema name. Which macro is responsible, and what does it control?",
+    "option_texts": {
+      "A": "`generate_schema_name`, which determines the complete schema name a model is materialized into, including any custom schema logic",
+      "B": "`generate_database_name`, which determines the complete schema name a model is materialized into",
+      "C": "`generate_schema_name`, which only appends a custom suffix onto the end of the model's table name",
+      "D": "`generate_alias_name`, which determines the full resulting schema name during materialization"
+    },
+    "drill_answer": "A",
+    "drill_answer_short": "generate_schema_name determines the complete schema name a model is built in",
+    "decision_hinge": "dbt uses a default macro called generate_schema_name to determine the name of the schema that a model should be built in. generate_schema_name determines the complete schema name where a model is materialized, including any custom schema logic.",
+    "sources": [
+      "https://docs.getdbt.com/docs/build/custom-schemas"
+    ],
+    "plausible_options": {
+      "D": "which macro actually controls that full resulting schema name"
+    },
+    "eliminated_by": {
+      "B": "which macro actually controls that full resulting schema name",
+      "C": {
+        "signal": "configured with `schema: marketing`",
+        "requires_fact": "generate_schema_name determines the complete schema name where a model is materialized, including any custom schema logic."
+      }
+    },
+    "distractor_traps": {
+      "B": "T3: confusable sibling \u2014 generate_database_name controls the database name, a separate macro from the schema one",
+      "C": "T4: breaks a stated fact \u2014 generate_schema_name controls the schema, not the table name suffix",
+      "D": "T3: confusable sibling \u2014 an alias macro controls a relation's identifier, not the schema it is built into"
+    },
+    "topics": [
+      "ae/01-developing-and-optimizing-models/project-config-and-flags"
+    ]
+  },
+  {
+    "id": "draft-orig2-ae01-python-model-signature-fib",
+    "domain": "ae-01",
+    "blueprint_task": "1.8",
+    "qtype": "fill_in_blank",
+    "difficulty_estimate": "L2",
+    "stem": "In a dbt Python model, what is the exact function signature for the entry point that dbt calls? Write the complete `def` line including parameters, skipping Python type hints: ____",
+    "accepted_answers": [
+      "def model(dbt, session):",
+      "model(dbt, session)",
+      "def model(dbt, session)"
+    ],
+    "drill_answer": "def model(dbt, session):",
+    "drill_answer_short": "The entry point is def model(dbt, session):, taking the dbt class and the session object",
+    "decision_hinge": "Use the dbt.ref() method within a Python model to read data from other models. models/my_python_model.py def model(dbt, session) ... dbt will prepare and pass in both arguments (dbt and session) when you dbt run --select python_model.",
+    "sources": [
+      "https://docs.getdbt.com/docs/build/python-models"
+    ],
+    "topics": [
+      "ae/01-developing-and-optimizing-models/materializations"
+    ]
+  },
+  {
+    "id": "draft-orig2-ae01-lineage-source-vs-ref",
+    "domain": "ae-01",
+    "blueprint_task": "1.1",
+    "qtype": "multiple_choice",
+    "difficulty_estimate": "L2",
+    "stem": "A lineage diagram shows an arrow from `airbnb.listings` into `src_listings`, with no other arrows feeding into `airbnb.listings`. A reviewer needs to describe which of these two nodes is a dbt-built model and which one is raw data dbt did not build. Which statement correctly matches each node to its reference function?",
+    "option_texts": {
+      "A": "`airbnb.listings` is a source referenced via `source()`, and `src_listings` is a dbt model referenced via `ref()`",
+      "B": "`src_listings` is a source referenced via `source()`, and `airbnb.listings` is a dbt model referenced via `ref()`",
+      "C": "Both nodes are dbt models, each referenced via `ref()`, since the diagram only shows models",
+      "D": "Both nodes are sources, each referenced via `source()`, since neither has further upstream arrows"
+    },
+    "drill_answer": "A",
+    "drill_answer_short": "The raw, un-built node is a source() call; the dbt-built node downstream is a ref() call",
+    "decision_hinge": "Sources make it possible to name and describe the data loaded into your warehouse by your Extract and Load tools, referenced using the source() function. The ref() function returns a Relation for a model, seed, or snapshot, and creates dependencies between the referenced node and the current model.",
+    "sources": [
+      "https://docs.getdbt.com/docs/build/sources",
+      "https://docs.getdbt.com/reference/dbt-jinja-functions/ref"
+    ],
+    "plausible_options": {
+      "B": "with no other arrows feeding into `airbnb.listings`"
+    },
+    "eliminated_by": {
+      "C": "A lineage diagram shows an arrow from `airbnb.listings` into `src_listings`",
+      "D": "A lineage diagram shows an arrow from `airbnb.listings` into `src_listings`"
+    },
+    "distractor_traps": {
+      "B": "T3: confusable sibling \u2014 the arrow direction in the diagram is the opposite of what this option claims",
+      "C": "T1: fabricated \u2014 a node with no upstream arrows and a raw-sounding name is the classic source pattern, not a model",
+      "D": "T1: fabricated \u2014 a node fed by an arrow is downstream of something dbt built, which is what ref() points at"
+    },
+    "topics": [
+      "ae/01-developing-and-optimizing-models/dbt-commands"
+    ]
+  },
+  {
+    "id": "draft-orig2-ae01-delete-insert-vs-merge-snowflake",
+    "domain": "ae-01",
+    "blueprint_task": "1.11",
+    "qtype": "multiple_choice",
+    "difficulty_estimate": "L4",
+    "stem": "On Snowflake, an incremental model's `merge` strategy starts failing with a \"nondeterministic merge\" error because the configured `unique_key` turns out not to be truly unique. The team needs to know what actually changes if they switch `incremental_strategy` to `delete+insert` instead, on this same platform. What's the real difference?",
+    "option_texts": {
+      "A": "`delete+insert` uses a two-step approach, deleting matching rows and then inserting new ones, instead of Snowflake's single `merge` statement",
+      "B": "`delete+insert` and `merge` are functionally identical on Snowflake, so switching strategies changes nothing about this error",
+      "C": "`delete+insert` only works on partitioned tables instead of row-level keys, so it cannot replace `merge` for this model at all",
+      "D": "`delete+insert` requires removing the `unique_key` config entirely, since it does not support matching on a key"
+    },
+    "drill_answer": "A",
+    "drill_answer_short": "delete+insert is a two-step approach that sidesteps Snowflake merge's uniqueness requirement",
+    "decision_hinge": "Snowflake's merge statement fails with a nondeterministic merge error if the unique_key specified in your model config is not actually unique. If you encounter this error, you can instruct dbt to use a two-step incremental approach by setting the incremental_strategy config for your model to delete+insert.",
+    "sources": [
+      "https://docs.getdbt.com/reference/resource-configs/snowflake-configs"
+    ],
+    "plausible_options": {
+      "B": "the configured `unique_key` turns out not to be truly unique"
+    },
+    "eliminated_by": {
+      "C": "The team needs to know what actually changes if they switch `incremental_strategy` to `delete+insert` instead, on this same platform",
+      "D": {
+        "signal": "the configured `unique_key` turns out not to be truly unique",
+        "requires_fact": "You can instruct dbt to use a two-step incremental approach by setting the incremental_strategy config for your model to delete+insert, as a way to recover from the merge strategy's nondeterministic merge error on a non-unique key."
+      }
+    },
+    "distractor_traps": {
+      "B": "T3: confusable sibling \u2014 the two strategies are documented as handling a non-unique key differently on Snowflake",
+      "C": "T1: fabricated \u2014 delete+insert is not restricted to partitioned tables",
+      "D": "T1: fabricated \u2014 delete+insert still uses a unique_key to match rows for the delete step"
+    },
+    "topics": [
+      "ae/01-developing-and-optimizing-models/incremental-models"
+    ]
+  },
+  {
+    "id": "draft-orig2-ae01-snapshot-valid-strategies",
+    "domain": "ae-01",
+    "blueprint_task": "1.10",
+    "qtype": "multiple_response",
+    "difficulty_estimate": "L1",
+    "stem": "A new team member is reading a snapshot's YAML config and needs to recognize which values are actually valid for the `strategy` property dbt ships with. Which TWO are valid, documented snapshot strategies?",
+    "option_texts": {
+      "A": "`timestamp`",
+      "B": "`check`",
+      "C": "`incremental`",
+      "D": "`merge`"
+    },
+    "drill_answer": "A,B",
+    "drill_answer_short": "timestamp and check are dbt's two built-in snapshot strategies",
+    "decision_hinge": "The source has a reliable last updated column, use the timestamp strategy -- the recommended default. No reliable timestamp, changes must be detected by comparing values, use the check strategy.",
+    "sources": [
+      "https://docs.getdbt.com/docs/build/snapshots"
+    ],
+    "plausible_options": {
+      "C": "which values are actually valid for the `strategy` property dbt ships with"
+    },
+    "eliminated_by": {
+      "D": "which values are actually valid for the `strategy` property dbt ships with"
+    },
+    "distractor_traps": {
+      "C": "T3: confusable sibling \u2014 incremental is a materialization, not a snapshot strategy",
+      "D": "T3: confusable sibling \u2014 merge is an incremental model strategy, not a snapshot strategy"
+    },
+    "topics": [
+      "ae/01-developing-and-optimizing-models/snapshots"
+    ]
+  },
+  {
+    "id": "draft-orig2-ae01-snapshot-not-auto-column",
+    "domain": "ae-01",
+    "blueprint_task": "1.10",
+    "qtype": "multiple_choice",
+    "difficulty_estimate": "L2",
+    "stem": "A reviewer is checking a newly built snapshot table and needs to flag any column name that dbt does NOT automatically add to every snapshot table by default. Which of these is NOT one of dbt's automatically added snapshot columns?",
+    "option_texts": {
+      "A": "`dbt_row_hash`",
+      "B": "`dbt_valid_from`",
+      "C": "`dbt_valid_to`",
+      "D": "`dbt_scd_id`"
+    },
+    "drill_answer": "A",
+    "drill_answer_short": "dbt_row_hash is not one of dbt's automatically added snapshot meta columns",
+    "decision_hinge": "By default, dbt uses the timestamp to update dbt_updated_at, dbt_valid_from and dbt_valid_to fields. dbt_scd_id is also a snapshot meta column dbt calculates automatically.",
+    "sources": [
+      "https://docs.getdbt.com/docs/build/snapshots"
+    ],
+    "eliminated_by": {
+      "B": "flag any column name that dbt does NOT automatically add to every snapshot table by default",
+      "C": "dbt does NOT automatically add to every snapshot table by default",
+      "D": {
+        "signal": "flag any column name that dbt does NOT automatically add",
+        "requires_fact": "By default, dbt uses the timestamp to update dbt_updated_at, dbt_valid_from and dbt_valid_to fields, and dbt_scd_id is also a meta column dbt calculates."
+      }
+    },
+    "distractor_traps": {
+      "B": "T8: scope error \u2014 dbt_valid_from is one of the automatically added columns, so it cannot be the odd one out",
+      "C": "T8: scope error \u2014 dbt_valid_to is one of the automatically added columns, so it cannot be the odd one out",
+      "D": "T8: scope error \u2014 dbt_scd_id is one of the automatically added columns, so it cannot be the odd one out"
+    },
+    "topics": [
+      "ae/01-developing-and-optimizing-models/snapshots"
+    ]
+  },
+  {
+    "id": "draft-orig2-ae01-python-model-ephemeral-limitation",
+    "domain": "ae-01",
+    "blueprint_task": "1.8",
+    "qtype": "multiple_choice",
+    "difficulty_estimate": "L3",
+    "stem": "A team wants a Python model to read from an upstream model in the same project. They need to know about a genuinely documented limitation of dbt Python models before they design the DAG. Which of the following is an actual, current limitation?",
+    "option_texts": {
+      "A": "Python models currently cannot reference an ephemeral model, since that kind of reference is not supported",
+      "B": "Python models cannot reference other dbt models using `dbt.ref()`",
+      "C": "Python models cannot be tested or documented like SQL models",
+      "D": "Python models cannot be granted access to their results using the `grants` config"
+    },
+    "drill_answer": "A",
+    "drill_answer_short": "Referencing an ephemeral model from a Python model is currently not supported",
+    "decision_hinge": "Referencing ephemeral models is currently not supported. dbt Python models have access to almost all of the same configuration options as SQL models. You can test and document them, add tags and meta properties, and grant access to their results to other users.",
+    "sources": [
+      "https://docs.getdbt.com/docs/build/python-models"
+    ],
+    "plausible_options": {
+      "B": "A team wants a Python model to read from an upstream model in the same project"
+    },
+    "eliminated_by": {
+      "C": "They need to know about a genuinely documented limitation of dbt Python models before they design the DAG",
+      "D": {
+        "signal": "before they design the DAG",
+        "requires_fact": "dbt Python models have access to almost all of the same configuration options as SQL models, including testing, documenting, tags, meta properties, and granting access to their results."
+      }
+    },
+    "distractor_traps": {
+      "B": "T3: confusable sibling \u2014 dbt.ref() is exactly the documented method for referencing other models from a Python model",
+      "C": "T1: fabricated \u2014 Python models can be tested and documented like SQL models",
+      "D": "T1: fabricated \u2014 Python models support the grants config like SQL models"
+    },
+    "topics": [
+      "ae/01-developing-and-optimizing-models/materializations"
+    ]
+  },
+  {
+    "id": "draft-orig2-ae01-grants-true-statements",
+    "domain": "ae-01",
+    "blueprint_task": "1.9",
+    "qtype": "multiple_response",
+    "difficulty_estimate": "L3",
+    "stem": "A platform engineer configures the `grants` resource config on a mart model for the first time and needs to predict exactly how dbt applies it once the model finishes building. Which TWO statements about `grants` are TRUE?",
+    "option_texts": {
+      "A": "When the model finishes building, dbt ensures the grants on its view or table match exactly the grants configured for it",
+      "B": "By default, a privilege configured without a `+` prefix replaces the less-specific set of grantees rather than adding to it",
+      "C": "`grants` can apply row- or column-level masking policies directly through the resource config exactly when building finishes, with no hooks needed",
+      "D": "`grants` can be configured for sources, exactly as it is once a model finishes building, since dbt also controls access to raw loaded tables"
+    },
+    "drill_answer": "A,B",
+    "drill_answer_short": "dbt reconciles grants to match the config exactly, clobbering by default unless a privilege uses the + prefix",
+    "decision_hinge": "When your model, seed, or snapshot finishes building, dbt ensures that the grants on its view or table match exactly the grants you have configured. dbt's default behavior replaces the less-specific set of grantees with the more-specific set of grantees, this merge and clobber behavior updates each privilege when dbt parses your project.",
+    "sources": [
+      "https://docs.getdbt.com/reference/resource-configs/grants"
+    ],
+    "plausible_options": {
+      "C": "configures the `grants` resource config on a mart model for the first time"
+    },
+    "eliminated_by": {
+      "D": "configures the `grants` resource config on a mart model for the first time"
+    },
+    "distractor_traps": {
+      "C": "T8: scope error \u2014 row- and column-level masking policies need hooks, since the grants config does not offer out-of-the-box support for them",
+      "D": "T1: fabricated \u2014 grants are defined as resource configs on models, seeds, and snapshots, not sources"
+    },
+    "topics": [
+      "ae/01-developing-and-optimizing-models/grants"
+    ]
+  }
+]

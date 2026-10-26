@@ -6555,8 +6555,3284 @@
       "sealed_at": "2026-10-21",
       "seal_confidence": 90,
       "needs_review": false
+    },
+    {
+      "id": "Q-AU-DBTAE-126",
+      "source": "authored",
+      "source_url": null,
+      "raw_path": "question-bank/authored/original2-batchA.json",
+      "stem": "A dbt project builds a model configured with `schema: marketing` into a resulting schema like `analytics_marketing`, where `analytics` is the developer's target schema. An engineer needs to know which macro actually controls that full resulting schema name. Which macro is responsible, and what does it control?",
+      "option_texts": {
+        "A": "`generate_schema_name`, which determines the complete schema name a model is materialized into, including any custom schema logic",
+        "B": "`generate_database_name`, which determines the complete schema name a model is materialized into",
+        "C": "`generate_schema_name`, which only appends a custom suffix onto the end of the model's table name",
+        "D": "`generate_alias_name`, which determines the full resulting schema name during materialization"
+      },
+      "domain": "ae-01",
+      "track": "ae",
+      "blueprint_task": "1.6",
+      "blueprint_task_title": "Defining configurations in dbt_project.yml",
+      "qtype": "multiple_choice",
+      "difficulty_estimate": "L2",
+      "difficulty_source": "authored",
+      "drill_answer": "A",
+      "drill_answer_short": "generate_schema_name determines the complete schema name a model is built in",
+      "drill_rationale": "dbt uses a default macro called generate_schema_name to determine the name of the schema that a model should be built in. generate_schema_name determines the complete schema name where a model is materialized, including any custom schema logic.",
+      "decision_hinge": "dbt uses a default macro called generate_schema_name to determine the name of the schema that a model should be built in. generate_schema_name determines the complete schema name where a model is materialized, including any custom schema logic.",
+      "plausible_options": {
+        "D": "which macro actually controls that full resulting schema name"
+      },
+      "eliminated_by": {
+        "B": "which macro actually controls that full resulting schema name",
+        "C": {
+          "signal": "configured with `schema: marketing`",
+          "requires_fact": "generate_schema_name determines the complete schema name where a model is materialized, including any custom schema logic."
+        }
+      },
+      "distractor_traps": {
+        "B": "T3: confusable sibling — generate_database_name controls the database name, a separate macro from the schema one",
+        "C": "T4: breaks a stated fact — generate_schema_name controls the schema, not the table name suffix",
+        "D": "T3: confusable sibling — an alias macro controls a relation's identifier, not the schema it is built into"
+      },
+      "options_analysis": "",
+      "sources": [
+        "https://docs.getdbt.com/docs/build/custom-schemas"
+      ],
+      "citation_status": "resolved",
+      "topics": [
+        "knowledge/ae/01-developing-and-optimizing-models/project-config-and-flags.md"
+      ],
+      "verified": true,
+      "status": "verified",
+      "sealed_by": "authored_via_item_qa",
+      "sealed_at": "2026-10-25",
+      "seal_confidence": 90,
+      "needs_review": false
+    },
+    {
+      "id": "Q-AU-DBTAE-127",
+      "source": "authored",
+      "source_url": null,
+      "raw_path": "question-bank/authored/original2-batchA.json",
+      "stem": "In a dbt Python model, what is the exact function signature for the entry point that dbt calls? Write the complete `def` line including parameters, skipping Python type hints: ____",
+      "option_texts": {},
+      "domain": "ae-01",
+      "track": "ae",
+      "blueprint_task": "1.8",
+      "blueprint_task_title": "Creating Python Models",
+      "qtype": "fill_in_blank",
+      "difficulty_estimate": "L2",
+      "difficulty_source": "authored",
+      "drill_answer": "def model(dbt, session):",
+      "drill_answer_short": "The entry point is def model(dbt, session):, taking the dbt class and the session object",
+      "drill_rationale": "Use the dbt.ref() method within a Python model to read data from other models. models/my_python_model.py def model(dbt, session) ... dbt will prepare and pass in both arguments (dbt and session) when you dbt run --select python_model.",
+      "decision_hinge": "Use the dbt.ref() method within a Python model to read data from other models. models/my_python_model.py def model(dbt, session) ... dbt will prepare and pass in both arguments (dbt and session) when you dbt run --select python_model.",
+      "plausible_options": {},
+      "eliminated_by": {},
+      "distractor_traps": {},
+      "options_analysis": "",
+      "sources": [
+        "https://docs.getdbt.com/docs/build/python-models"
+      ],
+      "citation_status": "resolved",
+      "topics": [
+        "knowledge/ae/01-developing-and-optimizing-models/materializations.md"
+      ],
+      "verified": true,
+      "status": "verified",
+      "sealed_by": "authored_via_item_qa",
+      "sealed_at": "2026-10-25",
+      "seal_confidence": 90,
+      "needs_review": false,
+      "accepted_answers": [
+        "def model(dbt, session):",
+        "model(dbt, session)",
+        "def model(dbt, session)"
+      ]
+    },
+    {
+      "id": "Q-AU-DBTAE-128",
+      "source": "authored",
+      "source_url": null,
+      "raw_path": "question-bank/authored/original2-batchA.json",
+      "stem": "A lineage diagram shows an arrow from `airbnb.listings` into `src_listings`, with no other arrows feeding into `airbnb.listings`. A reviewer needs to describe which of these two nodes is a dbt-built model and which one is raw data dbt did not build. Which statement correctly matches each node to its reference function?",
+      "option_texts": {
+        "A": "`airbnb.listings` is a source referenced via `source()`, and `src_listings` is a dbt model referenced via `ref()`",
+        "B": "`src_listings` is a source referenced via `source()`, and `airbnb.listings` is a dbt model referenced via `ref()`",
+        "C": "Both nodes are dbt models, each referenced via `ref()`, since the diagram only shows models",
+        "D": "Both nodes are sources, each referenced via `source()`, since neither has further upstream arrows"
+      },
+      "domain": "ae-01",
+      "track": "ae",
+      "blueprint_task": "1.1",
+      "blueprint_task_title": "Identifying and verifying any raw object dependencies",
+      "qtype": "multiple_choice",
+      "difficulty_estimate": "L2",
+      "difficulty_source": "authored",
+      "drill_answer": "A",
+      "drill_answer_short": "The raw, un-built node is a source() call; the dbt-built node downstream is a ref() call",
+      "drill_rationale": "Sources make it possible to name and describe the data loaded into your warehouse by your Extract and Load tools, referenced using the source() function. The ref() function returns a Relation for a model, seed, or snapshot, and creates dependencies between the referenced node and the current model.",
+      "decision_hinge": "Sources make it possible to name and describe the data loaded into your warehouse by your Extract and Load tools, referenced using the source() function. The ref() function returns a Relation for a model, seed, or snapshot, and creates dependencies between the referenced node and the current model.",
+      "plausible_options": {
+        "B": "with no other arrows feeding into `airbnb.listings`"
+      },
+      "eliminated_by": {
+        "C": "A lineage diagram shows an arrow from `airbnb.listings` into `src_listings`",
+        "D": "A lineage diagram shows an arrow from `airbnb.listings` into `src_listings`"
+      },
+      "distractor_traps": {
+        "B": "T3: confusable sibling — the arrow direction in the diagram is the opposite of what this option claims",
+        "C": "T1: fabricated — a node with no upstream arrows and a raw-sounding name is the classic source pattern, not a model",
+        "D": "T1: fabricated — a node fed by an arrow is downstream of something dbt built, which is what ref() points at"
+      },
+      "options_analysis": "",
+      "sources": [
+        "https://docs.getdbt.com/docs/build/sources",
+        "https://docs.getdbt.com/reference/dbt-jinja-functions/ref"
+      ],
+      "citation_status": "resolved",
+      "topics": [
+        "knowledge/ae/01-developing-and-optimizing-models/dbt-commands.md"
+      ],
+      "verified": true,
+      "status": "verified",
+      "sealed_by": "authored_via_item_qa",
+      "sealed_at": "2026-10-25",
+      "seal_confidence": 90,
+      "needs_review": false
+    },
+    {
+      "id": "Q-AU-DBTAE-129",
+      "source": "authored",
+      "source_url": null,
+      "raw_path": "question-bank/authored/original2-batchA.json",
+      "stem": "On Snowflake, an incremental model's `merge` strategy starts failing with a \"nondeterministic merge\" error because the configured `unique_key` turns out not to be truly unique. The team needs to know what actually changes if they switch `incremental_strategy` to `delete+insert` instead, on this same platform. What's the real difference?",
+      "option_texts": {
+        "A": "`delete+insert` uses a two-step approach, deleting matching rows and then inserting new ones, instead of Snowflake's single `merge` statement",
+        "B": "`delete+insert` and `merge` are functionally identical on Snowflake, so switching strategies changes nothing about this error",
+        "C": "`delete+insert` only works on partitioned tables instead of row-level keys, so it cannot replace `merge` for this model at all",
+        "D": "`delete+insert` requires removing the `unique_key` config entirely, since it does not support matching on a key"
+      },
+      "domain": "ae-01",
+      "track": "ae",
+      "blueprint_task": "1.11",
+      "blueprint_task_title": "Selecting the optimal incremental strategy based on a dataset's characteristics",
+      "qtype": "multiple_choice",
+      "difficulty_estimate": "L4",
+      "difficulty_source": "authored",
+      "drill_answer": "A",
+      "drill_answer_short": "delete+insert is a two-step approach that sidesteps Snowflake merge's uniqueness requirement",
+      "drill_rationale": "Snowflake's merge statement fails with a nondeterministic merge error if the unique_key specified in your model config is not actually unique. If you encounter this error, you can instruct dbt to use a two-step incremental approach by setting the incremental_strategy config for your model to delete+insert.",
+      "decision_hinge": "Snowflake's merge statement fails with a nondeterministic merge error if the unique_key specified in your model config is not actually unique. If you encounter this error, you can instruct dbt to use a two-step incremental approach by setting the incremental_strategy config for your model to delete+insert.",
+      "plausible_options": {
+        "B": "the configured `unique_key` turns out not to be truly unique"
+      },
+      "eliminated_by": {
+        "C": "The team needs to know what actually changes if they switch `incremental_strategy` to `delete+insert` instead, on this same platform",
+        "D": {
+          "signal": "the configured `unique_key` turns out not to be truly unique",
+          "requires_fact": "You can instruct dbt to use a two-step incremental approach by setting the incremental_strategy config for your model to delete+insert, as a way to recover from the merge strategy's nondeterministic merge error on a non-unique key."
+        }
+      },
+      "distractor_traps": {
+        "B": "T3: confusable sibling — the two strategies are documented as handling a non-unique key differently on Snowflake",
+        "C": "T1: fabricated — delete+insert is not restricted to partitioned tables",
+        "D": "T1: fabricated — delete+insert still uses a unique_key to match rows for the delete step"
+      },
+      "options_analysis": "",
+      "sources": [
+        "https://docs.getdbt.com/reference/resource-configs/snowflake-configs"
+      ],
+      "citation_status": "resolved",
+      "topics": [
+        "knowledge/ae/01-developing-and-optimizing-models/incremental-models.md"
+      ],
+      "verified": true,
+      "status": "verified",
+      "sealed_by": "authored_via_item_qa",
+      "sealed_at": "2026-10-25",
+      "seal_confidence": 90,
+      "needs_review": false
+    },
+    {
+      "id": "Q-AU-DBTAE-130",
+      "source": "authored",
+      "source_url": null,
+      "raw_path": "question-bank/authored/original2-batchA.json",
+      "stem": "A new team member is reading a snapshot's YAML config and needs to recognize which values are actually valid for the `strategy` property dbt ships with. Which TWO are valid, documented snapshot strategies?",
+      "option_texts": {
+        "A": "`timestamp`",
+        "B": "`check`",
+        "C": "`incremental`",
+        "D": "`merge`"
+      },
+      "domain": "ae-01",
+      "track": "ae",
+      "blueprint_task": "1.10",
+      "blueprint_task_title": "Creating snapshots in YAML",
+      "qtype": "multiple_response",
+      "difficulty_estimate": "L1",
+      "difficulty_source": "authored",
+      "drill_answer": "A,B",
+      "drill_answer_short": "timestamp and check are dbt's two built-in snapshot strategies",
+      "drill_rationale": "The source has a reliable last updated column, use the timestamp strategy -- the recommended default. No reliable timestamp, changes must be detected by comparing values, use the check strategy.",
+      "decision_hinge": "The source has a reliable last updated column, use the timestamp strategy -- the recommended default. No reliable timestamp, changes must be detected by comparing values, use the check strategy.",
+      "plausible_options": {
+        "C": "which values are actually valid for the `strategy` property dbt ships with"
+      },
+      "eliminated_by": {
+        "D": "which values are actually valid for the `strategy` property dbt ships with"
+      },
+      "distractor_traps": {
+        "C": "T3: confusable sibling — incremental is a materialization, not a snapshot strategy",
+        "D": "T3: confusable sibling — merge is an incremental model strategy, not a snapshot strategy"
+      },
+      "options_analysis": "",
+      "sources": [
+        "https://docs.getdbt.com/docs/build/snapshots"
+      ],
+      "citation_status": "resolved",
+      "topics": [
+        "knowledge/ae/01-developing-and-optimizing-models/snapshots.md"
+      ],
+      "verified": true,
+      "status": "verified",
+      "sealed_by": "authored_via_item_qa",
+      "sealed_at": "2026-10-25",
+      "seal_confidence": 90,
+      "needs_review": false
+    },
+    {
+      "id": "Q-AU-DBTAE-131",
+      "source": "authored",
+      "source_url": null,
+      "raw_path": "question-bank/authored/original2-batchA.json",
+      "stem": "A reviewer is checking a newly built snapshot table and needs to flag any column name that dbt does NOT automatically add to every snapshot table by default. Which of these is NOT one of dbt's automatically added snapshot columns?",
+      "option_texts": {
+        "A": "`dbt_row_hash`",
+        "B": "`dbt_valid_from`",
+        "C": "`dbt_valid_to`",
+        "D": "`dbt_scd_id`"
+      },
+      "domain": "ae-01",
+      "track": "ae",
+      "blueprint_task": "1.10",
+      "blueprint_task_title": "Creating snapshots in YAML",
+      "qtype": "multiple_choice",
+      "difficulty_estimate": "L2",
+      "difficulty_source": "authored",
+      "drill_answer": "A",
+      "drill_answer_short": "dbt_row_hash is not one of dbt's automatically added snapshot meta columns",
+      "drill_rationale": "By default, dbt uses the timestamp to update dbt_updated_at, dbt_valid_from and dbt_valid_to fields. dbt_scd_id is also a snapshot meta column dbt calculates automatically.",
+      "decision_hinge": "By default, dbt uses the timestamp to update dbt_updated_at, dbt_valid_from and dbt_valid_to fields. dbt_scd_id is also a snapshot meta column dbt calculates automatically.",
+      "plausible_options": {},
+      "eliminated_by": {
+        "B": "flag any column name that dbt does NOT automatically add to every snapshot table by default",
+        "C": "dbt does NOT automatically add to every snapshot table by default",
+        "D": {
+          "signal": "flag any column name that dbt does NOT automatically add",
+          "requires_fact": "By default, dbt uses the timestamp to update dbt_updated_at, dbt_valid_from and dbt_valid_to fields, and dbt_scd_id is also a meta column dbt calculates."
+        }
+      },
+      "distractor_traps": {
+        "B": "T8: scope error — dbt_valid_from is one of the automatically added columns, so it cannot be the odd one out",
+        "C": "T8: scope error — dbt_valid_to is one of the automatically added columns, so it cannot be the odd one out",
+        "D": "T8: scope error — dbt_scd_id is one of the automatically added columns, so it cannot be the odd one out"
+      },
+      "options_analysis": "",
+      "sources": [
+        "https://docs.getdbt.com/docs/build/snapshots"
+      ],
+      "citation_status": "resolved",
+      "topics": [
+        "knowledge/ae/01-developing-and-optimizing-models/snapshots.md"
+      ],
+      "verified": true,
+      "status": "verified",
+      "sealed_by": "authored_via_item_qa",
+      "sealed_at": "2026-10-25",
+      "seal_confidence": 90,
+      "needs_review": false
+    },
+    {
+      "id": "Q-AU-DBTAE-132",
+      "source": "authored",
+      "source_url": null,
+      "raw_path": "question-bank/authored/original2-batchA.json",
+      "stem": "A team wants a Python model to read from an upstream model in the same project. They need to know about a genuinely documented limitation of dbt Python models before they design the DAG. Which of the following is an actual, current limitation?",
+      "option_texts": {
+        "A": "Python models currently cannot reference an ephemeral model, since that kind of reference is not supported",
+        "B": "Python models cannot reference other dbt models using `dbt.ref()`",
+        "C": "Python models cannot be tested or documented like SQL models",
+        "D": "Python models cannot be granted access to their results using the `grants` config"
+      },
+      "domain": "ae-01",
+      "track": "ae",
+      "blueprint_task": "1.8",
+      "blueprint_task_title": "Creating Python Models",
+      "qtype": "multiple_choice",
+      "difficulty_estimate": "L3",
+      "difficulty_source": "authored",
+      "drill_answer": "A",
+      "drill_answer_short": "Referencing an ephemeral model from a Python model is currently not supported",
+      "drill_rationale": "Referencing ephemeral models is currently not supported. dbt Python models have access to almost all of the same configuration options as SQL models. You can test and document them, add tags and meta properties, and grant access to their results to other users.",
+      "decision_hinge": "Referencing ephemeral models is currently not supported. dbt Python models have access to almost all of the same configuration options as SQL models. You can test and document them, add tags and meta properties, and grant access to their results to other users.",
+      "plausible_options": {
+        "B": "A team wants a Python model to read from an upstream model in the same project"
+      },
+      "eliminated_by": {
+        "C": "They need to know about a genuinely documented limitation of dbt Python models before they design the DAG",
+        "D": {
+          "signal": "before they design the DAG",
+          "requires_fact": "dbt Python models have access to almost all of the same configuration options as SQL models, including testing, documenting, tags, meta properties, and granting access to their results."
+        }
+      },
+      "distractor_traps": {
+        "B": "T3: confusable sibling — dbt.ref() is exactly the documented method for referencing other models from a Python model",
+        "C": "T1: fabricated — Python models can be tested and documented like SQL models",
+        "D": "T1: fabricated — Python models support the grants config like SQL models"
+      },
+      "options_analysis": "",
+      "sources": [
+        "https://docs.getdbt.com/docs/build/python-models"
+      ],
+      "citation_status": "resolved",
+      "topics": [
+        "knowledge/ae/01-developing-and-optimizing-models/materializations.md"
+      ],
+      "verified": true,
+      "status": "verified",
+      "sealed_by": "authored_via_item_qa",
+      "sealed_at": "2026-10-25",
+      "seal_confidence": 90,
+      "needs_review": false
+    },
+    {
+      "id": "Q-AU-DBTAE-133",
+      "source": "authored",
+      "source_url": null,
+      "raw_path": "question-bank/authored/original2-batchA.json",
+      "stem": "A platform engineer configures the `grants` resource config on a mart model for the first time and needs to predict exactly how dbt applies it once the model finishes building. Which TWO statements about `grants` are TRUE?",
+      "option_texts": {
+        "A": "When the model finishes building, dbt ensures the grants on its view or table match exactly the grants configured for it",
+        "B": "By default, a privilege configured without a `+` prefix replaces the less-specific set of grantees rather than adding to it",
+        "C": "`grants` can apply row- or column-level masking policies directly through the resource config exactly when building finishes, with no hooks needed",
+        "D": "`grants` can be configured for sources, exactly as it is once a model finishes building, since dbt also controls access to raw loaded tables"
+      },
+      "domain": "ae-01",
+      "track": "ae",
+      "blueprint_task": "1.9",
+      "blueprint_task_title": "Providing access to users to models with the \"grants\" config",
+      "qtype": "multiple_response",
+      "difficulty_estimate": "L3",
+      "difficulty_source": "authored",
+      "drill_answer": "A,B",
+      "drill_answer_short": "dbt reconciles grants to match the config exactly, clobbering by default unless a privilege uses the + prefix",
+      "drill_rationale": "When your model, seed, or snapshot finishes building, dbt ensures that the grants on its view or table match exactly the grants you have configured. dbt's default behavior replaces the less-specific set of grantees with the more-specific set of grantees, this merge and clobber behavior updates each privilege when dbt parses your project.",
+      "decision_hinge": "When your model, seed, or snapshot finishes building, dbt ensures that the grants on its view or table match exactly the grants you have configured. dbt's default behavior replaces the less-specific set of grantees with the more-specific set of grantees, this merge and clobber behavior updates each privilege when dbt parses your project.",
+      "plausible_options": {
+        "C": "configures the `grants` resource config on a mart model for the first time"
+      },
+      "eliminated_by": {
+        "D": "configures the `grants` resource config on a mart model for the first time"
+      },
+      "distractor_traps": {
+        "C": "T8: scope error — row- and column-level masking policies need hooks, since the grants config does not offer out-of-the-box support for them",
+        "D": "T1: fabricated — grants are defined as resource configs on models, seeds, and snapshots, not sources"
+      },
+      "options_analysis": "",
+      "sources": [
+        "https://docs.getdbt.com/reference/resource-configs/grants"
+      ],
+      "citation_status": "resolved",
+      "topics": [
+        "knowledge/ae/01-developing-and-optimizing-models/grants.md"
+      ],
+      "verified": true,
+      "status": "verified",
+      "sealed_by": "authored_via_item_qa",
+      "sealed_at": "2026-10-25",
+      "seal_confidence": 90,
+      "needs_review": false
+    },
+    {
+      "id": "Q-AU-DBTAE-134",
+      "source": "authored",
+      "source_url": null,
+      "raw_path": "question-bank/authored/original2-batchB.json",
+      "stem": "A snapshot is currently configured with `strategy: timestamp` and `updated_at: last_modified`. The team switches it to `strategy: check` for a future run. Before that switch can work, which additional config becomes required that was not required under the timestamp strategy?",
+      "option_texts": {
+        "A": "`check_cols`, the list of columns dbt compares to detect a change",
+        "B": "`updated_at`, a timestamp column indicating when each record last changed",
+        "C": "`unique_key`, a column or expression identifying each record",
+        "D": "`hard_deletes`, which controls how deleted source rows are handled"
+      },
+      "domain": "ae-01",
+      "track": "ae",
+      "blueprint_task": "1.10",
+      "blueprint_task_title": "Creating snapshots in YAML",
+      "qtype": "multiple_choice",
+      "difficulty_estimate": "L3",
+      "difficulty_source": "authored",
+      "drill_answer": "A",
+      "drill_answer_short": "Switching to the check strategy requires check_cols, the columns dbt compares for changes",
+      "drill_rationale": "check_cols: if using the check strategy, then the columns to check. Only if using the check strategy.",
+      "decision_hinge": "check_cols: if using the check strategy, then the columns to check. Only if using the check strategy.",
+      "plausible_options": {
+        "B": "currently configured with `strategy: timestamp` and `updated_at: last_modified`"
+      },
+      "eliminated_by": {
+        "C": "The team switches it to `strategy: check` for a future run",
+        "D": {
+          "signal": "Before that switch can work, which additional config becomes required",
+          "requires_fact": "check_cols is required only if using the check strategy; hard_deletes defaults to ignore and is not required by either strategy."
+        }
+      },
+      "distractor_traps": {
+        "B": "T3: confusable sibling — updated_at is required for the timestamp strategy, which this snapshot is switching away from",
+        "C": "T8: scope error — unique_key is already required for every snapshot strategy, not a new requirement introduced by switching",
+        "D": "T3: confusable sibling — hard_deletes is an optional config independent of which strategy is chosen"
+      },
+      "options_analysis": "",
+      "sources": [
+        "https://docs.getdbt.com/docs/build/snapshots"
+      ],
+      "citation_status": "resolved",
+      "topics": [
+        "knowledge/ae/01-developing-and-optimizing-models/snapshots.md"
+      ],
+      "verified": true,
+      "status": "verified",
+      "sealed_by": "authored_via_item_qa",
+      "sealed_at": "2026-10-25",
+      "seal_confidence": 90,
+      "needs_review": false
+    },
+    {
+      "id": "Q-AU-DBTAE-135",
+      "source": "authored",
+      "source_url": null,
+      "raw_path": "question-bank/authored/original2-batchB.json",
+      "stem": "A project ingests data from two source systems, `stripe` and an internal `jaffle_shop` database, both containing an `orders` table. The team needs a staging file-naming pattern that keeps the two `orders` staging models visually distinct by source. Which naming pattern does dbt's documented guidance recommend?",
+      "option_texts": {
+        "A": "`stg_[source]__[entity]s.sql`, using a double underscore between the source system and the entity name",
+        "B": "`[entity]_stg_[source].sql`, putting the entity name first and the source system last",
+        "C": "`stg_[entity]s.sql`, omitting the source system entirely since folders already separate sources",
+        "D": "`[source]_[entity]s_staging.sql`, putting \"staging\" as a suffix rather than a prefix"
+      },
+      "domain": "ae-01",
+      "track": "ae",
+      "blueprint_task": "1.3",
+      "blueprint_task_title": "Conceptualizing modularity and how to incorporate DRY principles",
+      "qtype": "multiple_choice",
+      "difficulty_estimate": "L2",
+      "difficulty_source": "authored",
+      "drill_answer": "A",
+      "drill_answer_short": "stg_[source]__[entity]s.sql, with a double underscore separating source and entity",
+      "drill_rationale": "Creating a consistent pattern of file naming is crucial in dbt. We recommend putting as much clear information into the file name as possible, including a prefix for the layer the model exists in. stg_[source]__[entity]s.sql -- the double underscore between source system and entity helps visually distinguish the separate parts in the case of a source name having multiple words.",
+      "decision_hinge": "Creating a consistent pattern of file naming is crucial in dbt. We recommend putting as much clear information into the file name as possible, including a prefix for the layer the model exists in. stg_[source]__[entity]s.sql -- the double underscore between source system and entity helps visually distinguish the separate parts in the case of a source name having multiple words.",
+      "plausible_options": {
+        "C": "keeps the two `orders` staging models visually distinct by source"
+      },
+      "eliminated_by": {
+        "B": "needs a staging file-naming pattern that keeps the two `orders` staging models visually distinct by source",
+        "D": "needs a staging file-naming pattern that keeps the two `orders` staging models visually distinct by source"
+      },
+      "distractor_traps": {
+        "B": "T3: confusable sibling — the recommended pattern leads with the layer prefix, not the entity name",
+        "C": "T3: confusable sibling — folders group by source, but the file name itself still needs the source to stay distinct",
+        "D": "T3: confusable sibling — the documented prefix is the stg_ layer marker, not a staging suffix"
+      },
+      "options_analysis": "",
+      "sources": [
+        "https://docs.getdbt.com/best-practices/how-we-structure/2-staging"
+      ],
+      "citation_status": "resolved",
+      "topics": [
+        "knowledge/ae/01-developing-and-optimizing-models/dbt-commands.md"
+      ],
+      "verified": true,
+      "status": "verified",
+      "sealed_by": "authored_via_item_qa",
+      "sealed_at": "2026-10-25",
+      "seal_confidence": 90,
+      "needs_review": false
+    },
+    {
+      "id": "Q-AU-DBTAE-136",
+      "source": "authored",
+      "source_url": null,
+      "raw_path": "question-bank/authored/original2-batchB.json",
+      "stem": "A team maintains several incremental models and needs to recognize when `dbt run --full-refresh` genuinely becomes necessary, rather than just a safe habit. In which TWO scenarios is a full refresh actually required for an incremental model?",
+      "option_texts": {
+        "A": "The model's incremental logic changed, so new rows would be transformed differently from the historical rows already in the target table",
+        "B": "The model's column data types changed in a way existing incremental runs cannot reconcile without rebuilding the table from scratch",
+        "C": "The team wants to add a single new incremental test to the model's YAML without changing its SQL",
+        "D": "The team wants to rename the project without changing any model logic"
+      },
+      "domain": "ae-01",
+      "track": "ae",
+      "blueprint_task": "1.11",
+      "blueprint_task_title": "Selecting the optimal incremental strategy based on a dataset's characteristics",
+      "qtype": "multiple_response",
+      "difficulty_estimate": "L4",
+      "difficulty_source": "authored",
+      "drill_answer": "A,B",
+      "drill_answer_short": "A changed incremental transformation or an unreconcilable schema change both require a full rebuild",
+      "drill_rationale": "If your incremental model logic has changed, the transformations on your new rows of data may diverge from the historical transformations, which are stored in your target table. In this case, you should rebuild your incremental model. To force dbt to rebuild the entire incremental model from scratch, use the --full-refresh flag.",
+      "decision_hinge": "If your incremental model logic has changed, the transformations on your new rows of data may diverge from the historical transformations, which are stored in your target table. In this case, you should rebuild your incremental model. To force dbt to rebuild the entire incremental model from scratch, use the --full-refresh flag.",
+      "plausible_options": {
+        "C": "needs to recognize when `dbt run --full-refresh` genuinely becomes necessary, rather than just a safe habit"
+      },
+      "eliminated_by": {
+        "D": "needs to recognize when `dbt run --full-refresh` genuinely becomes necessary, rather than just a safe habit"
+      },
+      "distractor_traps": {
+        "C": "T8: scope error — adding a test does not change the model's transformation logic or stored historical rows",
+        "D": "T1: fabricated — renaming a project does not by itself invalidate any model's historical incremental data"
+      },
+      "options_analysis": "",
+      "sources": [
+        "https://docs.getdbt.com/docs/build/incremental-models"
+      ],
+      "citation_status": "resolved",
+      "topics": [
+        "knowledge/ae/01-developing-and-optimizing-models/incremental-models.md"
+      ],
+      "verified": true,
+      "status": "verified",
+      "sealed_by": "authored_via_item_qa",
+      "sealed_at": "2026-10-25",
+      "seal_confidence": 90,
+      "needs_review": false
+    },
+    {
+      "id": "Q-AU-DBTAE-137",
+      "source": "authored",
+      "source_url": null,
+      "raw_path": "question-bank/authored/original2-batchB.json",
+      "stem": "A platform engineer is deciding between `on-run-start` and `on-run-end` hooks for setting up and tearing down an audit table around an entire invocation. Which TWO statements about these two hooks are correct?",
+      "option_texts": {
+        "A": "`on-run-start` executes once at the start of commands such as `dbt build`, `dbt run`, `dbt seed`, and `dbt test`",
+        "B": "`on-run-end` executes once at the end of the same set of commands that trigger `on-run-start`",
+        "C": "`on-run-start` and `on-run-end` each run once per model, seed, or snapshot built during the invocation",
+        "D": "`on-run-start` and `on-run-end` can only be configured inside a model's own SQL file, never in `dbt_project.yml`"
+      },
+      "domain": "ae-01",
+      "track": "ae",
+      "blueprint_task": "1.6",
+      "blueprint_task_title": "Defining configurations in dbt_project.yml",
+      "qtype": "multiple_response",
+      "difficulty_estimate": "L2",
+      "difficulty_source": "authored",
+      "drill_answer": "A,B",
+      "drill_answer_short": "on-run-start and on-run-end each fire once per invocation, at the start and end respectively",
+      "drill_rationale": "on-run-start is executed at the start of dbt build, dbt compile, dbt docs generate, dbt run, dbt seed, dbt snapshot, or dbt test. on-run-end is executed at the end of the invocation.",
+      "decision_hinge": "on-run-start is executed at the start of dbt build, dbt compile, dbt docs generate, dbt run, dbt seed, dbt snapshot, or dbt test. on-run-end is executed at the end of the invocation.",
+      "plausible_options": {
+        "C": "setting up and tearing down an audit table around an entire invocation"
+      },
+      "eliminated_by": {
+        "D": "deciding between `on-run-start` and `on-run-end` hooks for setting up and tearing down an audit table"
+      },
+      "distractor_traps": {
+        "C": "T3: confusable sibling — pre-hook and post-hook run once per model, seed, or snapshot; on-run-start and on-run-end run once per invocation",
+        "D": "T1: fabricated — these hooks are typically configured at the project level in dbt_project.yml"
+      },
+      "options_analysis": "",
+      "sources": [
+        "https://docs.getdbt.com/docs/build/hooks-operations"
+      ],
+      "citation_status": "resolved",
+      "topics": [
+        "knowledge/ae/01-developing-and-optimizing-models/project-config-and-flags.md"
+      ],
+      "verified": true,
+      "status": "verified",
+      "sealed_by": "authored_via_item_qa",
+      "sealed_at": "2026-10-25",
+      "seal_confidence": 90,
+      "needs_review": false
+    },
+    {
+      "id": "Q-AU-DBTAE-138",
+      "source": "authored",
+      "source_url": null,
+      "raw_path": "question-bank/authored/original2-batchB.json",
+      "stem": "A `dbt_project.yml` file declares `vars: {region: us}` as a project-wide default. A model needs to read that declared value from inside its SQL, with the option to override it at runtime using `--vars`. Which Jinja function accesses a value declared this way?",
+      "option_texts": {
+        "A": "`var()`, which returns the value defined in the project or passed using `--vars`, based on precedence",
+        "B": "`env_var()`, which reads values from the operating system's environment variables",
+        "C": "`this()`, which returns the database representation of the current model",
+        "D": "`ref()`, which returns a Relation for a model, seed, or snapshot"
+      },
+      "domain": "ae-01",
+      "track": "ae",
+      "blueprint_task": "1.6",
+      "blueprint_task_title": "Defining configurations in dbt_project.yml",
+      "qtype": "multiple_choice",
+      "difficulty_estimate": "L2",
+      "difficulty_source": "authored",
+      "drill_answer": "A",
+      "drill_answer_short": "var() reads a value declared under vars: in dbt_project.yml, with --vars overriding it",
+      "drill_rationale": "To retrieve a variable inside a model, hook, or macro, use the var() function. The var() function returns the value defined in your project or passed using --vars, based on precedence.",
+      "decision_hinge": "To retrieve a variable inside a model, hook, or macro, use the var() function. The var() function returns the value defined in your project or passed using --vars, based on precedence.",
+      "plausible_options": {
+        "B": "with the option to override it at runtime using `--vars`"
+      },
+      "eliminated_by": {
+        "C": "A `dbt_project.yml` file declares `vars: {region: us}` as a project-wide default",
+        "D": "needs to read that declared value from inside its SQL"
+      },
+      "distractor_traps": {
+        "B": "T3: confusable sibling — env_var() reads operating-system environment variables, not values declared under vars: in dbt_project.yml",
+        "C": "T1: fabricated — this() points at the current model's own relation, unrelated to project variables",
+        "D": "T1: fabricated — ref() resolves a dependency relationship, it does not read a declared variable"
+      },
+      "options_analysis": "",
+      "sources": [
+        "https://docs.getdbt.com/reference/dbt-jinja-functions/var"
+      ],
+      "citation_status": "resolved",
+      "topics": [
+        "knowledge/ae/01-developing-and-optimizing-models/project-config-and-flags.md"
+      ],
+      "verified": true,
+      "status": "verified",
+      "sealed_by": "authored_via_item_qa",
+      "sealed_at": "2026-10-25",
+      "seal_confidence": 90,
+      "needs_review": false
+    },
+    {
+      "id": "Q-AU-DBTAE-139",
+      "source": "authored",
+      "source_url": null,
+      "raw_path": "question-bank/authored/original2-batchB.json",
+      "stem": "A pipeline currently needs to run seeds, models, snapshots, and tests, all respecting the dependency graph, with a failing upstream test skipping its downstream resources automatically. The team wants exactly one command for this instead of four separate invocations. Which command accomplishes this?",
+      "option_texts": {
+        "A": "`dbt build`, which runs models, tests, snapshots, and seeds together in DAG order for the selected resources",
+        "B": "`dbt run`, which also runs seeds, snapshots, and tests once models finish successfully",
+        "C": "`dbt compile`, which prepares all four resource types as selected resources to run automatically afterward",
+        "D": "`dbt docs generate`, which also builds every resource type it then documents"
+      },
+      "domain": "ae-01",
+      "track": "ae",
+      "blueprint_task": "1.4",
+      "blueprint_task_title": "Using commands such as build, run, test, docs, show, snapshot, and seed",
+      "qtype": "multiple_choice",
+      "difficulty_estimate": "L2",
+      "difficulty_source": "authored",
+      "drill_answer": "A",
+      "drill_answer_short": "dbt build runs models, tests, snapshots, and seeds together in DAG order",
+      "drill_rationale": "The dbt build command will run models, test tests, snapshot snapshots, and seed seeds, in DAG order, for selected resources or an entire project.",
+      "decision_hinge": "The dbt build command will run models, test tests, snapshot snapshots, and seed seeds, in DAG order, for selected resources or an entire project.",
+      "plausible_options": {
+        "B": "needs to run seeds, models, snapshots, and tests, all respecting the dependency graph"
+      },
+      "eliminated_by": {
+        "C": "with a failing upstream test skipping its downstream resources automatically",
+        "D": {
+          "signal": "wants exactly one command for this instead of four separate invocations",
+          "requires_fact": "The dbt build command will run models, test tests, snapshot snapshots, and seed seeds, in DAG order, for selected resources or an entire project."
+        }
+      },
+      "distractor_traps": {
+        "B": "T3: confusable sibling — dbt run only builds models, it does not also run seeds, snapshots, or tests",
+        "C": "T1: fabricated — dbt compile does not execute any resource against the warehouse",
+        "D": "T1: fabricated — generating docs does not build any resource"
+      },
+      "options_analysis": "",
+      "sources": [
+        "https://docs.getdbt.com/reference/commands/build"
+      ],
+      "citation_status": "resolved",
+      "topics": [
+        "knowledge/ae/01-developing-and-optimizing-models/dbt-commands.md"
+      ],
+      "verified": true,
+      "status": "verified",
+      "sealed_by": "authored_via_item_qa",
+      "sealed_at": "2026-10-25",
+      "seal_confidence": 90,
+      "needs_review": false
+    },
+    {
+      "id": "Q-AU-DBTAE-140",
+      "source": "authored",
+      "source_url": null,
+      "raw_path": "question-bank/authored/original2-batchB.json",
+      "stem": "A developer runs `dbt run --full-refresh --select fct_reviews`, where `fct_reviews` is materialized as incremental and wraps its filtering logic in an `is_incremental()` block. The team needs to know exactly what dbt does to the existing target table, and whether that `is_incremental()` filter still applies. What happens?",
+      "option_texts": {
+        "A": "dbt drops the existing target table and rebuilds it for all-time, since `is_incremental()` evaluates to `False` during a full refresh",
+        "B": "Only new rows are processed, because the `is_incremental()` filter still applies even during a full refresh",
+        "C": "dbt appends a second copy of all historical target rows on top of the existing table, doubling the row count",
+        "D": "dbt leaves the existing table completely untouched, since `--full-refresh` only affects downstream models"
+      },
+      "domain": "ae-01",
+      "track": "ae",
+      "blueprint_task": "1.11",
+      "blueprint_task_title": "Selecting the optimal incremental strategy based on a dataset's characteristics",
+      "qtype": "multiple_choice",
+      "difficulty_estimate": "L3",
+      "difficulty_source": "authored",
+      "drill_answer": "A",
+      "drill_answer_short": "--full-refresh drops and rebuilds the table for all-time; is_incremental() returns False",
+      "drill_rationale": "The --full-refresh flag will cause dbt to drop the existing target table in the database before rebuilding it for all-time. The is_incremental() macro will return True only if the full-refresh flag is not passed, among other conditions.",
+      "decision_hinge": "The --full-refresh flag will cause dbt to drop the existing target table in the database before rebuilding it for all-time. The is_incremental() macro will return True only if the full-refresh flag is not passed, among other conditions.",
+      "plausible_options": {
+        "B": "wraps its filtering logic in an `is_incremental()` block"
+      },
+      "eliminated_by": {
+        "C": "The team needs to know exactly what dbt does to the existing target table",
+        "D": {
+          "signal": "The team needs to know exactly what dbt does to the existing target table",
+          "requires_fact": "The --full-refresh flag will cause dbt to drop the existing target table in the database before rebuilding it for all-time."
+        }
+      },
+      "distractor_traps": {
+        "B": "T3: confusable sibling — is_incremental() depends on the full-refresh flag, so it does not keep filtering during one",
+        "C": "T1: fabricated — a full refresh drops and rebuilds the table, it does not append a duplicate copy",
+        "D": "T1: fabricated — --full-refresh rebuilds the selected model's own table, not only its downstream models"
+      },
+      "options_analysis": "",
+      "sources": [
+        "https://docs.getdbt.com/docs/build/incremental-models"
+      ],
+      "citation_status": "resolved",
+      "topics": [
+        "knowledge/ae/01-developing-and-optimizing-models/incremental-models.md"
+      ],
+      "verified": true,
+      "status": "verified",
+      "sealed_by": "authored_via_item_qa",
+      "sealed_at": "2026-10-25",
+      "seal_confidence": 90,
+      "needs_review": false
+    },
+    {
+      "id": "Q-AU-DBTAE-141",
+      "source": "authored",
+      "source_url": null,
+      "raw_path": "question-bank/authored/original2-batchB.json",
+      "stem": "A developer notices the same CASE statement repeated across five models and wants to extract it into a single, parameterized, reusable piece of Jinja that any model can call by name. Which dbt concept actually describes what they should write?",
+      "option_texts": {
+        "A": "A piece of Jinja code written once and called from many files, similar to a function in most programming languages",
+        "B": "A pre-built template shipped with dbt Core and reused across runs automatically during `dbt run`",
+        "C": "A snapshot: a way to capture how a resource's output changes across time",
+        "D": "A seed: a CSV file loaded into the warehouse and referenced like a model"
+      },
+      "domain": "ae-01",
+      "track": "ae",
+      "blueprint_task": "1.3",
+      "blueprint_task_title": "Conceptualizing modularity and how to incorporate DRY principles",
+      "qtype": "multiple_choice",
+      "difficulty_estimate": "L1",
+      "difficulty_source": "authored",
+      "drill_answer": "A",
+      "drill_answer_short": "A macro is reusable Jinja code, similar to a function, callable from many models",
+      "drill_rationale": "Macros in Jinja are pieces of code that can be reused multiple times, they are analogous to functions in most programming languages, and are extremely useful if you find yourself repeating code across multiple models.",
+      "decision_hinge": "Macros in Jinja are pieces of code that can be reused multiple times, they are analogous to functions in most programming languages, and are extremely useful if you find yourself repeating code across multiple models.",
+      "plausible_options": {
+        "B": "wants to extract it into a single, parameterized, reusable piece of Jinja that any model can call by name"
+      },
+      "eliminated_by": {
+        "C": "notices the same CASE statement repeated across five models",
+        "D": "notices the same CASE statement repeated across five models"
+      },
+      "distractor_traps": {
+        "B": "T3: confusable sibling — dbt ships no library of pre-built model templates reused across runs",
+        "C": "T3: confusable sibling — a snapshot captures historical change in data, it is not a reusable code block",
+        "D": "T3: confusable sibling — a seed loads a static CSV, it does not package reusable Jinja logic"
+      },
+      "options_analysis": "",
+      "sources": [
+        "https://docs.getdbt.com/docs/build/jinja-macros"
+      ],
+      "citation_status": "resolved",
+      "topics": [
+        "knowledge/ae/01-developing-and-optimizing-models/dbt-commands.md"
+      ],
+      "verified": true,
+      "status": "verified",
+      "sealed_by": "authored_via_item_qa",
+      "sealed_at": "2026-10-25",
+      "seal_confidence": 90,
+      "needs_review": false
+    },
+    {
+      "id": "Q-AU-DBTAE-142",
+      "source": "authored",
+      "source_url": null,
+      "raw_path": "question-bank/authored/original2-batchC.json",
+      "stem": "A model `fct_reviews` has an enforced contract declaring five columns, each with a `data_type`. The model's SQL `select` statement returns those five columns plus one extra column that is not declared anywhere in the contract. The team needs to predict whether this model builds. What happens?",
+      "option_texts": {
+        "A": "The build fails, because the preflight check requires the query's returned columns to match the contract's declared columns exactly",
+        "B": "The build succeeds, and dbt silently drops the undeclared extra column before loading it into the contract's table",
+        "C": "The build succeeds, and the extra column is added to the warehouse table without a declared type",
+        "D": "The build succeeds, because contracts only restrict declared columns and ignore anything beyond that list"
+      },
+      "domain": "ae-02",
+      "track": "ae",
+      "blueprint_task": "2.1",
+      "blueprint_task_title": "Adding contracts to models to ensure the shape of models",
+      "qtype": "multiple_choice",
+      "difficulty_estimate": "L4",
+      "difficulty_source": "authored",
+      "drill_answer": "A",
+      "drill_answer_short": "A preflight check compares the query's columns against the contract exactly; an extra column fails it",
+      "drill_rationale": "dbt will run a preflight check to ensure that the model's query will return a set of columns with names and data types matching the ones you have defined, or it will fail to build.",
+      "decision_hinge": "dbt will run a preflight check to ensure that the model's query will return a set of columns with names and data types matching the ones you have defined, or it will fail to build.",
+      "plausible_options": {
+        "D": "plus one extra column that is not declared anywhere in the contract"
+      },
+      "eliminated_by": {
+        "B": "The team needs to predict whether this model builds",
+        "C": {
+          "signal": "plus one extra column that is not declared anywhere in the contract",
+          "requires_fact": "dbt will run a preflight check to ensure that the model's query will return a set of columns matching the ones you have defined, or it will fail to build."
+        }
+      },
+      "distractor_traps": {
+        "B": "T1: fabricated — dbt does not silently drop extra columns to make a contracted query fit",
+        "C": "T1: fabricated — a contract requires every returned column to have a declared, matching data_type",
+        "D": "T3: confusable sibling — a contract's guarantee covers the whole returned set, not only the declared subset"
+      },
+      "options_analysis": "",
+      "sources": [
+        "https://docs.getdbt.com/docs/collaborate/govern/model-contracts"
+      ],
+      "citation_status": "resolved",
+      "topics": [
+        "knowledge/ae/02-model-governance/model-contracts.md"
+      ],
+      "verified": true,
+      "status": "verified",
+      "sealed_by": "authored_via_item_qa",
+      "sealed_at": "2026-10-25",
+      "seal_confidence": 90,
+      "needs_review": false
+    },
+    {
+      "id": "Q-AU-DBTAE-143",
+      "source": "authored",
+      "source_url": null,
+      "raw_path": "question-bank/authored/original2-batchC.json",
+      "stem": "A model `dim_listings_cleansed` declares an enforced contract with five columns in its YAML, including `listing_id` as `integer`. A recent SQL edit accidentally drops `listing_id` from the final `select` list, while the other four declared columns are still returned. The team needs to know what happens on the next build.",
+      "option_texts": {
+        "A": "The build fails, because the preflight check requires every declared column to actually appear in the query's output",
+        "B": "The build succeeds, and `listing_id` is created as a `NULL`-only column to satisfy the declared contract",
+        "C": "The build succeeds, because contracts only check the columns a query does return, not ones it omits",
+        "D": "dbt automatically re-adds `listing_id` by inferring it from the YAML definition"
+      },
+      "domain": "ae-02",
+      "track": "ae",
+      "blueprint_task": "2.1",
+      "blueprint_task_title": "Adding contracts to models to ensure the shape of models",
+      "qtype": "multiple_choice",
+      "difficulty_estimate": "L3",
+      "difficulty_source": "authored",
+      "drill_answer": "A",
+      "drill_answer_short": "A declared contract column missing from the query output fails the preflight check",
+      "drill_rationale": "dbt will run a preflight check to ensure that the model's query will return a set of columns with names and data types matching the ones you have defined, or it will fail to build.",
+      "decision_hinge": "dbt will run a preflight check to ensure that the model's query will return a set of columns with names and data types matching the ones you have defined, or it will fail to build.",
+      "plausible_options": {
+        "C": "A recent SQL edit accidentally drops `listing_id` from the final `select` list"
+      },
+      "eliminated_by": {
+        "B": "The team needs to know what happens on the next build",
+        "D": {
+          "signal": "A recent SQL edit accidentally drops `listing_id` from the final `select` list",
+          "requires_fact": "dbt will run a preflight check to ensure that the model's query will return a set of columns matching the ones you have defined, or it will fail to build."
+        }
+      },
+      "distractor_traps": {
+        "B": "T1: fabricated — dbt does not synthesize a missing column out of nulls to satisfy a contract",
+        "C": "T3: confusable sibling — the preflight check compares the full declared set, not just what the query happens to return",
+        "D": "T1: fabricated — dbt has no mechanism to auto-insert a column a query forgot to select"
+      },
+      "options_analysis": "",
+      "sources": [
+        "https://docs.getdbt.com/docs/collaborate/govern/model-contracts"
+      ],
+      "citation_status": "resolved",
+      "topics": [
+        "knowledge/ae/02-model-governance/model-contracts.md"
+      ],
+      "verified": true,
+      "status": "verified",
+      "sealed_by": "authored_via_item_qa",
+      "sealed_at": "2026-10-25",
+      "seal_confidence": 90,
+      "needs_review": false
+    },
+    {
+      "id": "Q-AU-DBTAE-144",
+      "source": "authored",
+      "source_url": null,
+      "raw_path": "question-bank/authored/original2-batchC.json",
+      "stem": "`dim_listings_cleansed` defines `v: 1` and `v: 2`, with `latest_version: 2`. A downstream model needs to keep building against version 1 specifically, even after version 2 becomes the default. Which `ref()` call pins it to version 1?",
+      "option_texts": {
+        "A": "`ref('dim_listings_cleansed', v=1)`",
+        "B": "`ref('dim_listings_cleansed')`, since omitting the version always resolves to the oldest one",
+        "C": "`ref('dim_listings_cleansed_v1')`, treating the version suffix as part of the model's name",
+        "D": "`ref('dim_listings_cleansed', version='latest')`, since 'latest' always means the lowest version number"
+      },
+      "domain": "ae-02",
+      "track": "ae",
+      "blueprint_task": "2.2",
+      "blueprint_task_title": "Creating different versions of our models and deprecating the old ones",
+      "qtype": "multiple_choice",
+      "difficulty_estimate": "L3",
+      "difficulty_source": "authored",
+      "drill_answer": "A",
+      "drill_answer_short": "Pin a version explicitly with the v= argument to ref()",
+      "drill_rationale": "ref('dim_customers', v=1) resolves to the database relation for that specific version, independent of which version is marked latest.",
+      "decision_hinge": "ref('dim_customers', v=1) resolves to the database relation for that specific version, independent of which version is marked latest.",
+      "plausible_options": {
+        "C": "even after version 2 becomes the default"
+      },
+      "eliminated_by": {
+        "B": {
+          "signal": "even after version 2 becomes the default",
+          "requires_fact": "If latest_version is not specified explicitly, the latest_version would be the numerically greatest version; an unversioned ref() resolves to the latest_version, not the oldest."
+        },
+        "D": "even after version 2 becomes the default"
+      },
+      "distractor_traps": {
+        "B": "T4: breaks a stated fact — an unversioned ref() follows latest_version, which is explicitly set to 2 here, not the oldest",
+        "C": "T3: confusable sibling — the versioned file may be named with a suffix, but ref() still takes the base model name plus a version argument",
+        "D": "T1: fabricated — ref() has no `version='latest'` argument, and latest does not mean lowest"
+      },
+      "options_analysis": "",
+      "sources": [
+        "https://docs.getdbt.com/docs/collaborate/govern/model-versions"
+      ],
+      "citation_status": "resolved",
+      "topics": [
+        "knowledge/ae/02-model-governance/model-versions.md"
+      ],
+      "verified": true,
+      "status": "verified",
+      "sealed_by": "authored_via_item_qa",
+      "sealed_at": "2026-10-25",
+      "seal_confidence": 90,
+      "needs_review": false
+    },
+    {
+      "id": "Q-AU-DBTAE-145",
+      "source": "authored",
+      "source_url": null,
+      "raw_path": "question-bank/authored/original2-batchC.json",
+      "stem": "A versioned model declares three versions, numbered 1 through 3, with `latest_version: 2` set explicitly. A reviewer needs to understand exactly what this `latest_version` property controls for downstream consumers. What is its purpose?",
+      "option_texts": {
+        "A": "It determines which version an unversioned `ref()` call resolves to by default",
+        "B": "It determines which version number dbt treats as numerically highest for comparison purposes",
+        "C": "It deletes every version other than the one specified once the project is built",
+        "D": "It determines the order in which versions are listed in the generated documentation site"
+      },
+      "domain": "ae-02",
+      "track": "ae",
+      "blueprint_task": "2.2",
+      "blueprint_task_title": "Creating different versions of our models and deprecating the old ones",
+      "qtype": "multiple_choice",
+      "difficulty_estimate": "L2",
+      "difficulty_source": "authored",
+      "drill_answer": "A",
+      "drill_answer_short": "latest_version sets which version an unversioned ref() call resolves to",
+      "drill_rationale": "If latest_version is not specified explicitly, the latest_version would be the numerically greatest version. In this case, latest_version: 1 means v2 is a prerelease, in early development and testing.",
+      "decision_hinge": "If latest_version is not specified explicitly, the latest_version would be the numerically greatest version. In this case, latest_version: 1 means v2 is a prerelease, in early development and testing.",
+      "plausible_options": {
+        "B": "declares three versions, numbered 1 through 3, with `latest_version: 2` set explicitly"
+      },
+      "eliminated_by": {
+        "C": "A reviewer needs to understand exactly what this `latest_version` property controls for downstream consumers",
+        "D": "A reviewer needs to understand exactly what this `latest_version` property controls for downstream consumers"
+      },
+      "distractor_traps": {
+        "B": "T3: confusable sibling — latest_version overrides which version counts as latest, it does not change the numeric values themselves",
+        "C": "T1: fabricated — older or newer versions keep building through their migration window, they are not deleted",
+        "D": "T1: fabricated — documentation ordering is not what latest_version is documented to control"
+      },
+      "options_analysis": "",
+      "sources": [
+        "https://docs.getdbt.com/docs/collaborate/govern/model-versions"
+      ],
+      "citation_status": "resolved",
+      "topics": [
+        "knowledge/ae/02-model-governance/model-versions.md"
+      ],
+      "verified": true,
+      "status": "verified",
+      "sealed_by": "authored_via_item_qa",
+      "sealed_at": "2026-10-25",
+      "seal_confidence": 90,
+      "needs_review": false
+    },
+    {
+      "id": "Q-AU-DBTAE-146",
+      "source": "authored",
+      "source_url": null,
+      "raw_path": "question-bank/authored/original2-batchC.json",
+      "stem": "Before opening a PR, a developer runs `dbt build --select +staging --empty`, and the entire build, models and tests included, succeeds in 30 seconds. The developer is ready to open the PR with confidence that the real data will build correctly too. Is that confidence justified by what `--empty` actually checked?",
+      "option_texts": {
+        "A": "No, because `--empty` limits refs and sources to zero rows, so it validates schema and dependencies but never touches real data values",
+        "B": "Yes, because `--empty` still executes the model SQL against real data, just faster than a normal run",
+        "C": "No, because `--empty` does not connect to the warehouse at all, so nothing was actually validated",
+        "D": "Yes, because passing tests under `--empty` proves the same tests would pass against full production data"
+      },
+      "domain": "ae-01",
+      "track": "ae",
+      "blueprint_task": "1.12",
+      "blueprint_task_title": "Validating model logic and schema definitions in dry-runs using the --empty flag",
+      "qtype": "multiple_choice",
+      "difficulty_estimate": "L5",
+      "difficulty_source": "authored",
+      "drill_answer": "A",
+      "drill_answer_short": "--empty validates schema and dependencies with zero rows; it never touches real data values",
+      "drill_rationale": "The --empty flag limits the refs and sources to zero rows. dbt will still execute the model SQL against the target data warehouse but will avoid expensive reads of input data. This validates dependencies and ensures your models will build properly.",
+      "decision_hinge": "The --empty flag limits the refs and sources to zero rows. dbt will still execute the model SQL against the target data warehouse but will avoid expensive reads of input data. This validates dependencies and ensures your models will build properly.",
+      "plausible_options": {
+        "D": "the entire build, models and tests included, succeeds in 30 seconds"
+      },
+      "eliminated_by": {
+        "B": "the entire build, models and tests included, succeeds in 30 seconds",
+        "C": {
+          "signal": "the entire build, models and tests included, succeeds in 30 seconds",
+          "requires_fact": "dbt will still execute the model SQL against the target data warehouse but will avoid expensive reads of input data."
+        }
+      },
+      "distractor_traps": {
+        "B": "T4: breaks a stated fact — --empty limits refs and sources to zero rows, it does not run against real data",
+        "C": "T1: fabricated — dbt does still execute the model SQL against the warehouse under --empty, just with no input rows",
+        "D": "T3: confusable sibling — a test run against zero rows proves nothing about full production data"
+      },
+      "options_analysis": "",
+      "sources": [
+        "https://docs.getdbt.com/reference/commands/run"
+      ],
+      "citation_status": "resolved",
+      "topics": [
+        "knowledge/ae/01-developing-and-optimizing-models/dry-runs-and-sampling.md"
+      ],
+      "verified": true,
+      "status": "verified",
+      "sealed_by": "authored_via_item_qa",
+      "sealed_at": "2026-10-25",
+      "seal_confidence": 90,
+      "needs_review": false
+    },
+    {
+      "id": "Q-AU-DBTAE-147",
+      "source": "authored",
+      "source_url": null,
+      "raw_path": "question-bank/authored/original2-batchC.json",
+      "stem": "A model's enforced contract declares `host_id` as `integer`. The model's SQL returns `host_id` computed as a string expression, and the columns are also selected in a different order than they appear in the YAML contract. Which of these two discrepancies will actually cause the preflight check to fail?",
+      "option_texts": {
+        "A": "Only the data type mismatch on `host_id`; the preflight check is agnostic to column order",
+        "B": "Only the column order mismatch on `host_id`; data types are inferred at preflight check time regardless of what the contract declares",
+        "C": "Both discrepancies independently fail the build, since dbt requires exact order as well as exact types",
+        "D": "Neither `host_id` discrepancy fails the preflight check, since contracts only check that every declared column name is present"
+      },
+      "domain": "ae-02",
+      "track": "ae",
+      "blueprint_task": "2.1",
+      "blueprint_task_title": "Adding contracts to models to ensure the shape of models",
+      "qtype": "multiple_choice",
+      "difficulty_estimate": "L4",
+      "difficulty_source": "authored",
+      "drill_answer": "A",
+      "drill_answer_short": "A data_type mismatch fails the preflight check; column order does not matter to it",
+      "drill_rationale": "dbt will run a preflight check to ensure that the model's query will return a set of columns with names and data types matching the ones you have defined. This check is agnostic to the order of columns specified in your model (SQL) or YAML spec.",
+      "decision_hinge": "dbt will run a preflight check to ensure that the model's query will return a set of columns with names and data types matching the ones you have defined. This check is agnostic to the order of columns specified in your model (SQL) or YAML spec.",
+      "plausible_options": {
+        "C": "the columns are also selected in a different order than they appear in the YAML contract"
+      },
+      "eliminated_by": {
+        "B": {
+          "signal": "The model's SQL returns `host_id` computed as a string expression",
+          "requires_fact": "dbt will run a preflight check to ensure that the model's query will return a set of columns with names and data types matching the ones you have defined."
+        },
+        "D": "The model's SQL returns `host_id` computed as a string expression"
+      },
+      "distractor_traps": {
+        "B": "T4: breaks a stated fact — the preflight check does compare data types, it is only order that it ignores",
+        "C": "T3: confusable sibling — order is explicitly excluded from the check, so it is not a second, independent failure",
+        "D": "T1: fabricated — names alone are not sufficient; declared data types are checked too"
+      },
+      "options_analysis": "",
+      "sources": [
+        "https://docs.getdbt.com/docs/collaborate/govern/model-contracts"
+      ],
+      "citation_status": "resolved",
+      "topics": [
+        "knowledge/ae/02-model-governance/model-contracts.md"
+      ],
+      "verified": true,
+      "status": "verified",
+      "sealed_by": "authored_via_item_qa",
+      "sealed_at": "2026-10-25",
+      "seal_confidence": 90,
+      "needs_review": false
+    },
+    {
+      "id": "Q-AU-DBTAE-148",
+      "source": "authored",
+      "source_url": null,
+      "raw_path": "question-bank/authored/original2-batchD.json",
+      "stem": "Running `dbt run`, a developer sees a `Compilation Error` whose message includes `Invalid models config given in models/schema.yml @ models: {...} - at path []: Additional properties are not allowed ('hello' was unexpected)`. The developer needs to know what's actually wrong here, before trying a fix. What's the real cause?",
+      "option_texts": {
+        "A": "The YAML parses fine structurally, but it contains a property key, `hello`, that dbt's schema does not recognize for a model's config",
+        "B": "The YAML has invalid indentation, a problem unrelated to any unrecognized property key",
+        "C": "The referenced model's `.sql` file is missing entirely from the `models/` directory",
+        "D": "A Jinja tag somewhere in the model's config file was never closed"
+      },
+      "domain": "ae-03",
+      "track": "ae",
+      "blueprint_task": "3.3",
+      "blueprint_task_title": "Troubleshooting .yml compilation errors",
+      "qtype": "multiple_choice",
+      "difficulty_estimate": "L3",
+      "difficulty_source": "authored",
+      "drill_answer": "A",
+      "drill_answer_short": "The YAML is structurally valid but uses a key dbt's schema doesn't recognize",
+      "drill_rationale": "Slightly different error -- the YAML structure is right, but there's a key that dbt doesn't recognize. Invalid models config given in models/schema.yml @ models: {'name': 'customers', 'hello': 'world', ...} - at path []: Additional properties are not allowed ('hello' was unexpected).",
+      "decision_hinge": "Slightly different error -- the YAML structure is right, but there's a key that dbt doesn't recognize. Invalid models config given in models/schema.yml @ models: {'name': 'customers', 'hello': 'world', ...} - at path []: Additional properties are not allowed ('hello' was unexpected).",
+      "plausible_options": {
+        "D": "The developer needs to know what's actually wrong here, before trying a fix"
+      },
+      "eliminated_by": {
+        "B": "a `Compilation Error` whose message includes",
+        "C": "a `Compilation Error` whose message includes"
+      },
+      "distractor_traps": {
+        "B": "T3: confusable sibling — bad indentation produces a different, separate YAML parsing error than an unrecognized key",
+        "C": "T1: fabricated — a missing SQL file produces a different error about a node not being found, not an unexpected property",
+        "D": "T3: confusable sibling — an unclosed Jinja tag produces a different, separate compile error about reaching EOF"
+      },
+      "options_analysis": "",
+      "sources": [
+        "https://docs.getdbt.com/guides/debug-errors"
+      ],
+      "citation_status": "resolved",
+      "topics": [
+        "knowledge/ae/03-debugging-modeling-errors/yaml-properties-vs-configs.md"
+      ],
+      "verified": true,
+      "status": "verified",
+      "sealed_by": "authored_via_item_qa",
+      "sealed_at": "2026-10-25",
+      "seal_confidence": 90,
+      "needs_review": false
+    },
+    {
+      "id": "Q-AU-DBTAE-149",
+      "source": "authored",
+      "source_url": null,
+      "raw_path": "question-bank/authored/original2-batchD.json",
+      "stem": "A developer creates a second model file also named `src_listings` in a different subfolder of the same project, and `dbt run` raises a compilation error about an ambiguous or duplicated reference. The team needs to know the actual rule being violated here. What's the rule?",
+      "option_texts": {
+        "A": "Within one project, every ref-able resource name must be unique, even across distinct folders",
+        "B": "Resource names only need to be unique within the same subfolder, not across the whole project",
+        "C": "dbt automatically renames the second model by appending a numeric suffix, so no conflict should occur",
+        "D": "This error only happens for seeds and snapshots, never for models, since models are selected by file path"
+      },
+      "domain": "ae-03",
+      "track": "ae",
+      "blueprint_task": "3.1",
+      "blueprint_task_title": "Understanding logged error messages",
+      "qtype": "multiple_choice",
+      "difficulty_estimate": "L3",
+      "difficulty_source": "authored",
+      "drill_answer": "A",
+      "drill_answer_short": "Ref-able resource names must be unique project-wide, regardless of folder",
+      "drill_rationale": "To build dependencies between resources, you need to use the ref function, and pass in the resource name as an argument. dbt uses that resource name to uniquely resolve the ref to a specific resource. As a result, these resource names need to be unique, even if they are in distinct folders.",
+      "decision_hinge": "To build dependencies between resources, you need to use the ref function, and pass in the resource name as an argument. dbt uses that resource name to uniquely resolve the ref to a specific resource. As a result, these resource names need to be unique, even if they are in distinct folders.",
+      "plausible_options": {
+        "B": "creates a second model file also named `src_listings` in a different subfolder of the same project"
+      },
+      "eliminated_by": {
+        "C": "dbt run` raises a compilation error about an ambiguous or duplicated reference",
+        "D": "dbt run` raises a compilation error about an ambiguous or duplicated reference"
+      },
+      "distractor_traps": {
+        "B": "T3: confusable sibling — the uniqueness requirement is explicitly project-wide, not scoped to a single subfolder",
+        "C": "T1: fabricated — dbt does not auto-rename a conflicting resource; it raises an error instead",
+        "D": "T1: fabricated — this uniqueness requirement applies to models, seeds, and snapshots alike"
+      },
+      "options_analysis": "",
+      "sources": [
+        "https://docs.getdbt.com/docs/build/sql-models"
+      ],
+      "citation_status": "resolved",
+      "topics": [
+        "knowledge/ae/03-debugging-modeling-errors/yaml-properties-vs-configs.md"
+      ],
+      "verified": true,
+      "status": "verified",
+      "sealed_by": "authored_via_item_qa",
+      "sealed_at": "2026-10-25",
+      "seal_confidence": 90,
+      "needs_review": false
+    },
+    {
+      "id": "Q-AU-DBTAE-150",
+      "source": "authored",
+      "source_url": null,
+      "raw_path": "question-bank/authored/original2-batchD.json",
+      "stem": "A reviewer is sorting a list of dbt failure reports by which error type they actually represent. Which THREE of the following scenarios would produce a Compilation Error specifically, rather than a Database Error or Dependency Error?",
+      "option_texts": {
+        "A": "A model references `{{ ref('src_review') }}` but no model named `src_review` exists anywhere in the project",
+        "B": "A `.yml` file has a key the dbt schema does not recognize, such as an unexpected top-level property",
+        "C": "A macro file is missing its closing `{% endmacro %}` tag",
+        "D": "The warehouse rejects a model's generated SQL with a syntax error at a specific line and position",
+        "E": "Two models depend on each other, forming a dependency cycle with no valid build order"
+      },
+      "domain": "ae-03",
+      "track": "ae",
+      "blueprint_task": "3.1",
+      "blueprint_task_title": "Understanding logged error messages",
+      "qtype": "multiple_response",
+      "difficulty_estimate": "L4",
+      "difficulty_source": "authored",
+      "drill_answer": "A,B,C",
+      "drill_answer_short": "An unresolved ref, an unrecognized YAML key, and an unclosed Jinja tag are all Compilation Errors",
+      "drill_rationale": "Parsing: check that the Jinja snippets in .sql files are valid, and that .yml files are valid -- Compilation Error. Model 'model.jaffle_shop.customers' depends on a node named 'stg_customer' which was not found. Reached EOF without finding a close tag for macro.",
+      "decision_hinge": "Parsing: check that the Jinja snippets in .sql files are valid, and that .yml files are valid -- Compilation Error. Model 'model.jaffle_shop.customers' depends on a node named 'stg_customer' which was not found. Reached EOF without finding a close tag for macro.",
+      "plausible_options": {
+        "D": "is sorting a list of dbt failure reports by which error type they actually represent"
+      },
+      "eliminated_by": {
+        "E": {
+          "signal": "is sorting a list of dbt failure reports by which error type they actually represent",
+          "requires_fact": "Graph validation compiles the dependencies into a graph and checks that it's acyclic, producing a Dependency Error, a separate step and error type from Compilation Error."
+        }
+      },
+      "distractor_traps": {
+        "D": "T3: confusable sibling — a warehouse-rejected SQL syntax error is a Database Error, a later pipeline step than Compilation Error",
+        "E": "T3: confusable sibling — a dependency cycle is a Dependency Error, a distinct category from Compilation Error"
+      },
+      "options_analysis": "",
+      "sources": [
+        "https://docs.getdbt.com/guides/debug-errors"
+      ],
+      "citation_status": "resolved",
+      "topics": [
+        "knowledge/ae/03-debugging-modeling-errors/compiled-code-and-logs.md"
+      ],
+      "verified": true,
+      "status": "verified",
+      "sealed_by": "authored_via_item_qa",
+      "sealed_at": "2026-10-25",
+      "seal_confidence": 90,
+      "needs_review": false
+    },
+    {
+      "id": "Q-AU-DBTAE-151",
+      "source": "authored",
+      "source_url": null,
+      "raw_path": "question-bank/authored/original2-batchD.json",
+      "stem": "Running `dbt run -s fct_reviews`, a developer sees `Database Error in model fct_reviews (models/core/fct_reviews.sql)` followed by a warehouse message that an object does not exist. The model's SQL and YAML both parsed successfully, and the dependency graph built without a cycle. The team needs to know what stage this error actually represents. What stage is it?",
+      "option_texts": {
+        "A": "SQL execution: the warehouse ran the compiled query and rejected it, because the referenced object genuinely isn't there",
+        "B": "Parsing: dbt's Jinja or YAML validation caught this before any SQL was generated",
+        "C": "Graph validation: dbt detected a cycle in the object-dependency graph while compiling it",
+        "D": "Initialize: dbt could not confirm the project object layout or connect to the warehouse at all"
+      },
+      "domain": "ae-03",
+      "track": "ae",
+      "blueprint_task": "3.1",
+      "blueprint_task_title": "Understanding logged error messages",
+      "qtype": "multiple_choice",
+      "difficulty_estimate": "L3",
+      "difficulty_source": "authored",
+      "drill_answer": "A",
+      "drill_answer_short": "A warehouse-rejected object-not-found message is a Database Error, at the SQL execution stage",
+      "drill_rationale": "SQL execution: Run the models -- Database Error. Database Errors come from your data warehouse, and dbt passes the message on.",
+      "decision_hinge": "SQL execution: Run the models -- Database Error. Database Errors come from your data warehouse, and dbt passes the message on.",
+      "plausible_options": {
+        "B": "The model's SQL and YAML both parsed successfully, and the dependency graph built without a cycle"
+      },
+      "eliminated_by": {
+        "C": "The model's SQL and YAML both parsed successfully, and the dependency graph built without a cycle",
+        "D": "The model's SQL and YAML both parsed successfully, and the dependency graph built without a cycle"
+      },
+      "distractor_traps": {
+        "B": "T3: confusable sibling — the stem already states parsing succeeded, ruling out this earlier stage",
+        "C": "T4: breaks a stated fact — the stem says the graph built without a cycle, ruling out this stage",
+        "D": "T4: breaks a stated fact — the error names a specific model and SQL file, which requires the project to already be recognized and connected"
+      },
+      "options_analysis": "",
+      "sources": [
+        "https://docs.getdbt.com/guides/debug-errors"
+      ],
+      "citation_status": "resolved",
+      "topics": [
+        "knowledge/ae/03-debugging-modeling-errors/compiled-code-and-logs.md"
+      ],
+      "verified": true,
+      "status": "verified",
+      "sealed_by": "authored_via_item_qa",
+      "sealed_at": "2026-10-25",
+      "seal_confidence": 90,
+      "needs_review": false
+    },
+    {
+      "id": "Q-AU-DBTAE-152",
+      "source": "authored",
+      "source_url": null,
+      "raw_path": "question-bank/authored/original2-batchD.json",
+      "stem": "`model_a` references `model_b`, and `model_b` references `model_a` back, so dbt cannot compute a valid build order between them. A developer needs to name the error type dbt reports for this specific situation, so they know which step of dbt's process to investigate. What type of error does this circular reference produce?",
+      "option_texts": {
+        "A": "Dependency Error",
+        "B": "Database Error",
+        "C": "Compilation Error",
+        "D": "Runtime Error"
+      },
+      "domain": "ae-03",
+      "track": "ae",
+      "blueprint_task": "3.1",
+      "blueprint_task_title": "Understanding logged error messages",
+      "qtype": "multiple_choice",
+      "difficulty_estimate": "L3",
+      "difficulty_source": "authored",
+      "drill_answer": "A",
+      "drill_answer_short": "A circular reference is a Dependency Error, caught during graph validation",
+      "drill_rationale": "Graph validation: compile the dependencies into a graph, check that it's acyclic -- Dependency Error. Found a cycle: model.jaffle_shop.customers --> model.jaffle_shop.stg_customers --> model.jaffle_shop.customers. Your dbt DAG is not acyclic, and needs to be fixed.",
+      "decision_hinge": "Graph validation: compile the dependencies into a graph, check that it's acyclic -- Dependency Error. Found a cycle: model.jaffle_shop.customers --> model.jaffle_shop.stg_customers --> model.jaffle_shop.customers. Your dbt DAG is not acyclic, and needs to be fixed.",
+      "plausible_options": {
+        "C": "so dbt cannot compute a valid build order between them"
+      },
+      "eliminated_by": {
+        "B": "needs to name the error type dbt reports for this specific situation",
+        "D": "needs to name the error type dbt reports for this specific situation"
+      },
+      "distractor_traps": {
+        "B": "T3: confusable sibling — a Database Error comes from the warehouse rejecting SQL, a later step than graph validation",
+        "C": "T3: confusable sibling — a Compilation Error is caught earlier, during Jinja and YAML parsing, before graph validation runs",
+        "D": "T3: confusable sibling — a Runtime Error covers project initialization and connecting, not graph-cycle checks"
+      },
+      "options_analysis": "",
+      "sources": [
+        "https://docs.getdbt.com/guides/debug-errors"
+      ],
+      "citation_status": "resolved",
+      "topics": [
+        "knowledge/ae/03-debugging-modeling-errors/compiled-code-and-logs.md"
+      ],
+      "verified": true,
+      "status": "verified",
+      "sealed_by": "authored_via_item_qa",
+      "sealed_at": "2026-10-25",
+      "seal_confidence": 90,
+      "needs_review": false
+    },
+    {
+      "id": "Q-AU-DBTAE-153",
+      "source": "authored",
+      "source_url": null,
+      "raw_path": "question-bank/authored/original2-batchD.json",
+      "stem": "A reviewer is sorting failure reports and needs to identify scenarios that produce a Database Error specifically, meaning the warehouse itself rejected something, rather than dbt catching a problem before any SQL ran. Which TWO scenarios genuinely produce a Database Error, not a Compilation Error?",
+      "option_texts": {
+        "A": "A pre-hook SQL statement that creates a schema fails because the configured role lacks the right privilege",
+        "B": "An incremental model's merge statement fails because the warehouse rejects a column type mismatch between source and target",
+        "C": "A Jinja `{% if %}` block in a model references an undefined variable, so the warehouse never even receives a query",
+        "D": "A `.yml` file nests a config property at the wrong level, one sibling deeper than the schema expects"
+      },
+      "domain": "ae-03",
+      "track": "ae",
+      "blueprint_task": "3.1",
+      "blueprint_task_title": "Understanding logged error messages",
+      "qtype": "multiple_response",
+      "difficulty_estimate": "L4",
+      "difficulty_source": "authored",
+      "drill_answer": "A,B",
+      "drill_answer_short": "A rejected pre-hook statement and a rejected merge both come from the warehouse, as Database Errors",
+      "drill_rationale": "In some cases, these errors might occur as a result of queries that dbt runs behind-the-scenes, including queries to create schemas, pre-hooks, post-hooks, and for incremental models, merge, update and insert statements. Database Errors come from your data warehouse, and dbt passes the message on.",
+      "decision_hinge": "In some cases, these errors might occur as a result of queries that dbt runs behind-the-scenes, including queries to create schemas, pre-hooks, post-hooks, and for incremental models, merge, update and insert statements. Database Errors come from your data warehouse, and dbt passes the message on.",
+      "plausible_options": {
+        "D": "needs to identify scenarios that produce a Database Error specifically"
+      },
+      "eliminated_by": {
+        "C": "rather than dbt catching a problem before any SQL ran"
+      },
+      "distractor_traps": {
+        "C": "T3: confusable sibling — an undefined Jinja variable is caught during parsing, before any SQL is sent, making it a Compilation Error",
+        "D": "T3: confusable sibling — a misplaced config property is a parsing-stage YAML problem, not a warehouse rejection"
+      },
+      "options_analysis": "",
+      "sources": [
+        "https://docs.getdbt.com/guides/debug-errors"
+      ],
+      "citation_status": "resolved",
+      "topics": [
+        "knowledge/ae/03-debugging-modeling-errors/compiled-code-and-logs.md"
+      ],
+      "verified": true,
+      "status": "verified",
+      "sealed_by": "authored_via_item_qa",
+      "sealed_at": "2026-10-25",
+      "seal_confidence": 90,
+      "needs_review": false
+    },
+    {
+      "id": "Q-AU-DBTAE-154",
+      "source": "authored",
+      "source_url": null,
+      "raw_path": "question-bank/authored/original2-batchD.json",
+      "stem": "A `schema.yml` file nests a `columns:` property one level deeper than dbt's schema expects, and `dbt run` fails with `mapping values are not allowed in this context`. The team needs to know what category of mistake actually causes this specific message. What's the real cause?",
+      "option_texts": {
+        "A": "Indentation: the YAML is nested incorrectly, so the YAML parser itself cannot turn the file into a valid dictionary",
+        "B": "An unrecognized property key, the same category of error as an unexpected top-level config value",
+        "C": "A missing `ref()` call for a model the file is trying to describe",
+        "D": "A Jinja tag inside the YAML file that was never closed"
+      },
+      "domain": "ae-03",
+      "track": "ae",
+      "blueprint_task": "3.3",
+      "blueprint_task_title": "Troubleshooting .yml compilation errors",
+      "qtype": "multiple_choice",
+      "difficulty_estimate": "L2",
+      "difficulty_source": "authored",
+      "drill_answer": "A",
+      "drill_answer_short": "mapping values are not allowed in this context is a YAML indentation parsing failure",
+      "drill_rationale": "dbt wasn't able to turn your YAML into a valid dictionary. Syntax error near line 5, mapping values are not allowed in this context. Usually, it's to do with indentation.",
+      "decision_hinge": "dbt wasn't able to turn your YAML into a valid dictionary. Syntax error near line 5, mapping values are not allowed in this context. Usually, it's to do with indentation.",
+      "plausible_options": {
+        "B": "The team needs to know what category of mistake actually causes this specific message"
+      },
+      "eliminated_by": {
+        "C": "nests a `columns:` property one level deeper than dbt's schema expects",
+        "D": "nests a `columns:` property one level deeper than dbt's schema expects"
+      },
+      "distractor_traps": {
+        "B": "T3: confusable sibling — an unrecognized key is a structurally valid YAML file with the wrong key, a separate error from this one",
+        "C": "T1: fabricated — this error happens before dbt can even read the file as a dictionary, unrelated to any specific ref() call",
+        "D": "T1: fabricated — schema.yml files do not contain Jinja tags that need closing"
+      },
+      "options_analysis": "",
+      "sources": [
+        "https://docs.getdbt.com/guides/debug-errors"
+      ],
+      "citation_status": "resolved",
+      "topics": [
+        "knowledge/ae/03-debugging-modeling-errors/yaml-properties-vs-configs.md"
+      ],
+      "verified": true,
+      "status": "verified",
+      "sealed_by": "authored_via_item_qa",
+      "sealed_at": "2026-10-25",
+      "seal_confidence": 90,
+      "needs_review": false
+    },
+    {
+      "id": "Q-AU-DBTAE-155",
+      "source": "authored",
+      "source_url": null,
+      "raw_path": "question-bank/authored/original2-batchD.json",
+      "stem": "A `not_null` test on `fct_reviews` is configured with `severity: error` and `error_if: \"> 100\"`. The most recent run found 50 NULL values, and the test did not produce an error. The team needs to know exactly why, given the default `warn_if` behavior. Why didn't it error?",
+      "option_texts": {
+        "A": "dbt checked `error_if` first, 50 did not satisfy `> 100`, so it fell through to the default `warn_if` condition and only warned",
+        "B": "severity: error` always suppresses `error_if`, so the test can never actually fail while that severity is set",
+        "C": "50 NULL values is below dbt's hardcoded internal threshold of 100 failures before any test can error",
+        "D": "The test silently did not run at all, since `error_if` needs an accompanying `warn_if` by default to be valid"
+      },
+      "domain": "ae-03",
+      "track": "ae",
+      "blueprint_task": "3.1",
+      "blueprint_task_title": "Understanding logged error messages",
+      "qtype": "multiple_choice",
+      "difficulty_estimate": "L4",
+      "difficulty_source": "authored",
+      "drill_answer": "A",
+      "drill_answer_short": "With severity: error, dbt checks error_if first; if unmet, it falls through to warn_if (default !=0)",
+      "drill_rationale": "If severity: error, dbt will check the error_if condition first. If the error condition is met, the test returns an error. If it's not met, dbt will then check the warn_if condition (defaulted to !=0).",
+      "decision_hinge": "If severity: error, dbt will check the error_if condition first. If the error condition is met, the test returns an error. If it's not met, dbt will then check the warn_if condition (defaulted to !=0).",
+      "plausible_options": {
+        "B": "configured with `severity: error` and `error_if: \"> 100\"`"
+      },
+      "eliminated_by": {
+        "C": "The most recent run found 50 NULL values, and the test did not produce an error",
+        "D": {
+          "signal": "The most recent run found 50 NULL values, and the test did not produce an error",
+          "requires_fact": "If severity: error, dbt checks the error_if condition first; if not met, dbt checks the warn_if condition, defaulted to !=0."
+        }
+      },
+      "distractor_traps": {
+        "B": "T3: confusable sibling — severity: error still checks error_if first; it does not bypass that check by default",
+        "C": "T1: fabricated — dbt has no hardcoded internal failure threshold of 100",
+        "D": "T1: fabricated — warn_if has a documented default and does not need to be set explicitly for the test to run"
+      },
+      "options_analysis": "",
+      "sources": [
+        "https://docs.getdbt.com/reference/resource-configs/severity"
+      ],
+      "citation_status": "resolved",
+      "topics": [
+        "knowledge/ae/05-implementing-tests/test-severity-and-workflow.md"
+      ],
+      "verified": true,
+      "status": "verified",
+      "sealed_by": "authored_via_item_qa",
+      "sealed_at": "2026-10-25",
+      "seal_confidence": 90,
+      "needs_review": false
+    },
+    {
+      "id": "Q-AU-DBTAE-156",
+      "source": "authored",
+      "source_url": null,
+      "raw_path": "question-bank/authored/original2-batchD.json",
+      "stem": "A developer compares two files for the same model: one under `target/compiled/` and one under `target/run/`. Both contain a `select` statement, but a `Database Error` message names only the file under `target/run/`. The team needs to know what actually differs between these two directories.",
+      "option_texts": {
+        "A": "`target/compiled/` holds the resolved `select` statement; `target/run/` holds the SQL dbt actually executed to build the model",
+        "B": "`target/compiled/` holds unresolved Jinja templates, while `target/run/` holds the original, un-compiled SQL source",
+        "C": "`target/compiled/` is only populated for tests, while `target/run/` is only populated for models",
+        "D": "Both directories always contain byte-identical output, so the actually compiled select statement never differs"
+      },
+      "domain": "ae-03",
+      "track": "ae",
+      "blueprint_task": "3.2",
+      "blueprint_task_title": "Troubleshooting using compiled code",
+      "qtype": "multiple_choice",
+      "difficulty_estimate": "L2",
+      "difficulty_source": "authored",
+      "drill_answer": "A",
+      "drill_answer_short": "target/compiled holds the compiled select; target/run holds the SQL dbt actually executed",
+      "drill_rationale": "The target/compiled directory contains select statements that you can run in any query editor. The target/run directory contains the SQL dbt executes to build your models.",
+      "decision_hinge": "The target/compiled directory contains select statements that you can run in any query editor. The target/run directory contains the SQL dbt executes to build your models.",
+      "plausible_options": {
+        "C": "a `Database Error` message names only the file under `target/run/`"
+      },
+      "eliminated_by": {
+        "B": "Both contain a `select` statement, but a `Database Error` message names only the file under `target/run/`",
+        "D": {
+          "signal": "a `Database Error` message names only the file under `target/run/`",
+          "requires_fact": "The target/compiled directory contains select statements; the target/run directory contains the SQL dbt executes to build your models, which can differ once dbt wraps it for execution."
+        }
+      },
+      "distractor_traps": {
+        "B": "T4: breaks a stated fact — both files the stem describes already contain a resolved select statement, not unresolved Jinja",
+        "C": "T3: confusable sibling — both directories can hold output for models, this is not a strict per-resource-type split",
+        "D": "T4: breaks a stated fact — the error names only one of the two files, implying a meaningful difference between them"
+      },
+      "options_analysis": "",
+      "sources": [
+        "https://docs.getdbt.com/guides/debug-errors"
+      ],
+      "citation_status": "resolved",
+      "topics": [
+        "knowledge/ae/03-debugging-modeling-errors/compiled-code-and-logs.md"
+      ],
+      "verified": true,
+      "status": "verified",
+      "sealed_by": "authored_via_item_qa",
+      "sealed_at": "2026-10-25",
+      "seal_confidence": 90,
+      "needs_review": false
+    },
+    {
+      "id": "Q-AU-DBTAE-157",
+      "source": "authored",
+      "source_url": null,
+      "raw_path": "question-bank/authored/original2-batchD.json",
+      "stem": "Running `dbt compile` on `dim_listings_cleansed` produces a connection-related error, even though the developer only wanted to see the compiled SQL and never intended to touch the warehouse. The team needs to know whether this is expected behavior for `dbt compile` itself. Is it, and why?",
+      "option_texts": {
+        "A": "Yes, `dbt compile` does connect to the warehouse; use `dbt parse` instead if a warehouse connection is not wanted",
+        "B": "No, `dbt compile` never needs a warehouse connection, so this must be an unrelated Jinja bug",
+        "C": "Yes, but only because `dbt compile` is a required pre-requisite step before `dbt run` can execute",
+        "D": "No, connection errors under `dbt compile` always indicate a corrupted `manifest.json` instead of anything wanted"
+      },
+      "domain": "ae-03",
+      "track": "ae",
+      "blueprint_task": "3.2",
+      "blueprint_task_title": "Troubleshooting using compiled code",
+      "qtype": "multiple_choice",
+      "difficulty_estimate": "L3",
+      "difficulty_source": "authored",
+      "drill_answer": "A",
+      "drill_answer_short": "dbt compile connects to the warehouse; dbt parse is the no-connection alternative",
+      "drill_rationale": "dbt compile is not a pre-requisite of dbt run, or other building commands. If you just want dbt to read and validate your project code, without connecting to the data warehouse, use dbt parse instead.",
+      "decision_hinge": "dbt compile is not a pre-requisite of dbt run, or other building commands. If you just want dbt to read and validate your project code, without connecting to the data warehouse, use dbt parse instead.",
+      "plausible_options": {
+        "B": "only wanted to see the compiled SQL and never intended to touch the warehouse"
+      },
+      "eliminated_by": {
+        "C": {
+          "signal": "only wanted to see the compiled SQL and never intended to touch the warehouse",
+          "requires_fact": "dbt compile is not a pre-requisite of dbt run, or other building commands; those commands handle compilation themselves."
+        },
+        "D": "Running `dbt compile` on `dim_listings_cleansed` produces a connection-related error"
+      },
+      "distractor_traps": {
+        "B": "T3: confusable sibling — dbt compile is documented to connect to the warehouse, which is why this is expected, not a Jinja bug",
+        "C": "T1: fabricated — dbt compile is explicitly not a required pre-requisite of dbt run",
+        "D": "T1: fabricated — a connection error is not tied to manifest corruption"
+      },
+      "options_analysis": "",
+      "sources": [
+        "https://docs.getdbt.com/reference/commands/compile"
+      ],
+      "citation_status": "resolved",
+      "topics": [
+        "knowledge/ae/03-debugging-modeling-errors/compiled-code-and-logs.md"
+      ],
+      "verified": true,
+      "status": "verified",
+      "sealed_by": "authored_via_item_qa",
+      "sealed_at": "2026-10-25",
+      "seal_confidence": 90,
+      "needs_review": false
+    },
+    {
+      "id": "Q-AU-DBTAE-158",
+      "source": "authored",
+      "source_url": null,
+      "raw_path": "question-bank/authored/original2-batchD.json",
+      "stem": "A macro's compiled SQL has far more blank lines and extra spaces than the developer wants, scattered around several `{% if %}` and `{% for %}` blocks. The developer needs the documented technique for trimming that whitespace out of the compiled output, without changing the underlying logic. What should they do?",
+      "option_texts": {
+        "A": "Add a minus sign at the start or end of the affected blocks, such as `{%- ... %}` or `{{- ... -}}`, to strip whitespace there",
+        "B": "Wrap the entire macro body's if and for blocks in `{# ... #}`, since Jinja comments automatically remove all surrounding whitespace",
+        "C": "Replace every `{% if %}` and `{% for %}` tag with `{%- set -%}` statements, since only `set` supports whitespace control",
+        "D": "Add a trailing semicolon after each Jinja tag to signal where whitespace should be trimmed"
+      },
+      "domain": "ae-03",
+      "track": "ae",
+      "blueprint_task": "3.2",
+      "blueprint_task_title": "Troubleshooting using compiled code",
+      "qtype": "multiple_choice",
+      "difficulty_estimate": "L4",
+      "difficulty_source": "authored",
+      "drill_answer": "A",
+      "drill_answer_short": "A minus sign on a Jinja tag, like {%- ... %}, strips whitespace before or after that block",
+      "drill_rationale": "This is known as whitespace control. Use a minus sign (-, e.g. {{- ... -}}, {%- ... %}, {#- ... -#}) at the start or end of a block to strip whitespace before or after the block.",
+      "decision_hinge": "This is known as whitespace control. Use a minus sign (-, e.g. {{- ... -}}, {%- ... %}, {#- ... -#}) at the start or end of a block to strip whitespace before or after the block.",
+      "plausible_options": {
+        "C": "without changing the underlying logic"
+      },
+      "eliminated_by": {
+        "B": "far more blank lines and extra spaces than the developer wants, scattered around several `{% if %}` and `{% for %}` blocks",
+        "D": "far more blank lines and extra spaces than the developer wants, scattered around several `{% if %}` and `{% for %}` blocks"
+      },
+      "distractor_traps": {
+        "B": "T1: fabricated — wrapping the whole macro in a comment would remove the macro's logic entirely, not just whitespace",
+        "C": "T3: confusable sibling — set statements are not the only tag type that supports the minus-sign whitespace syntax",
+        "D": "T1: fabricated — Jinja has no semicolon-based whitespace control mechanism"
+      },
+      "options_analysis": "",
+      "sources": [
+        "https://docs.getdbt.com/docs/build/jinja-macros"
+      ],
+      "citation_status": "resolved",
+      "topics": [
+        "knowledge/ae/03-debugging-modeling-errors/compiled-code-and-logs.md"
+      ],
+      "verified": true,
+      "status": "verified",
+      "sealed_by": "authored_via_item_qa",
+      "sealed_at": "2026-10-25",
+      "seal_confidence": 90,
+      "needs_review": false
+    },
+    {
+      "id": "Q-AU-DBTAE-159",
+      "source": "authored",
+      "source_url": null,
+      "raw_path": "question-bank/authored/original2-batchE.json",
+      "stem": "Before running the nightly pipeline, a team wants to verify that the Airbnb source tables received new data within their configured time window, and they want the command that is documented as the current, recommended way to do this, not the legacy one kept only for backward compatibility. Which command should they run?",
+      "option_texts": {
+        "A": "`dbt freshness`, the current top-level command for checking every source and model with freshness configured",
+        "B": "`dbt source freshness`, since it is the only command dbt has ever currently configured for this check",
+        "C": "`dbt test`, since freshness checks are currently configured as a category of data test",
+        "D": "`dbt build`, since building a model automatically re-validates its current source freshness first"
+      },
+      "domain": "ae-06",
+      "track": "ae",
+      "blueprint_task": "6.2",
+      "blueprint_task_title": "Implementing source freshness",
+      "qtype": "multiple_choice",
+      "difficulty_estimate": "L3",
+      "difficulty_source": "authored",
+      "drill_answer": "A",
+      "drill_answer_short": "dbt freshness is the current, recommended command checking both sources and models",
+      "drill_rationale": "Run dbt freshness to check every source and model with freshness configured. dbt source freshness is a legacy command that checks freshness for sources only; it's still supported for backward compatibility, but dbt freshness is recommended going forward.",
+      "decision_hinge": "Run dbt freshness to check every source and model with freshness configured. dbt source freshness is a legacy command that checks freshness for sources only; it's still supported for backward compatibility, but dbt freshness is recommended going forward.",
+      "plausible_options": {
+        "B": "the command that is documented as the current, recommended way to do this, not the legacy one kept only for backward compatibility"
+      },
+      "eliminated_by": {
+        "C": "verify that the Airbnb source tables received new data within their configured time window",
+        "D": "verify that the Airbnb source tables received new data within their configured time window"
+      },
+      "distractor_traps": {
+        "B": "T6: stale behaviour — dbt source freshness still exists, but it is the legacy, sources-only predecessor, not the current recommendation",
+        "C": "T3: confusable sibling — freshness checks are a distinct mechanism from data tests, with their own dedicated command",
+        "D": "T1: fabricated — building a model does not automatically run a freshness check against its sources"
+      },
+      "options_analysis": "",
+      "sources": [
+        "https://docs.getdbt.com/reference/commands/source"
+      ],
+      "citation_status": "resolved",
+      "topics": [
+        "knowledge/ae/06-external-dependencies/source-freshness.md"
+      ],
+      "verified": true,
+      "status": "verified",
+      "sealed_by": "authored_via_item_qa",
+      "sealed_at": "2026-10-25",
+      "seal_confidence": 90,
+      "needs_review": false
+    },
+    {
+      "id": "Q-AU-DBTAE-160",
+      "source": "authored",
+      "source_url": null,
+      "raw_path": "question-bank/authored/original2-batchE.json",
+      "stem": "A DAG has many dimension models that are independent of each other, meaning none of them depends on another, and the team wants to reduce total run time without changing any model's SQL. Which approach is most likely to help, and why?",
+      "option_texts": {
+        "A": "Increase the number of threads, since threads represent the maximum number of paths through the graph dbt may work on at once",
+        "B": "Materialize every independent model as a view, since views always build faster than tables regardless of concurrency",
+        "C": "Split the DAG into two separate dbt projects, one per half of the independent models",
+        "D": "Add a `post-hook` to each model that runs the next model's build, chaining them together manually"
+      },
+      "domain": "ae-01",
+      "track": "ae",
+      "blueprint_task": "1.6",
+      "blueprint_task_title": "Defining configurations in dbt_project.yml",
+      "qtype": "multiple_choice",
+      "difficulty_estimate": "L2",
+      "difficulty_source": "authored",
+      "drill_answer": "A",
+      "drill_answer_short": "More threads let dbt build independent, ready models in parallel",
+      "drill_rationale": "The number of threads represents the maximum number of paths through the graph dbt may work on at once; increasing the number of threads can minimize the run time of your project. With more threads, dbt builds as many ready models in parallel as the graph allows, finishing much sooner.",
+      "decision_hinge": "The number of threads represents the maximum number of paths through the graph dbt may work on at once; increasing the number of threads can minimize the run time of your project. With more threads, dbt builds as many ready models in parallel as the graph allows, finishing much sooner.",
+      "plausible_options": {
+        "B": "reduce total run time without changing any model's SQL"
+      },
+      "eliminated_by": {
+        "C": "A DAG has many dimension models that are independent of each other",
+        "D": {
+          "signal": "A DAG has many dimension models that are independent of each other",
+          "requires_fact": "The number of threads represents the maximum number of paths through the graph dbt may work on at once; with more threads, dbt builds as many ready models in parallel as the graph allows."
+        }
+      },
+      "distractor_traps": {
+        "B": "T3: confusable sibling — materialization choice is a separate lever from run-time concurrency, and a view is not inherently faster to build",
+        "C": "T7: over-engineering — splitting into two projects is a heavier change than increasing a concurrency setting",
+        "D": "T1: fabricated — dbt already parallelizes independent models through threads, without manual hook chaining"
+      },
+      "options_analysis": "",
+      "sources": [
+        "https://docs.getdbt.com/docs/running-a-dbt-project/using-threads"
+      ],
+      "citation_status": "resolved",
+      "topics": [
+        "knowledge/ae/01-developing-and-optimizing-models/project-config-and-flags.md"
+      ],
+      "verified": true,
+      "status": "verified",
+      "sealed_by": "authored_via_item_qa",
+      "sealed_at": "2026-10-25",
+      "seal_confidence": 90,
+      "needs_review": false
+    },
+    {
+      "id": "Q-AU-DBTAE-161",
+      "source": "authored",
+      "source_url": null,
+      "raw_path": "question-bank/authored/original2-batchE.json",
+      "stem": "A team wants to use `dbt clone` to copy production state into a development schema, on a platform that supports zero-copy cloning. A reviewer needs to pick the one TRUE statement about `dbt clone` out of several plausible-sounding claims. Which statement is TRUE?",
+      "option_texts": {
+        "A": "`dbt clone` requires a `--state` manifest to know which objects to clone from",
+        "B": "`dbt clone` creates a full physical copy of the data in the target schema every time, regardless of platform",
+        "C": "`dbt clone` always overwrites a pre-existing relation in the target schema by default",
+        "D": "`dbt clone` can only be used for incremental models, never for tables built with other materializations"
+      },
+      "domain": "ae-04",
+      "track": "ae",
+      "blueprint_task": "4.2",
+      "blueprint_task_title": "Using dbt clone",
+      "qtype": "multiple_choice",
+      "difficulty_estimate": "L3",
+      "difficulty_source": "authored",
+      "drill_answer": "A",
+      "drill_answer_short": "dbt clone clones nodes from a specified state manifest",
+      "drill_rationale": "clone all of my models from specified state to my target schema(s): dbt clone --state path/to/artifacts. By default, dbt clone will not recreate pre-existing relations in the current target. To override this, use the --full-refresh flag.",
+      "decision_hinge": "clone all of my models from specified state to my target schema(s): dbt clone --state path/to/artifacts. By default, dbt clone will not recreate pre-existing relations in the current target. To override this, use the --full-refresh flag.",
+      "plausible_options": {
+        "B": "on a platform that supports zero-copy cloning"
+      },
+      "eliminated_by": {
+        "C": {
+          "signal": "wants to use `dbt clone` to copy production state into a development schema",
+          "requires_fact": "By default, dbt clone will not recreate pre-existing relations in the current target; to override this, use the --full-refresh flag."
+        },
+        "D": "wants to use `dbt clone` to copy production state into a development schema"
+      },
+      "distractor_traps": {
+        "B": "T3: confusable sibling — on a platform with zero-copy cloning, dbt creates a clone rather than a full physical data copy",
+        "C": "T4: breaks a stated fact — dbt clone will not recreate a pre-existing relation unless --full-refresh is passed",
+        "D": "T1: fabricated — dbt clone is useful for incremental models in CI, but it is not restricted to that one materialization"
+      },
+      "options_analysis": "",
+      "sources": [
+        "https://docs.getdbt.com/reference/commands/clone"
+      ],
+      "citation_status": "resolved",
+      "topics": [
+        "knowledge/ae/04-troubleshooting-pipelines/dbt-clone.md"
+      ],
+      "verified": true,
+      "status": "verified",
+      "sealed_by": "authored_via_item_qa",
+      "sealed_at": "2026-10-25",
+      "seal_confidence": 90,
+      "needs_review": false
+    },
+    {
+      "id": "Q-AU-DBTAE-162",
+      "source": "authored",
+      "source_url": null,
+      "raw_path": "question-bank/authored/original2-batchE.json",
+      "stem": "A team wants every `dbt build` invocation to stop immediately if any model in the project is missing a description, before dbt spends time compiling or running anything. They need to know the name of the dbt build feature designed for exactly this kind of project-standard enforcement. What is it called, and when does it run?",
+      "option_texts": {
+        "A": "Checks: SQL queries run against the dbt Information Schema that stop the build before anything is materialized, unless set to warn",
+        "B": "Tests: generic or singular SQL queries that run only after everything has already been built",
+        "C": "Hooks: `pre-hook` statements that run once per model immediately before that model is built",
+        "D": "Contracts: YAML-declared column guarantees enforced only while a model is actually building, after anything else has started"
+      },
+      "domain": "ae-04",
+      "track": "ae",
+      "blueprint_task": "4.1",
+      "blueprint_task_title": "Troubleshooting and managing failure points in the DAG",
+      "qtype": "multiple_choice",
+      "difficulty_estimate": "L4",
+      "difficulty_source": "authored",
+      "drill_answer": "A",
+      "drill_answer_short": "Checks run before compiling or running any models, stopping the build on a failing check",
+      "drill_rationale": "dbt build runs checks before it compiles or runs any models. Checks are SQL queries you write against the dbt Information Schema to enforce your team's project standards. A failing check stops the build before anything is materialized, unless the check's severity is set to warn.",
+      "decision_hinge": "dbt build runs checks before it compiles or runs any models. Checks are SQL queries you write against the dbt Information Schema to enforce your team's project standards. A failing check stops the build before anything is materialized, unless the check's severity is set to warn.",
+      "plausible_options": {
+        "C": "stop immediately if any model in the project is missing a description, before dbt spends time compiling or running anything"
+      },
+      "eliminated_by": {
+        "B": "before dbt spends time compiling or running anything",
+        "D": "before dbt spends time compiling or running anything"
+      },
+      "distractor_traps": {
+        "B": "T4: breaks a stated requirement — tests run after a model builds, not before anything compiles or runs",
+        "C": "T3: confusable sibling — pre-hooks run per model at build time, not once before the whole build even starts",
+        "D": "T3: confusable sibling — contracts enforce column shape during a build, they do not enforce project-wide standards like descriptions beforehand"
+      },
+      "options_analysis": "",
+      "sources": [
+        "https://docs.getdbt.com/reference/commands/build"
+      ],
+      "citation_status": "resolved",
+      "topics": [
+        "knowledge/ae/04-troubleshooting-pipelines/dag-failure-points.md"
+      ],
+      "verified": true,
+      "status": "verified",
+      "sealed_by": "authored_via_item_qa",
+      "sealed_at": "2026-10-25",
+      "seal_confidence": 90,
+      "needs_review": false
+    },
+    {
+      "id": "Q-AU-DBTAE-163",
+      "source": "authored",
+      "source_url": null,
+      "raw_path": "question-bank/authored/original2-batchE.json",
+      "stem": "A source freshness config sets only `warn_after`, with no `error_after` anywhere in the block, and both `count` and `period` are provided for `warn_after`. The team needs to know what dbt actually does if `error_after` is never configured at all. What's the outcome?",
+      "option_texts": {
+        "A": "dbt only ever reports a warning for this source, since `error_after` was never configured",
+        "B": "dbt automatically copies the `warn_after` thresholds into `error_after` so errors still fire",
+        "C": "dbt refuses to check this source at all, since both warn_after and error_after are configured as required together",
+        "D": "dbt treats the missing error_after as a parse error that blocks the whole configured source"
+      },
+      "domain": "ae-06",
+      "track": "ae",
+      "blueprint_task": "6.2",
+      "blueprint_task_title": "Implementing source freshness",
+      "qtype": "multiple_choice",
+      "difficulty_estimate": "L3",
+      "difficulty_source": "authored",
+      "drill_answer": "A",
+      "drill_answer_short": "With only warn_after configured, dbt can only ever warn, never error, on that source",
+      "drill_rationale": "One or both of warn_after and error_after can be provided. If neither is set, dbt will not check freshness for that resource.",
+      "decision_hinge": "One or both of warn_after and error_after can be provided. If neither is set, dbt will not check freshness for that resource.",
+      "plausible_options": {
+        "C": "with no `error_after` anywhere in the block"
+      },
+      "eliminated_by": {
+        "B": "with no `error_after` anywhere in the block",
+        "D": "with no `error_after` anywhere in the block"
+      },
+      "distractor_traps": {
+        "B": "T1: fabricated — dbt does not copy one threshold's values into the other",
+        "C": "T3: confusable sibling — one or both thresholds can be provided, this is not a strict pairing requirement",
+        "D": "T1: fabricated — an omitted error_after is a valid, documented configuration, not a parse error"
+      },
+      "options_analysis": "",
+      "sources": [
+        "https://docs.getdbt.com/reference/resource-properties/freshness"
+      ],
+      "citation_status": "resolved",
+      "topics": [
+        "knowledge/ae/06-external-dependencies/source-freshness.md"
+      ],
+      "verified": true,
+      "status": "verified",
+      "sealed_by": "authored_via_item_qa",
+      "sealed_at": "2026-10-25",
+      "seal_confidence": 90,
+      "needs_review": false
+    },
+    {
+      "id": "Q-AU-DBTAE-164",
+      "source": "authored",
+      "source_url": null,
+      "raw_path": "question-bank/authored/original2-batchE.json",
+      "stem": "A pull request triggers a CI job, and the resulting staging schema in the warehouse needs a name a reviewer can recognize at a glance as belonging to that specific PR, not to production or another PR. What naming convention does dbt actually follow for this temporary schema?",
+      "option_texts": {
+        "A": "`dbt_cloud_pr_<job_id>_<pr_id>`, a unique schema name tied to this specific job and PR",
+        "B": "The same schema name as production, isolated only by a different database rather than a specific schema",
+        "C": "A random UUID with no specific link back to the job or PR, generated fresh on every CI run",
+        "D": "The developer's own personal development schema, reused for every CI run they trigger"
+      },
+      "domain": "ae-04",
+      "track": "ae",
+      "blueprint_task": "4.1",
+      "blueprint_task_title": "Troubleshooting and managing failure points in the DAG",
+      "qtype": "multiple_choice",
+      "difficulty_estimate": "L3",
+      "difficulty_source": "authored",
+      "drill_answer": "A",
+      "drill_answer_short": "CI builds into a schema named dbt_cloud_pr_<job_id>_<pr_id>, unique to that PR",
+      "drill_rationale": "dbt builds and tests models affected by the code change in a temporary schema, unique to the PR. The unique schema name follows the naming convention dbt_cloud_pr_<job_id>_<pr_id>.",
+      "decision_hinge": "dbt builds and tests models affected by the code change in a temporary schema, unique to the PR. The unique schema name follows the naming convention dbt_cloud_pr_<job_id>_<pr_id>.",
+      "plausible_options": {
+        "D": "needs a name a reviewer can recognize at a glance as belonging to that specific PR"
+      },
+      "eliminated_by": {
+        "B": "not to production or another PR",
+        "C": {
+          "signal": "needs a name a reviewer can recognize at a glance as belonging to that specific PR",
+          "requires_fact": "The unique schema name follows the naming convention dbt_cloud_pr_<job_id>_<pr_id>, so it is not a disconnected random identifier."
+        }
+      },
+      "distractor_traps": {
+        "B": "T4: breaks a stated fact — the schema is unique and temporary, not production's own schema under a different database",
+        "C": "T1: fabricated — the naming convention is deterministic and traceable, not a random UUID",
+        "D": "T3: confusable sibling — a personal dev schema is a separate, longer-lived concept from a per-PR CI schema"
+      },
+      "options_analysis": "",
+      "sources": [
+        "https://docs.getdbt.com/docs/deploy/continuous-integration"
+      ],
+      "citation_status": "resolved",
+      "topics": [
+        "knowledge/ae/04-troubleshooting-pipelines/dag-failure-points.md"
+      ],
+      "verified": true,
+      "status": "verified",
+      "sealed_by": "authored_via_item_qa",
+      "sealed_at": "2026-10-25",
+      "seal_confidence": 90,
+      "needs_review": false
+    },
+    {
+      "id": "Q-AU-DBTAE-165",
+      "source": "authored",
+      "source_url": null,
+      "raw_path": "question-bank/authored/original2-batchF.json",
+      "stem": "A unit test YAML definition for `dim_customers` has both a `given:` block and an `expect:` block. A developer needs to know exactly which of the two actually supplies the mock input rows for the test's referenced models, versus which one states what the model should produce. What does `given` specify?",
+      "option_texts": {
+        "A": "The mock input rows for each `ref()` or `source()` listed under it, which the model's logic then transforms",
+        "B": "The expected output rows that the model should produce after transformation",
+        "C": "A list of column names the test should ignore when comparing actual and expected output",
+        "D": "The warehouse connection details the unit test should use instead of the project's default target"
+      },
+      "domain": "ae-05",
+      "track": "ae",
+      "blueprint_task": "5.1",
+      "blueprint_task_title": "Using generic, singular, custom, custom generic, and unit tests on a wide variety of models and sources",
+      "qtype": "multiple_choice",
+      "difficulty_estimate": "L2",
+      "difficulty_source": "authored",
+      "drill_answer": "A",
+      "drill_answer_short": "given supplies the mock input data; expect supplies the expected output",
+      "drill_rationale": "given: # the mock data for your inputs - input: ref('stg_customers'). expect: # the expected output given the inputs above.",
+      "decision_hinge": "given: # the mock data for your inputs - input: ref('stg_customers'). expect: # the expected output given the inputs above.",
+      "plausible_options": {
+        "B": "versus which one states what the model should produce"
+      },
+      "eliminated_by": {
+        "C": "needs to know exactly which of the two actually supplies the mock input rows for the test's referenced models",
+        "D": "needs to know exactly which of the two actually supplies the mock input rows for the test's referenced models"
+      },
+      "distractor_traps": {
+        "B": "T3: confusable sibling — that is exactly what the expect block specifies, not given",
+        "C": "T1: fabricated — unit tests have no documented column-ignore list under given",
+        "D": "T1: fabricated — given supplies mock data rows, not connection configuration"
+      },
+      "options_analysis": "",
+      "sources": [
+        "https://docs.getdbt.com/reference/resource-properties/unit-tests"
+      ],
+      "citation_status": "resolved",
+      "topics": [
+        "knowledge/ae/05-implementing-tests/test-types.md"
+      ],
+      "verified": true,
+      "status": "verified",
+      "sealed_by": "authored_via_item_qa",
+      "sealed_at": "2026-10-25",
+      "seal_confidence": 90,
+      "needs_review": false
+    },
+    {
+      "id": "Q-AU-DBTAE-166",
+      "source": "authored",
+      "source_url": null,
+      "raw_path": "question-bank/authored/original2-batchF.json",
+      "stem": "A team wants a genuine, documented advantage of unit tests over traditional data tests like `not_null` and `unique`, specifically around catching a logic bug before it ever reaches real data. What is that documented advantage?",
+      "option_texts": {
+        "A": "Unit tests validate modeling logic against a small set of static inputs before the full model is ever materialized in production",
+        "B": "Unit tests run faster before anything else, because they skip compiling any SQL at all",
+        "C": "Unit tests replace the need for data tests entirely, since they check the same things more efficiently",
+        "D": "Unit tests automatically test every model in the project without being explicitly defined anywhere"
+      },
+      "domain": "ae-05",
+      "track": "ae",
+      "blueprint_task": "5.1",
+      "blueprint_task_title": "Using generic, singular, custom, custom generic, and unit tests on a wide variety of models and sources",
+      "qtype": "multiple_choice",
+      "difficulty_estimate": "L3",
+      "difficulty_source": "authored",
+      "drill_answer": "A",
+      "drill_answer_short": "Unit tests validate logic against static inputs before the model is materialized, unlike data tests",
+      "drill_rationale": "Unit tests allow you to validate your SQL modeling logic on a small set of static inputs before you materialize your full model in production. Historically, dbt's data tests could only be executed after building a model.",
+      "decision_hinge": "Unit tests allow you to validate your SQL modeling logic on a small set of static inputs before you materialize your full model in production. Historically, dbt's data tests could only be executed after building a model.",
+      "plausible_options": {
+        "C": "specifically around catching a logic bug before it ever reaches real data"
+      },
+      "eliminated_by": {
+        "B": "A team wants a genuine, documented advantage of unit tests over traditional data tests",
+        "D": "A team wants a genuine, documented advantage of unit tests over traditional data tests"
+      },
+      "distractor_traps": {
+        "B": "T1: fabricated — unit tests still compile and run SQL against the static fixture rows",
+        "C": "T3: confusable sibling — unit tests and data tests check different things at different times; neither makes the other redundant",
+        "D": "T1: fabricated — unit tests must be explicitly defined in a YAML file under model-paths"
+      },
+      "options_analysis": "",
+      "sources": [
+        "https://docs.getdbt.com/docs/build/unit-tests"
+      ],
+      "citation_status": "resolved",
+      "topics": [
+        "knowledge/ae/05-implementing-tests/test-types.md"
+      ],
+      "verified": true,
+      "status": "verified",
+      "sealed_by": "authored_via_item_qa",
+      "sealed_at": "2026-10-25",
+      "seal_confidence": 90,
+      "needs_review": false
+    },
+    {
+      "id": "Q-AU-DBTAE-167",
+      "source": "authored",
+      "source_url": null,
+      "raw_path": "question-bank/authored/original2-batchF.json",
+      "stem": "A project has `unique` and `not_null` declared under a column in `schema.yml`, and also has a `.sql` file in `tests/` with a single `select` statement. A developer needs to know the fundamental difference in how dbt treats these two kinds of definitions. What's the real difference?",
+      "option_texts": {
+        "A": "The `schema.yml` entries are generic tests built from a parameterized `test` block; the standalone file is a singular test, which is just the raw SQL that returns failing rows",
+        "B": "The `schema.yml` entries only run during `dbt build`, while standalone SQL files only run during `dbt test`",
+        "C": "The standalone SQL file must also declare `model` and `column_name` as arguments, just like a generic test",
+        "D": "Both are functionally identical; dbt simply stores one in YAML and one in SQL for organizational preference"
+      },
+      "domain": "ae-05",
+      "track": "ae",
+      "blueprint_task": "5.1",
+      "blueprint_task_title": "Using generic, singular, custom, custom generic, and unit tests on a wide variety of models and sources",
+      "qtype": "multiple_choice",
+      "difficulty_estimate": "L2",
+      "difficulty_source": "authored",
+      "drill_answer": "A",
+      "drill_answer_short": "schema.yml entries are generic tests from a test block; the standalone file is a singular test with no block",
+      "drill_rationale": "A generic data test is defined in a test block, which contains a parameterized query and accepts arguments. A singular data test is the exact SQL that will return failing records, defined in a .sql file, typically in your tests directory.",
+      "decision_hinge": "A generic data test is defined in a test block, which contains a parameterized query and accepts arguments. A singular data test is the exact SQL that will return failing records, defined in a .sql file, typically in your tests directory.",
+      "plausible_options": {
+        "D": "the fundamental difference in how dbt treats these two kinds of definitions"
+      },
+      "eliminated_by": {
+        "B": "has `unique` and `not_null` declared under a column in `schema.yml`, and also has a `.sql` file in `tests/`",
+        "C": {
+          "signal": "has `unique` and `not_null` declared under a column in `schema.yml`, and also has a `.sql` file in `tests/`",
+          "requires_fact": "A singular data test is the exact SQL that will return failing records; only a generic test's test block accepts model and column_name as arguments."
+        }
+      },
+      "distractor_traps": {
+        "B": "T1: fabricated — both generic and singular tests run under either dbt test or dbt build, the command does not depend on which kind it is",
+        "C": "T4: breaks a stated fact — a singular test needs no test block and no declared arguments at all",
+        "D": "T3: confusable sibling — the two formats have genuinely different mechanics, not just a different file location"
+      },
+      "options_analysis": "",
+      "sources": [
+        "https://docs.getdbt.com/docs/build/data-tests"
+      ],
+      "citation_status": "resolved",
+      "topics": [
+        "knowledge/ae/05-implementing-tests/test-types.md"
+      ],
+      "verified": true,
+      "status": "verified",
+      "sealed_by": "authored_via_item_qa",
+      "sealed_at": "2026-10-25",
+      "seal_confidence": 90,
+      "needs_review": false
+    },
+    {
+      "id": "Q-AU-DBTAE-168",
+      "source": "authored",
+      "source_url": null,
+      "raw_path": "question-bank/authored/original2-batchF.json",
+      "stem": "A column is tested with `accepted_values: values: ['t', 'f']`, written at the top level without an `arguments:` key. A reviewer needs to evaluate two claims about this configuration against current dbt documentation. Which TWO statements are correct?",
+      "option_texts": {
+        "A": "This top-level form still works as a supported alias, though nesting `values` under `arguments:` is the currently recommended form",
+        "B": "`accepted_values` only validates non-null values in the column; null values are not checked against the list",
+        "C": "`accepted_values` also requires every value listed in the arguments against the column to appear at least once",
+        "D": "Writing `values` outside an `arguments:` block like this causes an immediate parse error on all current dbt versions"
+      },
+      "domain": "ae-05",
+      "track": "ae",
+      "blueprint_task": "5.1",
+      "blueprint_task_title": "Using generic, singular, custom, custom generic, and unit tests on a wide variety of models and sources",
+      "qtype": "multiple_response",
+      "difficulty_estimate": "L2",
+      "difficulty_source": "authored",
+      "drill_answer": "A,B",
+      "drill_answer_short": "Top-level values still works (older form); accepted_values only checks non-null values",
+      "drill_rationale": "accepted_values: arguments: values is available in v1.10.5 and higher; older versions can set the argument name as the top-level property. This data test validates that all of the non-null values present in a column are present in a supplied list.",
+      "decision_hinge": "accepted_values: arguments: values is available in v1.10.5 and higher; older versions can set the argument name as the top-level property. This data test validates that all of the non-null values present in a column are present in a supplied list.",
+      "plausible_options": {
+        "C": "written at the top level without an `arguments:` key"
+      },
+      "eliminated_by": {
+        "D": "written at the top level without an `arguments:` key"
+      },
+      "distractor_traps": {
+        "C": "T8: scope error — the test checks that present values are allowed, not that every allowed value must appear",
+        "D": "T6: stale behaviour — the top-level form is older but still supported as an alias, not rejected outright"
+      },
+      "options_analysis": "",
+      "sources": [
+        "https://docs.getdbt.com/docs/build/data-tests"
+      ],
+      "citation_status": "resolved",
+      "topics": [
+        "knowledge/ae/05-implementing-tests/test-types.md"
+      ],
+      "verified": true,
+      "status": "verified",
+      "sealed_by": "authored_via_item_qa",
+      "sealed_at": "2026-10-25",
+      "seal_confidence": 90,
+      "needs_review": false
+    },
+    {
+      "id": "Q-AU-DBTAE-169",
+      "source": "authored",
+      "source_url": null,
+      "raw_path": "question-bank/authored/original2-batchF.json",
+      "stem": "A model-level test compares row counts between two models, using a generic test macro that is not one of dbt's four built-in tests, and that the team never wrote themselves. The team needs to know the documented, current source of additional generic tests like this one. Where do they come from?",
+      "option_texts": {
+        "A": "Additional generic tests have been open-sourced in packages, such as the `dbt-utils` package, which you make available in your project through package management",
+        "B": "dbt automatically ships every possible additional generic test out of the box, so none of them ever come from a package",
+        "C": "Such a test can only exist if the team wrote it themselves as a custom generic test in `macros/`",
+        "D": "dbt Cloud exclusively provides these additional tests, and they are unavailable in dbt Core projects"
+      },
+      "domain": "ae-05",
+      "track": "ae",
+      "blueprint_task": "5.1",
+      "blueprint_task_title": "Using generic, singular, custom, custom generic, and unit tests on a wide variety of models and sources",
+      "qtype": "multiple_choice",
+      "difficulty_estimate": "L3",
+      "difficulty_source": "authored",
+      "drill_answer": "A",
+      "drill_answer_short": "Additional generic tests are open-sourced in packages like dbt-utils, installed via packages.yml",
+      "drill_rationale": "Out of the box, dbt ships with unique, not_null, accepted_values, and relationships. Some additional generic tests have been open-sourced in the dbt-utils package. Check out the docs on packages to learn how to make these tests available in your project.",
+      "decision_hinge": "Out of the box, dbt ships with unique, not_null, accepted_values, and relationships. Some additional generic tests have been open-sourced in the dbt-utils package. Check out the docs on packages to learn how to make these tests available in your project.",
+      "plausible_options": {
+        "C": "that the team never wrote themselves"
+      },
+      "eliminated_by": {
+        "B": "that is not one of dbt's four built-in tests, and that the team never wrote themselves",
+        "D": "that is not one of dbt's four built-in tests, and that the team never wrote themselves"
+      },
+      "distractor_traps": {
+        "B": "T4: breaks a stated fact — the stem says this test is not one of the four dbt ships out of the box",
+        "C": "T3: confusable sibling — a team can write its own custom generic test, but packages are the other documented source, and the stem rules out self-authorship",
+        "D": "T1: fabricated — package-sourced generic tests are available in dbt Core, not exclusive to dbt Cloud"
+      },
+      "options_analysis": "",
+      "sources": [
+        "https://docs.getdbt.com/docs/build/data-tests"
+      ],
+      "citation_status": "resolved",
+      "topics": [
+        "knowledge/ae/05-implementing-tests/test-types.md"
+      ],
+      "verified": true,
+      "status": "verified",
+      "sealed_by": "authored_via_item_qa",
+      "sealed_at": "2026-10-25",
+      "seal_confidence": 90,
+      "needs_review": false
+    },
+    {
+      "id": "Q-AU-DBTAE-170",
+      "source": "authored",
+      "source_url": null,
+      "raw_path": "question-bank/authored/original2-batchF.json",
+      "stem": "A `unique` test on `order_id` needs to run only against rows where `order_id > 21`, ignoring older rows entirely, while still keeping its default `severity`. The team needs the correct config key for this narrowing, not a property that happens to sound similar. Which config achieves it?",
+      "option_texts": {
+        "A": "`where`, a framework option nested under `config` that adds a filter clause limiting which rows the test considers",
+        "B": "`filter`, a property available on every generic test for limiting which rows it scans",
+        "C": "`limit`, which caps the number of failing rows returned without changing which rows are scanned",
+        "D": "`severity`, since adjusting this config also narrows which rows a test evaluates"
+      },
+      "domain": "ae-05",
+      "track": "ae",
+      "blueprint_task": "5.3",
+      "blueprint_task_title": "Implementing various testing steps in the workflow",
+      "qtype": "multiple_choice",
+      "difficulty_estimate": "L3",
+      "difficulty_source": "authored",
+      "drill_answer": "A",
+      "drill_answer_short": "where is the documented config for narrowing which rows a data test considers",
+      "drill_rationale": "You can add a config block for options like severity or where. unique: config: where: \"order_id > 21\". The config and where clause are optional.",
+      "decision_hinge": "You can add a config block for options like severity or where. unique: config: where: \"order_id > 21\". The config and where clause are optional.",
+      "plausible_options": {
+        "B": "needs to run only against rows where `order_id > 21`, ignoring older rows entirely"
+      },
+      "eliminated_by": {
+        "C": "needs the correct config key for this narrowing, not a property that happens to sound similar",
+        "D": {
+          "signal": "while still keeping its default `severity`",
+          "requires_fact": "You can add a config block for options like severity or where; where is the documented key for limiting which rows a test considers, separate from severity."
+        }
+      },
+      "distractor_traps": {
+        "B": "T3: confusable sibling — dbt's documented row-filtering config for generic tests is named where, not filter",
+        "C": "T3: confusable sibling — a row-count limit on failures is a different concern from which rows feed into the test query",
+        "D": "T3: confusable sibling — severity decides pass/warn/error, it does not change which rows a test scans"
+      },
+      "options_analysis": "",
+      "sources": [
+        "https://docs.getdbt.com/reference/resource-properties/data-tests"
+      ],
+      "citation_status": "resolved",
+      "topics": [
+        "knowledge/ae/05-implementing-tests/test-types.md"
+      ],
+      "verified": true,
+      "status": "verified",
+      "sealed_by": "authored_via_item_qa",
+      "sealed_at": "2026-10-25",
+      "seal_confidence": 90,
+      "needs_review": false
+    },
+    {
+      "id": "Q-AU-DBTAE-171",
+      "source": "authored",
+      "source_url": null,
+      "raw_path": "question-bank/authored/original2-batchF.json",
+      "stem": "A team sets both `store_failures: true` and `store_failures_as: \"view\"` on the same test. They need to know which of the two configs actually wins, and what it controls that the other one doesn't. What's the real relationship between them?",
+      "option_texts": {
+        "A": "`store_failures_as` takes precedence and controls the storage format (ephemeral, table, or view); `store_failures` only controls whether failures are stored at all",
+        "B": "`store_failures` takes precedence and controls over `store_failures_as` whenever both are set on the same test",
+        "C": "The two configs are redundant aliases that each control the same setting, so setting both has no additional effect",
+        "D": "`store_failures_as` only applies to singular tests, while `store_failures` only applies to generic tests"
+      },
+      "domain": "ae-05",
+      "track": "ae",
+      "blueprint_task": "5.3",
+      "blueprint_task_title": "Implementing various testing steps in the workflow",
+      "qtype": "multiple_choice",
+      "difficulty_estimate": "L4",
+      "difficulty_source": "authored",
+      "drill_answer": "A",
+      "drill_answer_short": "store_failures_as takes precedence and sets the storage format; store_failures only toggles storing at all",
+      "drill_rationale": "store_failures_as is an optional config that specifies how test failures should be stored. If store_failures is also configured, store_failures_as takes precedence. The three supported values are ephemeral, table, and view.",
+      "decision_hinge": "store_failures_as is an optional config that specifies how test failures should be stored. If store_failures is also configured, store_failures_as takes precedence. The three supported values are ephemeral, table, and view.",
+      "plausible_options": {
+        "C": "They need to know which of the two configs actually wins, and what it controls that the other one doesn't"
+      },
+      "eliminated_by": {
+        "B": "A team sets both `store_failures: true` and `store_failures_as: \"view\"` on the same test",
+        "D": {
+          "signal": "A team sets both `store_failures: true` and `store_failures_as: \"view\"` on the same test",
+          "requires_fact": "You can configure store_failures_as in all the same places as store_failures, including singular tests and generic tests, so neither is restricted to only one test kind."
+        }
+      },
+      "distractor_traps": {
+        "B": "T4: breaks a stated fact — store_failures_as is documented as taking precedence, not store_failures",
+        "C": "T3: confusable sibling — the two configs are related but control different things: whether to store, and in what format",
+        "D": "T1: fabricated — both configs are available in all the same places, not split by test kind"
+      },
+      "options_analysis": "",
+      "sources": [
+        "https://docs.getdbt.com/reference/resource-configs/store_failures_as"
+      ],
+      "citation_status": "resolved",
+      "topics": [
+        "knowledge/ae/05-implementing-tests/test-severity-and-workflow.md"
+      ],
+      "verified": true,
+      "status": "verified",
+      "sealed_by": "authored_via_item_qa",
+      "sealed_at": "2026-10-25",
+      "seal_confidence": 90,
+      "needs_review": false
+    },
+    {
+      "id": "Q-AU-DBTAE-172",
+      "source": "authored",
+      "source_url": null,
+      "raw_path": "question-bank/authored/original2-batchF.json",
+      "stem": "A team wants to unit test an incremental model's logic for handling late-arriving data, and needs this to work for both a from-scratch build and an already-incremental run, without hand-rolling two separate test files. What testing approach does dbt actually document for this?",
+      "option_texts": {
+        "A": "Override the output of macros, vars, or environment variables in the unit test config to exercise the model in both full-refresh and incremental modes",
+        "B": "Unit tests cannot be applied to incremental models at all; only data tests can validate them",
+        "C": "Write two separate unit test files, one hardcoded for full-refresh and one hardcoded for incremental mode, since dbt cannot parameterize this",
+        "D": "Unit test only the final materialized table's shape, since unit tests cannot evaluate incremental logic before a build"
+      },
+      "domain": "ae-05",
+      "track": "ae",
+      "blueprint_task": "5.1",
+      "blueprint_task_title": "Using generic, singular, custom, custom generic, and unit tests on a wide variety of models and sources",
+      "qtype": "multiple_choice",
+      "difficulty_estimate": "L5",
+      "difficulty_source": "authored",
+      "drill_answer": "A",
+      "drill_answer_short": "Unit tests can override macros, vars, or env vars to exercise both full-refresh and incremental modes",
+      "drill_rationale": "When configuring your unit test, you can override the output of macros, vars, or environment variables. This enables you to unit test your incremental models in full refresh and incremental modes.",
+      "decision_hinge": "When configuring your unit test, you can override the output of macros, vars, or environment variables. This enables you to unit test your incremental models in full refresh and incremental modes.",
+      "plausible_options": {
+        "D": "needs this to work for both a from-scratch build and an already-incremental run"
+      },
+      "eliminated_by": {
+        "B": "wants to unit test an incremental model's logic for handling late-arriving data",
+        "C": "without hand-rolling two separate test files"
+      },
+      "distractor_traps": {
+        "B": "T1: fabricated — dbt explicitly documents unit testing incremental models",
+        "C": "T4: breaks a stated requirement — the stem rules out hand-rolling two separate test files",
+        "D": "T3: confusable sibling — unit tests validate modeling logic on static inputs before a build, which is exactly what enables testing incremental behavior pre-materialization"
+      },
+      "options_analysis": "",
+      "sources": [
+        "https://docs.getdbt.com/docs/build/unit-tests"
+      ],
+      "citation_status": "resolved",
+      "topics": [
+        "knowledge/ae/05-implementing-tests/test-types.md"
+      ],
+      "verified": true,
+      "status": "verified",
+      "sealed_by": "authored_via_item_qa",
+      "sealed_at": "2026-10-25",
+      "seal_confidence": 90,
+      "needs_review": false
+    },
+    {
+      "id": "Q-AU-DBTAE-173",
+      "source": "authored",
+      "source_url": null,
+      "raw_path": "question-bank/authored/original2-batchF.json",
+      "stem": "A `room_type` column is tested with `accepted_values: arguments: values: ['Entire home/apt', 'Private room', 'Shared room', 'Hotel room']`. A new row arrives with `room_type = 'Boat'`, a value not in that list. The team needs to know exactly what the next `dbt test` run reports for this column.",
+      "option_texts": {
+        "A": "The test fails, returning the `Boat` row as a failing record, since its value is not in the supplied list",
+        "B": "The test automatically adds `Boat` to the accepted list going forward, so the next run passes",
+        "C": "The test passes, since `accepted_values` only checks the first value it finds in the column",
+        "D": "The test silently skips any row whose value was not already present when the test was first defined"
+      },
+      "domain": "ae-05",
+      "track": "ae",
+      "blueprint_task": "5.1",
+      "blueprint_task_title": "Using generic, singular, custom, custom generic, and unit tests on a wide variety of models and sources",
+      "qtype": "multiple_choice",
+      "difficulty_estimate": "L2",
+      "difficulty_source": "authored",
+      "drill_answer": "A",
+      "drill_answer_short": "A value outside the supplied list is returned as a failing row by accepted_values",
+      "drill_rationale": "accepted_values validates that all of the non-null values present in a column are present in a supplied list of values. Data tests return a set of failing records; if a value disproves the assertion, that row is a failure.",
+      "decision_hinge": "accepted_values validates that all of the non-null values present in a column are present in a supplied list of values. Data tests return a set of failing records; if a value disproves the assertion, that row is a failure.",
+      "plausible_options": {
+        "D": "A new row arrives with `room_type = 'Boat'`, a value not in that list"
+      },
+      "eliminated_by": {
+        "B": "The team needs to know exactly what the next `dbt test` run reports for this column",
+        "C": "The team needs to know exactly what the next `dbt test` run reports for this column"
+      },
+      "distractor_traps": {
+        "B": "T1: fabricated — accepted_values never mutates its own configured list based on incoming data",
+        "C": "T1: fabricated — accepted_values checks every non-null value in the column, not just the first one found",
+        "D": "T3: confusable sibling — the test re-evaluates the full column on every run, it does not grandfather in pre-existing values"
+      },
+      "options_analysis": "",
+      "sources": [
+        "https://docs.getdbt.com/docs/build/data-tests"
+      ],
+      "citation_status": "resolved",
+      "topics": [
+        "knowledge/ae/05-implementing-tests/test-types.md"
+      ],
+      "verified": true,
+      "status": "verified",
+      "sealed_by": "authored_via_item_qa",
+      "sealed_at": "2026-10-25",
+      "seal_confidence": 90,
+      "needs_review": false
+    },
+    {
+      "id": "Q-AU-DBTAE-174",
+      "source": "authored",
+      "source_url": null,
+      "raw_path": "question-bank/authored/original2-batchG.json",
+      "stem": "A team wants their model and column descriptions to show up as actual comments on the warehouse's tables and columns, visible from the warehouse's own catalog tools, not only inside the generated dbt docs site. Which configuration allows dbt to persist column-level descriptions as comments directly in the data warehouse?",
+      "option_texts": {
+        "A": "`persist_docs`, set with `relation` and `columns` keys to control what gets written as comments",
+        "B": "`asset-paths`, since it controls what dbt copies into the generated documentation site, columns included",
+        "C": "`persist_docs` only writes to the dbt docs site HTML, never to the warehouse itself",
+        "D": "`meta`, a free-form dictionary that the warehouse automatically renders as column comments"
+      },
+      "domain": "ae-01",
+      "track": "ae",
+      "blueprint_task": "1.5",
+      "blueprint_task_title": "Creating a logical flow of models and building clean DAGs",
+      "qtype": "multiple_choice",
+      "difficulty_estimate": "L2",
+      "difficulty_source": "authored",
+      "drill_answer": "A",
+      "drill_answer_short": "persist_docs writes descriptions as relation and column comments in the warehouse",
+      "drill_rationale": "persist_docs optionally persists resource descriptions as column and relation comments in the database. By default, documentation persistence is disabled.",
+      "decision_hinge": "persist_docs optionally persists resource descriptions as column and relation comments in the database. By default, documentation persistence is disabled.",
+      "plausible_options": {
+        "B": "visible from the warehouse's own catalog tools, not only inside the generated dbt docs site"
+      },
+      "eliminated_by": {
+        "C": "wants their model and column descriptions to show up as actual comments on the warehouse's tables and columns",
+        "D": "wants their model and column descriptions to show up as actual comments on the warehouse's tables and columns"
+      },
+      "distractor_traps": {
+        "B": "T3: confusable sibling — asset-paths copies static files for the docs site, it does not write comments into the warehouse",
+        "C": "T4: breaks a stated fact — persist_docs is documented to write comments into the database, not only the generated HTML site",
+        "D": "T1: fabricated — the warehouse does not automatically turn a meta dictionary into column comments"
+      },
+      "options_analysis": "",
+      "sources": [
+        "https://docs.getdbt.com/reference/resource-configs/persist_docs"
+      ],
+      "citation_status": "resolved",
+      "topics": [
+        "knowledge/ae/01-developing-and-optimizing-models/dbt-commands.md"
+      ],
+      "verified": true,
+      "status": "verified",
+      "sealed_by": "authored_via_item_qa",
+      "sealed_at": "2026-10-25",
+      "seal_confidence": 90,
+      "needs_review": false
+    },
+    {
+      "id": "Q-AU-DBTAE-175",
+      "source": "authored",
+      "source_url": null,
+      "raw_path": "question-bank/authored/original2-batchG.json",
+      "stem": "A column description references `{{ doc(\"dim_listings_cleansed__minimum_nights\") }}` from `schema.yml`. The team needs to know how that named docs block is actually defined, in the separate `.md` file where its content lives. How is it defined there?",
+      "option_texts": {
+        "A": "Using `{% docs dim_listings_cleansed__minimum_nights %} ... {% enddocs %}`, wrapping the markdown content between those two tags",
+        "B": "Using `{% macro doc_block(name) %} ... {% endmacro %}`, treating the docs block like any other reusable macro",
+        "C": "Using a `description:` property directly inside `schema.yml`, with the content needing no separate `.md` file",
+        "D": "Using `{{ doc(\"dim_listings_cleansed__minimum_nights\") }}` itself as both the definition and the reference"
+      },
+      "domain": "ae-01",
+      "track": "ae",
+      "blueprint_task": "1.5",
+      "blueprint_task_title": "Creating a logical flow of models and building clean DAGs",
+      "qtype": "multiple_choice",
+      "difficulty_estimate": "L2",
+      "difficulty_source": "authored",
+      "drill_answer": "A",
+      "drill_answer_short": "A docs block is defined with {% docs name %} ... {% enddocs %} in a markdown file",
+      "drill_rationale": "events.md: {% docs table_events %} This table contains clickstream events from the marketing website. ... {% enddocs %}",
+      "decision_hinge": "events.md: {% docs table_events %} This table contains clickstream events from the marketing website. ... {% enddocs %}",
+      "plausible_options": {
+        "B": "The team needs to know how that named docs block is actually defined, in the separate `.md` file where its content lives"
+      },
+      "eliminated_by": {
+        "C": "in the separate `.md` file where its content lives",
+        "D": "in the separate `.md` file where its content lives"
+      },
+      "distractor_traps": {
+        "B": "T3: confusable sibling — a docs block uses its own dedicated tag pair, not the generic macro tag pair",
+        "C": "T4: breaks a stated fact — the stem says the content lives in a separate .md file, which a bare description: property would not use",
+        "D": "T1: fabricated — doc() references a block from schema.yml; it does not also define the block's content"
+      },
+      "options_analysis": "",
+      "sources": [
+        "https://docs.getdbt.com/docs/collaborate/documentation"
+      ],
+      "citation_status": "resolved",
+      "topics": [
+        "knowledge/ae/01-developing-and-optimizing-models/dbt-commands.md"
+      ],
+      "verified": true,
+      "status": "verified",
+      "sealed_by": "authored_via_item_qa",
+      "sealed_at": "2026-10-25",
+      "seal_confidence": 90,
+      "needs_review": false
+    },
+    {
+      "id": "Q-AU-DBTAE-176",
+      "source": "authored",
+      "source_url": null,
+      "raw_path": "question-bank/authored/original2-batchG.json",
+      "stem": "A team wants to document both sources and models consistently, and also wants to know whether current dbt behavior still treats freshness checking as an exclusively source-only concept. Which TWO statements about documenting sources versus models are correct?",
+      "option_texts": {
+        "A": "Both sources and models can have descriptions added via a `description:` property, and both can reference the same `{{ doc(...) }}` block",
+        "B": "In current dbt, freshness can be configured for both sources and models, checked together with the `dbt freshness` command",
+        "C": "Only models can have column-level descriptions right now, current freshness rules aside; sources can only be described at the table level",
+        "D": "Sources cannot use `{{ doc(...) }}` references at all under current freshness rules, since docs blocks are reserved exclusively for models"
+      },
+      "domain": "ae-01",
+      "track": "ae",
+      "blueprint_task": "1.5",
+      "blueprint_task_title": "Creating a logical flow of models and building clean DAGs",
+      "qtype": "multiple_response",
+      "difficulty_estimate": "L4",
+      "difficulty_source": "authored",
+      "drill_answer": "A,B",
+      "drill_answer_short": "Both resource types support descriptions and doc() blocks; freshness now applies to models too",
+      "drill_rationale": "dbt provides a way to add descriptions to models, columns, sources, and more. Use the following fields to configure freshness for sources and models unless otherwise noted. Run dbt freshness to check every source and model with freshness configured.",
+      "decision_hinge": "dbt provides a way to add descriptions to models, columns, sources, and more. Use the following fields to configure freshness for sources and models unless otherwise noted. Run dbt freshness to check every source and model with freshness configured.",
+      "plausible_options": {
+        "C": "wants to know whether current dbt behavior still treats freshness checking as an exclusively source-only concept"
+      },
+      "eliminated_by": {
+        "D": "wants to document both sources and models consistently"
+      },
+      "distractor_traps": {
+        "C": "T6: stale behaviour — column-level descriptions for sources were historically more limited, but the documented mechanism now supports descriptions broadly across models, columns, and sources",
+        "D": "T1: fabricated — dbt adds descriptions to sources too, and the doc() function is not restricted to models"
+      },
+      "options_analysis": "",
+      "sources": [
+        "https://docs.getdbt.com/docs/collaborate/documentation",
+        "https://docs.getdbt.com/reference/resource-properties/freshness"
+      ],
+      "citation_status": "resolved",
+      "topics": [
+        "knowledge/ae/01-developing-and-optimizing-models/dbt-commands.md"
+      ],
+      "verified": true,
+      "status": "verified",
+      "sealed_by": "authored_via_item_qa",
+      "sealed_at": "2026-10-25",
+      "seal_confidence": 90,
+      "needs_review": false
+    },
+    {
+      "id": "Q-AU-DBTAE-177",
+      "source": "authored",
+      "source_url": null,
+      "raw_path": "question-bank/authored/original2-batchG.json",
+      "stem": "A `.md` file opens a docs block with `{% docs dim_listing_cleansed__minimum_nights %}`. The team needs the exact, correctly spelled closing tag dbt expects, since a near-miss won't parse. What's the closing tag?",
+      "option_texts": {
+        "A": "`{% enddocs %}`",
+        "B": "`{% end docs %}`",
+        "C": "`{% /docs %}`",
+        "D": "`{% enddoc %}`"
+      },
+      "domain": "ae-01",
+      "track": "ae",
+      "blueprint_task": "1.5",
+      "blueprint_task_title": "Creating a logical flow of models and building clean DAGs",
+      "qtype": "multiple_choice",
+      "difficulty_estimate": "L1",
+      "difficulty_source": "authored",
+      "drill_answer": "A",
+      "drill_answer_short": "A docs block closes with {% enddocs %}, one word, matching {% docs %}",
+      "drill_rationale": "{% docs table_events %} This table contains clickstream events from the marketing website. ... {% enddocs %}",
+      "decision_hinge": "{% docs table_events %} This table contains clickstream events from the marketing website. ... {% enddocs %}",
+      "plausible_options": {
+        "B": "opens a docs block with `{% docs dim_listing_cleansed__minimum_nights %}`"
+      },
+      "eliminated_by": {
+        "C": "since a near-miss won't parse",
+        "D": "since a near-miss won't parse"
+      },
+      "distractor_traps": {
+        "B": "T3: confusable sibling — Jinja block tags are plausible to misremember with extra spacing, but dbt expects one unbroken word",
+        "C": "T1: fabricated — Jinja block tags do not use a slash-based closing syntax",
+        "D": "T1: fabricated — the closing tag matches the plural docs opening tag, so it is enddocs, not enddoc"
+      },
+      "options_analysis": "",
+      "sources": [
+        "https://docs.getdbt.com/docs/collaborate/documentation"
+      ],
+      "citation_status": "resolved",
+      "topics": [
+        "knowledge/ae/01-developing-and-optimizing-models/dbt-commands.md"
+      ],
+      "verified": true,
+      "status": "verified",
+      "sealed_by": "authored_via_item_qa",
+      "sealed_at": "2026-10-25",
+      "seal_confidence": 90,
+      "needs_review": false
+    },
+    {
+      "id": "Q-AU-DBTAE-178",
+      "source": "authored",
+      "source_url": null,
+      "raw_path": "question-bank/authored/original2-batchG.json",
+      "stem": "A column already has a description defined in its upstream model's `schema.yml`. A data analyst wants the exact same wording to appear for that column in a downstream model, without retyping the text and without relying on any automatic inheritance between models. What should they do?",
+      "option_texts": {
+        "A": "Reference the same `{{ doc(...) }}` block downstream that the model upstream already points at",
+        "B": "Do nothing; dbt automatically copies a column's description to every downstream model that selects it",
+        "C": "Set `inherit_description: true` on the downstream column to pull the value from its upstream source",
+        "D": "Reference the upstream model's SQL file, which was already compiled, directly from the downstream column's `description:` property"
+      },
+      "domain": "ae-01",
+      "track": "ae",
+      "blueprint_task": "1.5",
+      "blueprint_task_title": "Creating a logical flow of models and building clean DAGs",
+      "qtype": "multiple_choice",
+      "difficulty_estimate": "L3",
+      "difficulty_source": "authored",
+      "drill_answer": "A",
+      "drill_answer_short": "Reference the same doc() block again downstream; descriptions are not auto-inherited",
+      "drill_rationale": "To use a docs block, reference it from your schema.yml file with the doc() function in place of a markdown string.",
+      "decision_hinge": "To use a docs block, reference it from your schema.yml file with the doc() function in place of a markdown string.",
+      "plausible_options": {
+        "C": "without relying on any automatic inheritance between models"
+      },
+      "eliminated_by": {
+        "B": "without relying on any automatic inheritance between models",
+        "D": "without retyping the text"
+      },
+      "distractor_traps": {
+        "B": "T4: breaks a stated fact — the stem explicitly rules out automatic inheritance, since no such mechanism is documented",
+        "C": "T3: confusable sibling — dbt defines no inherit_description property, but the idea of an inheritance flag is a natural guess",
+        "D": "T1: fabricated — a description property takes markdown text or a doc() call, not a path to compiled SQL"
+      },
+      "options_analysis": "",
+      "sources": [
+        "https://docs.getdbt.com/docs/collaborate/documentation"
+      ],
+      "citation_status": "resolved",
+      "topics": [
+        "knowledge/ae/01-developing-and-optimizing-models/dbt-commands.md"
+      ],
+      "verified": true,
+      "status": "verified",
+      "sealed_by": "authored_via_item_qa",
+      "sealed_at": "2026-10-25",
+      "seal_confidence": 90,
+      "needs_review": false
+    },
+    {
+      "id": "Q-AU-DBTAE-179",
+      "source": "authored",
+      "source_url": null,
+      "raw_path": "question-bank/authored/original2-batchG.json",
+      "stem": "A source sets `loaded_at_field: date` so freshness checks can find each record's most recent loaded timestamp without relying on adapter metadata. A reviewer needs to know what dbt actually requires of that column, rather than assuming a specific text format. What must be true about it?",
+      "option_texts": {
+        "A": "It is a column dbt can query to find that timestamp; it becomes required only when adapter metadata is unavailable",
+        "B": "It must be stored as plain text in strict ISO 8601 format, or the check silently returns no results",
+        "C": "It must be the same adapter timestamp column used as the model's `unique_key`, since freshness and deduplication share one column",
+        "D": "It must be declared in every source's config, even on adapters where that same timestamp metadata is already available automatically"
+      },
+      "domain": "ae-06",
+      "track": "ae",
+      "blueprint_task": "6.2",
+      "blueprint_task_title": "Implementing source freshness",
+      "qtype": "multiple_choice",
+      "difficulty_estimate": "L3",
+      "difficulty_source": "authored",
+      "drill_answer": "A",
+      "drill_answer_short": "loaded_at_field is a column dbt queries for the latest loaded timestamp, required only without adapter metadata",
+      "drill_rationale": "loaded_at_field: Column dbt queries to determine the most recent loaded timestamp. Required when adapter metadata is unavailable.",
+      "decision_hinge": "loaded_at_field: Column dbt queries to determine the most recent loaded timestamp. Required when adapter metadata is unavailable.",
+      "plausible_options": {
+        "B": "without relying on adapter metadata"
+      },
+      "eliminated_by": {
+        "C": "A reviewer needs to know what dbt actually requires of that column, rather than assuming a specific text format",
+        "D": {
+          "signal": "A reviewer needs to know what dbt actually requires of that column, rather than assuming a specific text format",
+          "requires_fact": "loaded_at_field is Required when adapter metadata is unavailable."
+        }
+      },
+      "distractor_traps": {
+        "B": "T3: confusable sibling — dbt documents this field by its purpose, querying for a timestamp, not by a mandated text format",
+        "C": "T1: fabricated — loaded_at_field has no documented relationship to a model's unique_key",
+        "D": "T4: breaks a stated fact — it is explicitly required only when adapter metadata is unavailable"
+      },
+      "options_analysis": "",
+      "sources": [
+        "https://docs.getdbt.com/reference/resource-properties/freshness"
+      ],
+      "citation_status": "resolved",
+      "topics": [
+        "knowledge/ae/06-external-dependencies/source-freshness.md"
+      ],
+      "verified": true,
+      "status": "verified",
+      "sealed_by": "authored_via_item_qa",
+      "sealed_at": "2026-10-25",
+      "seal_confidence": 90,
+      "needs_review": false
+    },
+    {
+      "id": "Q-AU-DBTAE-180",
+      "source": "authored",
+      "source_url": null,
+      "raw_path": "question-bank/authored/original2-batchG.json",
+      "stem": "A team drafts an exposure definition and needs to know which single property below is actually REQUIRED by dbt's documented exposure schema, as opposed to optional metadata that merely looks important.",
+      "option_texts": {
+        "A": "`owner`, satisfied by either a `name` or an `email` under it",
+        "B": "`maturity`, with values `high`, `medium`, or `low`",
+        "C": "`url`, a link to the dashboard or report the exposure represents",
+        "D": "`description`, a markdown string explaining the exposure's purpose"
+      },
+      "domain": "ae-06",
+      "track": "ae",
+      "blueprint_task": "6.1",
+      "blueprint_task_title": "Implementing dbt exposures",
+      "qtype": "multiple_choice",
+      "difficulty_estimate": "L3",
+      "difficulty_source": "authored",
+      "drill_answer": "A",
+      "drill_answer_short": "owner is a required exposure property; maturity, url, and description are optional",
+      "drill_rationale": "Required: name, a unique exposure name written in snake case; owner, name or email required, additional properties allowed.",
+      "decision_hinge": "Required: name, a unique exposure name written in snake case; owner, name or email required, additional properties allowed.",
+      "plausible_options": {
+        "B": "which single property below is actually REQUIRED by dbt's documented exposure schema"
+      },
+      "eliminated_by": {
+        "C": "which single property below is actually REQUIRED by dbt's documented exposure schema, as opposed to optional metadata",
+        "D": "which single property below is actually REQUIRED by dbt's documented exposure schema, as opposed to optional metadata"
+      },
+      "distractor_traps": {
+        "B": "T8: scope error — maturity indicates confidence level, it is optional documentation metadata, not required",
+        "C": "T8: scope error — url is useful context for consumers, but it is not required",
+        "D": "T8: scope error — description adds helpful context, but it is not required"
+      },
+      "options_analysis": "",
+      "sources": [
+        "https://docs.getdbt.com/docs/build/exposures"
+      ],
+      "citation_status": "resolved",
+      "topics": [
+        "knowledge/ae/06-external-dependencies/exposures.md"
+      ],
+      "verified": true,
+      "status": "verified",
+      "sealed_by": "authored_via_item_qa",
+      "sealed_at": "2026-10-25",
+      "seal_confidence": 90,
+      "needs_review": false
+    },
+    {
+      "id": "Q-AU-DBTAE-181",
+      "source": "authored",
+      "source_url": null,
+      "raw_path": "question-bank/authored/original2-batchH.json",
+      "stem": "After a failed `dbt build`, a developer wants to re-run only the nodes that genuinely need it, using `result:` selectors against the prior invocation's artifacts. Which TWO of the following are valid, documented `result` selectors?",
+      "option_texts": {
+        "A": "`result:error`, selecting resources that generated errors on the prior invocation",
+        "B": "`result:fail`, selecting tests that failed on the prior invocation",
+        "C": "`result:skipped`, selecting resources that were skipped because an upstream resource failed",
+        "D": "`result:pending`, selecting resources that have not been run yet in this invocation"
+      },
+      "domain": "ae-07",
+      "track": "ae",
+      "blueprint_task": "7.1",
+      "blueprint_task_title": "Understanding state and state selection",
+      "qtype": "multiple_response",
+      "difficulty_estimate": "L3",
+      "difficulty_source": "authored",
+      "drill_answer": "A,B",
+      "drill_answer_short": "result:error and result:fail are the documented result selectors",
+      "drill_rationale": "The result method can be used to select resources based on their result status from a prior run. Run all models that generated errors on the prior invocation of dbt run using result:error. Run all tests that failed on the prior invocation of dbt test using result:fail.",
+      "decision_hinge": "The result method can be used to select resources based on their result status from a prior run. Run all models that generated errors on the prior invocation of dbt run using result:error. Run all tests that failed on the prior invocation of dbt test using result:fail.",
+      "plausible_options": {
+        "C": "wants to re-run only the nodes that genuinely need it, using `result:` selectors against the prior invocation's artifacts"
+      },
+      "eliminated_by": {
+        "D": "using `result:` selectors against the prior invocation's artifacts"
+      },
+      "distractor_traps": {
+        "C": "T3: confusable sibling — skip propagation is real dbt behavior, but it is not exposed as a result: selector value",
+        "D": "T1: fabricated — dbt's documented result method does not define a pending value"
+      },
+      "options_analysis": "",
+      "sources": [
+        "https://docs.getdbt.com/reference/node-selection/methods"
+      ],
+      "citation_status": "resolved",
+      "topics": [
+        "knowledge/ae/07-dbt-state/state-selection.md"
+      ],
+      "verified": true,
+      "status": "verified",
+      "sealed_by": "authored_via_item_qa",
+      "sealed_at": "2026-10-25",
+      "seal_confidence": 90,
+      "needs_review": false
+    },
+    {
+      "id": "Q-AU-DBTAE-182",
+      "source": "authored",
+      "source_url": null,
+      "raw_path": "question-bank/authored/original2-batchH.json",
+      "stem": "A Slim CI pipeline only selects `state:modified` resources, but several of those modified models `ref()` parents that were never selected and don't yet exist in the CI schema. The team needs to know exactly what `--defer` does in this pipeline to prevent those refs from failing. What does `--defer` do?",
+      "option_texts": {
+        "A": "It resolves `ref()` calls for unselected, not-yet-built parents using a specified production state manifest instead",
+        "B": "It defers execution of failed models and their parents to a later retry, after the rest of the build finishes",
+        "C": "It postpones running any tests until every model in the selection has finished building",
+        "D": "It skips building any model that `--select` did not explicitly name, without touching how refs resolve"
+      },
+      "domain": "ae-07",
+      "track": "ae",
+      "blueprint_task": "7.1",
+      "blueprint_task_title": "Understanding state and state selection",
+      "qtype": "multiple_choice",
+      "difficulty_estimate": "L3",
+      "difficulty_source": "authored",
+      "drill_answer": "A",
+      "drill_answer_short": "--defer resolves unselected, unbuilt parent refs using a specified state manifest",
+      "drill_rationale": "When deferral conditions are met, dbt will resolve ref calls using the state manifest instead, but only if the node isn't among the selected nodes, and it doesn't exist in the database.",
+      "decision_hinge": "When deferral conditions are met, dbt will resolve ref calls using the state manifest instead, but only if the node isn't among the selected nodes, and it doesn't exist in the database.",
+      "plausible_options": {
+        "D": "several of those modified models `ref()` parents that were never selected and don't yet exist in the CI schema"
+      },
+      "eliminated_by": {
+        "B": "The team needs to know exactly what `--defer` does in this pipeline to prevent those refs from failing",
+        "C": "The team needs to know exactly what `--defer` does in this pipeline to prevent those refs from failing"
+      },
+      "distractor_traps": {
+        "B": "T1: fabricated — --defer is about ref resolution for unselected nodes, not retry scheduling for failures",
+        "C": "T1: fabricated — --defer does not reorder when tests run relative to models",
+        "D": "T3: confusable sibling — --select already decides which nodes build; --defer changes only how refs to the rest resolve"
+      },
+      "options_analysis": "",
+      "sources": [
+        "https://docs.getdbt.com/reference/node-selection/defer"
+      ],
+      "citation_status": "resolved",
+      "topics": [
+        "knowledge/ae/07-dbt-state/state-selection.md"
+      ],
+      "verified": true,
+      "status": "verified",
+      "sealed_by": "authored_via_item_qa",
+      "sealed_at": "2026-10-25",
+      "seal_confidence": 90,
+      "needs_review": false
+    },
+    {
+      "id": "Q-AU-DBTAE-183",
+      "source": "authored",
+      "source_url": null,
+      "raw_path": "question-bank/authored/original2-batchH.json",
+      "stem": "A Slim CI pipeline must build only models whose SQL body genuinely changed compared to production, deliberately ignoring config-only changes like a renamed `tags` entry or a relocated schema. Which command is correct for this narrower scope?",
+      "option_texts": {
+        "A": "`dbt run --select state:modified.body --state ./prod-artifacts`",
+        "B": "`dbt run --select state:modified.configs --state ./prod-artifacts`",
+        "C": "`dbt run --select state:modified.relation --state ./prod-artifacts`",
+        "D": "`dbt run --select state:modified --state ./prod-artifacts`, since the full modified criteria is always narrower than any subselector"
+      },
+      "domain": "ae-07",
+      "track": "ae",
+      "blueprint_task": "7.1",
+      "blueprint_task_title": "Understanding state and state selection",
+      "qtype": "multiple_choice",
+      "difficulty_estimate": "L4",
+      "difficulty_source": "authored",
+      "drill_answer": "A",
+      "drill_answer_short": "state:modified.body selects only changes to the node body, such as model SQL",
+      "drill_rationale": "state:modified.body: Changes to node body (e.g. model SQL, seed values). state:modified.configs: Changes to any node configs, excluding database/schema/alias/tags/meta.",
+      "decision_hinge": "state:modified.body: Changes to node body (e.g. model SQL, seed values). state:modified.configs: Changes to any node configs, excluding database/schema/alias/tags/meta.",
+      "plausible_options": {
+        "B": "deliberately ignoring config-only changes like a renamed `tags` entry or a relocated schema"
+      },
+      "eliminated_by": {
+        "C": "deliberately ignoring config-only changes like a renamed `tags` entry or a relocated schema",
+        "D": {
+          "signal": "must build only models whose SQL body genuinely changed compared to production",
+          "requires_fact": "state:modified subselectors each include a subset of the full modified criteria; the full state:modified is the broadest, not narrower than its own subselectors."
+        }
+      },
+      "distractor_traps": {
+        "B": "T3: confusable sibling — .configs tracks config changes, excluding tags and meta, which is the opposite scope from body changes",
+        "C": "T3: confusable sibling — .relation tracks database/schema/alias changes, not the SQL body itself",
+        "D": "T4: breaks a stated fact — subselectors are narrower subsets of the full modified criteria, not the other way around"
+      },
+      "options_analysis": "",
+      "sources": [
+        "https://docs.getdbt.com/reference/node-selection/methods"
+      ],
+      "citation_status": "resolved",
+      "topics": [
+        "knowledge/ae/07-dbt-state/state-selection.md"
+      ],
+      "verified": true,
+      "status": "verified",
+      "sealed_by": "authored_via_item_qa",
+      "sealed_at": "2026-10-25",
+      "seal_confidence": 90,
+      "needs_review": false
+    },
+    {
+      "id": "Q-AU-DBTAE-184",
+      "source": "authored",
+      "source_url": null,
+      "raw_path": "question-bank/authored/original2-batchH.json",
+      "stem": "A model's SQL stays byte-for-byte identical, but its `materialized` config changes from `view` to `table`. A reviewer needs to know which of the two `state:modified` subselectors, `.body` or `.configs`, actually flags this specific change. Which one does, and why?",
+      "option_texts": {
+        "A": "`.configs`, because it tracks config edits, and `.body` only tracks the node's SQL or seed values",
+        "B": "`.body`, because any functional change to how a model builds counts as a body change",
+        "C": "Both subselectors flag it, since a materialization config change ultimately alters the node's compiled configs too",
+        "D": "Neither subselector flags it, since only a full `state:modified` catches any node configs change"
+      },
+      "domain": "ae-07",
+      "track": "ae",
+      "blueprint_task": "7.1",
+      "blueprint_task_title": "Understanding state and state selection",
+      "qtype": "multiple_choice",
+      "difficulty_estimate": "L4",
+      "difficulty_source": "authored",
+      "drill_answer": "A",
+      "drill_answer_short": ".configs tracks config changes like materialized; .body only tracks the SQL or seed values themselves",
+      "drill_rationale": "state:modified.body: Changes to node body (e.g. model SQL, seed values). state:modified.configs: Changes to any node configs, excluding database/schema/alias/tags/meta.",
+      "decision_hinge": "state:modified.body: Changes to node body (e.g. model SQL, seed values). state:modified.configs: Changes to any node configs, excluding database/schema/alias/tags/meta.",
+      "plausible_options": {
+        "B": "A model's SQL stays byte-for-byte identical, but its `materialized` config changes"
+      },
+      "eliminated_by": {
+        "C": "A model's SQL stays byte-for-byte identical, but its `materialized` config changes",
+        "D": "A model's SQL stays byte-for-byte identical, but its `materialized` config changes"
+      },
+      "distractor_traps": {
+        "B": "T3: confusable sibling — .body is specifically about node body, which the stem says stayed byte-for-byte identical",
+        "C": "T4: breaks a stated fact — the stem says the SQL itself is unchanged, so the body subselector does not fire",
+        "D": "T1: fabricated — the .configs subselector is specifically designed to catch exactly this kind of config change"
+      },
+      "options_analysis": "",
+      "sources": [
+        "https://docs.getdbt.com/reference/node-selection/methods"
+      ],
+      "citation_status": "resolved",
+      "topics": [
+        "knowledge/ae/07-dbt-state/state-selection.md"
+      ],
+      "verified": true,
+      "status": "verified",
+      "sealed_by": "authored_via_item_qa",
+      "sealed_at": "2026-10-25",
+      "seal_confidence": 90,
+      "needs_review": false
+    },
+    {
+      "id": "Q-AU-DBTAE-185",
+      "source": "authored",
+      "source_url": null,
+      "raw_path": "question-bank/authored/original2-batchH.json",
+      "stem": "A `unique` test is declared on an incremental model's primary key column. The team needs to know exactly which rows that test query evaluates when `dbt test` runs: only the rows inserted or merged during the most recent incremental run, or something broader. What does the test actually evaluate?",
+      "option_texts": {
+        "A": "The model's entire current relation in the warehouse, since a generic test resolves `{{ model }}` to the full existing table, not a batch of recent rows",
+        "B": "Only the rows affected by the most recent incremental run, since dbt tracks which rows were just inserted or merged",
+        "C": "Only the rows that existed before the incremental model's very first run",
+        "D": "No rows at all, since data tests cannot run against incremental models"
+      },
+      "domain": "ae-01",
+      "track": "ae",
+      "blueprint_task": "1.11",
+      "blueprint_task_title": "Selecting the optimal incremental strategy based on a dataset's characteristics",
+      "qtype": "multiple_choice",
+      "difficulty_estimate": "L4",
+      "difficulty_source": "authored",
+      "drill_answer": "A",
+      "drill_answer_short": "A data test queries the model's full current relation, not just the latest incremental batch",
+      "drill_rationale": "A generic data test is defined in a test block with a parameterized query, templating model and column_name. The ref() function returns a Relation for a model, pointing at its current database object.",
+      "decision_hinge": "A generic data test is defined in a test block with a parameterized query, templating model and column_name. The ref() function returns a Relation for a model, pointing at its current database object.",
+      "plausible_options": {
+        "B": "only the rows inserted or merged during the most recent incremental run, or something broader"
+      },
+      "eliminated_by": {
+        "C": "The team needs to know exactly which rows that test query evaluates when `dbt test` runs",
+        "D": "The team needs to know exactly which rows that test query evaluates when `dbt test` runs"
+      },
+      "distractor_traps": {
+        "B": "T3: confusable sibling — dbt does not scope a generic test query to only the most recently changed rows",
+        "C": "T1: fabricated — a test query has no documented mechanism to isolate pre-first-run rows specifically",
+        "D": "T1: fabricated — data tests fully support incremental models, the same as any other materialization"
+      },
+      "options_analysis": "",
+      "sources": [
+        "https://docs.getdbt.com/docs/build/data-tests",
+        "https://docs.getdbt.com/reference/dbt-jinja-functions/ref"
+      ],
+      "citation_status": "resolved",
+      "topics": [
+        "knowledge/ae/01-developing-and-optimizing-models/incremental-models.md"
+      ],
+      "verified": true,
+      "status": "verified",
+      "sealed_by": "authored_via_item_qa",
+      "sealed_at": "2026-10-25",
+      "seal_confidence": 90,
+      "needs_review": false
+    },
+    {
+      "id": "Q-AU-DBTAE-186",
+      "source": "authored",
+      "source_url": null,
+      "raw_path": "question-bank/authored/original2-batchH.json",
+      "stem": "A CI/CD pipeline uses `dbt build --select state:modified+ result:error+ --defer --state ./prod-artifacts --target ci`. The team needs to know what the plain space between `state:modified+` and `result:error+` actually means for how these two selector expressions combine. What does the space mean here?",
+      "option_texts": {
+        "A": "A union: any resource matching either `state:modified+` or `result:error+` is selected",
+        "B": "An intersection: a resource must match both `state:modified+` and `result:error+` to be selected",
+        "C": "Exclusion: resources matching `result:error+` are removed from the `state:modified+` selection",
+        "D": "Sequencing: `state:modified+` runs first, then `result:error+` runs as a separate, later step"
+      },
+      "domain": "ae-07",
+      "track": "ae",
+      "blueprint_task": "7.1",
+      "blueprint_task_title": "Understanding state and state selection",
+      "qtype": "multiple_choice",
+      "difficulty_estimate": "L3",
+      "difficulty_source": "authored",
+      "drill_answer": "A",
+      "drill_answer_short": "A space between selector expressions is a union (OR)",
+      "drill_rationale": "A union merges the node sets from several selector expressions; every resource that matches any of those expressions is selected. With unions, you can pass multiple arguments separated by spaces.",
+      "decision_hinge": "A union merges the node sets from several selector expressions; every resource that matches any of those expressions is selected. With unions, you can pass multiple arguments separated by spaces.",
+      "plausible_options": {
+        "B": "what the plain space between `state:modified+` and `result:error+` actually means for how these two selector expressions combine"
+      },
+      "eliminated_by": {
+        "C": "what the plain space between `state:modified+` and `result:error+` actually means",
+        "D": "what the plain space between `state:modified+` and `result:error+` actually means"
+      },
+      "distractor_traps": {
+        "B": "T3: confusable sibling — an intersection is written with a comma and no space, the opposite of this syntax",
+        "C": "T1: fabricated — dbt's selection syntax defines no comma-free exclusion operator",
+        "D": "T1: fabricated — both expressions are resolved and combined into one set for a single invocation, not run as sequential steps"
+      },
+      "options_analysis": "",
+      "sources": [
+        "https://docs.getdbt.com/reference/node-selection/set-operators"
+      ],
+      "citation_status": "resolved",
+      "topics": [
+        "knowledge/ae/07-dbt-state/state-selection.md"
+      ],
+      "verified": true,
+      "status": "verified",
+      "sealed_by": "authored_via_item_qa",
+      "sealed_at": "2026-10-25",
+      "seal_confidence": 90,
+      "needs_review": false
+    },
+    {
+      "id": "Q-AU-DBTAE-187",
+      "source": "authored",
+      "source_url": null,
+      "raw_path": "question-bank/authored/original2-batchH.json",
+      "stem": "A reviewer needs the precise, documented scope of the `state:modified.configs` selector: which kinds of changes it tracks, and which specific ones it explicitly excludes. What does `state:modified.configs` identify?",
+      "option_texts": {
+        "A": "Changes to any node config, excluding changes to `database`, `schema`, `alias`, `tags`, or `meta`",
+        "B": "Changes to a model's schema YAML descriptions compared to the previous state artifact",
+        "C": "Changes to the database or schema a node resolves into, regardless of any other config",
+        "D": "Changes to upstream macros, whether called directly or indirectly by another macro"
+      },
+      "domain": "ae-07",
+      "track": "ae",
+      "blueprint_task": "7.1",
+      "blueprint_task_title": "Understanding state and state selection",
+      "qtype": "multiple_choice",
+      "difficulty_estimate": "L4",
+      "difficulty_source": "authored",
+      "drill_answer": "A",
+      "drill_answer_short": "state:modified.configs tracks config changes, excluding database/schema/alias/tags/meta",
+      "drill_rationale": "state:modified.configs: Changes to any node configs, excluding database/schema/alias/tags/meta.",
+      "decision_hinge": "state:modified.configs: Changes to any node configs, excluding database/schema/alias/tags/meta.",
+      "plausible_options": {
+        "B": "A reviewer needs the precise, documented scope of the `state:modified.configs` selector"
+      },
+      "eliminated_by": {
+        "C": "which kinds of changes it tracks, and which specific ones it explicitly excludes",
+        "D": "which kinds of changes it tracks, and which specific ones it explicitly excludes"
+      },
+      "distractor_traps": {
+        "B": "T3: confusable sibling — description changes are tracked by the separate .persisted_descriptions subselector, not .configs",
+        "C": "T3: confusable sibling — database and schema changes are tracked by .relation, and .configs explicitly excludes them",
+        "D": "T3: confusable sibling — upstream macro changes are tracked by the separate .macros subselector"
+      },
+      "options_analysis": "",
+      "sources": [
+        "https://docs.getdbt.com/reference/node-selection/methods"
+      ],
+      "citation_status": "resolved",
+      "topics": [
+        "knowledge/ae/07-dbt-state/state-selection.md"
+      ],
+      "verified": true,
+      "status": "verified",
+      "sealed_by": "authored_via_item_qa",
+      "sealed_at": "2026-10-25",
+      "seal_confidence": 90,
+      "needs_review": false
+    },
+    {
+      "id": "Q-AU-DBTAE-188",
+      "source": "authored",
+      "source_url": null,
+      "raw_path": "question-bank/authored/original2-batchH.json",
+      "stem": "Your data team has an SLA that the `reviews` source must be no more than 1 hour old before a freshness check reports a warning. Complete the config: `freshness: { warn_after: { count: 1, period: ____ } }`",
+      "option_texts": {},
+      "domain": "ae-06",
+      "track": "ae",
+      "blueprint_task": "6.2",
+      "blueprint_task_title": "Implementing source freshness",
+      "qtype": "fill_in_blank",
+      "difficulty_estimate": "L3",
+      "difficulty_source": "authored",
+      "drill_answer": "hour",
+      "drill_answer_short": "period: hour, paired with count: 1, sets a one-hour warn threshold",
+      "drill_rationale": "warn_after: How old the most recent data can be before a freshness check reports a warning. Requires both count and period.",
+      "decision_hinge": "warn_after: How old the most recent data can be before a freshness check reports a warning. Requires both count and period.",
+      "plausible_options": {},
+      "eliminated_by": {},
+      "distractor_traps": {},
+      "options_analysis": "",
+      "sources": [
+        "https://docs.getdbt.com/reference/resource-properties/freshness"
+      ],
+      "citation_status": "resolved",
+      "topics": [
+        "knowledge/ae/06-external-dependencies/source-freshness.md"
+      ],
+      "verified": true,
+      "status": "verified",
+      "sealed_by": "authored_via_item_qa",
+      "sealed_at": "2026-10-25",
+      "seal_confidence": 90,
+      "needs_review": false,
+      "accepted_answers": [
+        "hour",
+        "hours"
+      ]
+    },
+    {
+      "id": "Q-AU-DBTAE-189",
+      "source": "authored",
+      "source_url": null,
+      "raw_path": "question-bank/authored/original2-batchH.json",
+      "stem": "What flag do you pass to `dbt build` to specify the filesystem path to a previous invocation's state artifacts, so selectors like `state:modified` have something to compare against? Complete the command: `dbt build --select state:modified ____ ./prod-artifacts`",
+      "option_texts": {},
+      "domain": "ae-07",
+      "track": "ae",
+      "blueprint_task": "7.1",
+      "blueprint_task_title": "Understanding state and state selection",
+      "qtype": "fill_in_blank",
+      "difficulty_estimate": "L2",
+      "difficulty_source": "authored",
+      "drill_answer": "--state",
+      "drill_answer_short": "--state points dbt at the directory containing the comparison manifest",
+      "drill_rationale": "The state method is used to select nodes by comparing them against a previous version of the same project. The file path of the comparison manifest must be specified via the --state flag.",
+      "decision_hinge": "The state method is used to select nodes by comparing them against a previous version of the same project. The file path of the comparison manifest must be specified via the --state flag.",
+      "plausible_options": {},
+      "eliminated_by": {},
+      "distractor_traps": {},
+      "options_analysis": "",
+      "sources": [
+        "https://docs.getdbt.com/reference/node-selection/methods"
+      ],
+      "citation_status": "resolved",
+      "topics": [
+        "knowledge/ae/07-dbt-state/state-selection.md"
+      ],
+      "verified": true,
+      "status": "verified",
+      "sealed_by": "authored_via_item_qa",
+      "sealed_at": "2026-10-25",
+      "seal_confidence": 90,
+      "needs_review": false,
+      "accepted_answers": [
+        "--state",
+        "--state ./prod-artifacts"
+      ]
+    },
+    {
+      "id": "Q-AU-DBTAE-190",
+      "source": "authored",
+      "source_url": null,
+      "raw_path": "question-bank/authored/original2-batchH.json",
+      "stem": "Looking at a lineage graph, a CI job runs `dbt ls --select @mart_fullmoon_reviews`. The team needs to confirm exactly what the `@` operator selects here, compared to a plain `+mart_fullmoon_reviews`. Which TWO statements are correct?",
+      "option_texts": {
+        "A": "`@mart_fullmoon_reviews` lists every node reachable as mart_fullmoon_reviews itself, its descendants, and the ancestors of those descendants",
+        "B": "`@` is useful in CI so a model's descendants can build successfully even if some of their other ancestors do not yet exist in the schema",
+        "C": "`@mart_fullmoon_reviews` and `+mart_fullmoon_reviews` always select exactly the same set of nodes",
+        "D": "`@` can only be placed after a model name, the same position where a trailing `+` goes"
+      },
+      "domain": "ae-04",
+      "track": "ae",
+      "blueprint_task": "4.1",
+      "blueprint_task_title": "Troubleshooting and managing failure points in the DAG",
+      "qtype": "multiple_response",
+      "difficulty_estimate": "L4",
+      "difficulty_source": "authored",
+      "drill_answer": "A,B",
+      "drill_answer_short": "@ selects a node, its descendants, and the ancestors of those descendants, useful for CI",
+      "drill_rationale": "The @ operator is similar to +, but will also include all ancestors of all descendants of the selected model. This is useful in continuous integration environments where you want to build a model and all of its descendants, but the ancestors of those descendants might not exist in the schema yet.",
+      "decision_hinge": "The @ operator is similar to +, but will also include all ancestors of all descendants of the selected model. This is useful in continuous integration environments where you want to build a model and all of its descendants, but the ancestors of those descendants might not exist in the schema yet.",
+      "plausible_options": {
+        "C": "compared to a plain `+mart_fullmoon_reviews`"
+      },
+      "eliminated_by": {
+        "D": "The team needs to confirm exactly what the `@` operator selects here"
+      },
+      "distractor_traps": {
+        "C": "T3: confusable sibling — @ additionally pulls in ancestors of descendants, which a plain + does not, so the two sets can differ",
+        "D": "T1: fabricated — the @ operator is documented as placed at the front of the model name, not after it"
+      },
+      "options_analysis": "",
+      "sources": [
+        "https://docs.getdbt.com/reference/node-selection/graph-operators"
+      ],
+      "citation_status": "resolved",
+      "topics": [
+        "knowledge/ae/04-troubleshooting-pipelines/dag-failure-points.md"
+      ],
+      "verified": true,
+      "status": "verified",
+      "sealed_by": "authored_via_item_qa",
+      "sealed_at": "2026-10-25",
+      "seal_confidence": 90,
+      "needs_review": false
     }
   ],
-  "total": 125,
-  "last_updated_at": "2026-10-21"
+  "total": 190,
+  "last_updated_at": "2026-10-25"
 }

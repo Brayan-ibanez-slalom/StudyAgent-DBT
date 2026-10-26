@@ -7,19 +7,19 @@
     "difficulty_estimate": "L4",
     "stem": "A `dbt build` run fails immediately due to a warehouse connection error, before any model, seed, or snapshot has started executing. The developer fixes the connection issue and runs `dbt retry`. The team needs to know what actually happens. What's the outcome?",
     "option_texts": {
-      "A": "`dbt retry` runs nothing, because no nodes were executed before the failure, so there is nothing recorded to retry from",
+      "A": "`dbt retry` fails with an error, since there is no prior successful run it can resume",
       "B": "`dbt retry` re-runs the entire original selection from scratch, since the connection error invalidated the whole invocation",
       "C": "`dbt retry` automatically switches to `--full-refresh` before rebuilding, to guarantee a clean rebuild after a connection failure",
-      "D": "`dbt retry` fails with an error, since there is no prior successful run it can resume"
+      "D": "`dbt retry` runs nothing, because no nodes were executed before the failure, so there is nothing recorded to retry from"
     },
-    "drill_answer": "A",
+    "drill_answer": "D",
     "drill_answer_short": "With no nodes executed before the failure, retry has nothing recorded to retry from and runs nothing",
     "decision_hinge": "Retry re-executes the last invocation from the point of failure. If no nodes are executed before the failure, for example a run failed early due to a warehouse connection or permission error, retry won't run anything since there are no recorded nodes to retry from.",
     "sources": [
       "https://docs.getdbt.com/reference/commands/retry"
     ],
     "plausible_options": {
-      "D": "before any model, seed, or snapshot has started executing"
+      "A": "before any model, seed, or snapshot has started executing"
     },
     "eliminated_by": {
       "B": "The developer fixes the connection issue and runs `dbt retry`",
@@ -29,9 +29,9 @@
       }
     },
     "distractor_traps": {
-      "B": "T1: fabricated \u2014 retry resumes from the point of failure, it does not restart the whole selection",
-      "C": "T1: fabricated \u2014 retry never changes the materialization strategy of the original command",
-      "D": "T3: confusable sibling \u2014 retry does not error here, it simply has nothing recorded to retry, which is distinct from the already-succeeded no-op case"
+      "A": "T3: confusable sibling — retry does not error here, it simply has nothing recorded to retry, which is distinct from the already-succeeded no-op case",
+      "B": "T1: fabricated — retry resumes from the point of failure, it does not restart the whole selection",
+      "C": "T1: fabricated — retry never changes the materialization strategy of the original command"
     },
     "topics": [
       "ae/07-dbt-state/dbt-retry"
@@ -45,19 +45,19 @@
     "difficulty_estimate": "L2",
     "stem": "A CI job runs `dbt build --select state:modified --state path/to/prod/`. The platform engineer needs to know which artifact file dbt actually reads from that `--state` path to decide what counts as modified. Which artifact is it?",
     "option_texts": {
-      "A": "`manifest.json`, because dbt uses this file for state comparison, representing a previous version of the project",
-      "B": "`run_results.json`, because it records the status of every node from the last invocation",
+      "A": "`run_results.json`, because it records the status of every node from the last invocation",
+      "B": "`manifest.json`, because dbt uses this file for state comparison, representing a previous version of the project",
       "C": "`catalog.json`, because it describes the warehouse objects dbt can compare against",
       "D": "`sources.json`, because source freshness results are what state comparison checks"
     },
-    "drill_answer": "A",
+    "drill_answer": "B",
     "drill_answer_short": "state:modified compares against manifest.json, a representation of a previous project version",
     "decision_hinge": "The state method is used to select nodes by comparing them against a previous version of the same project, which is represented by a manifest. The file path of the comparison manifest must be specified via the --state flag.",
     "sources": [
       "https://docs.getdbt.com/reference/node-selection/methods"
     ],
     "plausible_options": {
-      "B": "to decide what counts as modified"
+      "A": "to decide what counts as modified"
     },
     "eliminated_by": {
       "C": "The platform engineer needs to know which artifact file dbt actually reads from that `--state` path",
@@ -67,9 +67,9 @@
       }
     },
     "distractor_traps": {
-      "B": "T3: confusable sibling \u2014 run_results.json records pass/fail status, it is not what state comparison reads",
-      "C": "T1: fabricated \u2014 catalog.json is not read for state-based node selection",
-      "D": "T1: fabricated \u2014 source freshness results are a separate concern from state comparison"
+      "A": "T3: confusable sibling — run_results.json records pass/fail status, it is not what state comparison reads",
+      "C": "T1: fabricated — catalog.json is not read for state-based node selection",
+      "D": "T1: fabricated — source freshness results are a separate concern from state comparison"
     },
     "topics": [
       "ae/07-dbt-state/state-selection"
@@ -104,12 +104,12 @@
     "difficulty_estimate": "L2",
     "stem": "After a `dbt build` finishes, a monitoring script needs the pass, fail, or error status for every node that actually executed in that specific invocation. Which artifact file should the script read, and why?",
     "option_texts": {
-      "A": "`run_results.json`, because it contains timing and status info, including dbt's interpretation of runtime success, failure, or error, for each executed node",
+      "A": "`sources.json`, because that file aggregates the executed status for every resource type, not only sources",
       "B": "`manifest.json`, because it lists the executed status every resource in the project last reported",
-      "C": "`sources.json`, because that file aggregates the executed status for every resource type, not only sources",
+      "C": "`run_results.json`, because it contains timing and status info, including dbt's interpretation of runtime success, failure, or error, for each executed node",
       "D": "The `logs/dbt.log` file, since it is the only place dbt records whether a node ultimately passed"
     },
-    "drill_answer": "A",
+    "drill_answer": "C",
     "drill_answer_short": "run_results.json records status per executed node for a specific invocation",
     "decision_hinge": "This file contains information about a completed invocation of dbt, including timing and status info for each node that was executed. status: dbt's interpretation of runtime success, failure, or error.",
     "sources": [
@@ -119,16 +119,16 @@
       "B": "After a `dbt build` finishes"
     },
     "eliminated_by": {
-      "C": "needs the pass, fail, or error status for every node that actually executed in that specific invocation",
+      "A": "needs the pass, fail, or error status for every node that actually executed in that specific invocation",
       "D": {
         "signal": "needs the pass, fail, or error status for every node that actually executed",
         "requires_fact": "This file contains information about a completed invocation of dbt, including timing and status info for each node that was executed."
       }
     },
     "distractor_traps": {
-      "B": "T3: confusable sibling \u2014 manifest.json represents the project's resources, not per-invocation pass/fail status",
-      "C": "T1: fabricated \u2014 sources.json is a freshness-specific artifact, not a general status report",
-      "D": "T2: wrong layer \u2014 the log file is unstructured text, not the structured per-node status artifact"
+      "A": "T1: fabricated — sources.json is a freshness-specific artifact, not a general status report",
+      "B": "T3: confusable sibling — manifest.json represents the project's resources, not per-invocation pass/fail status",
+      "D": "T2: wrong layer — the log file is unstructured text, not the structured per-node status artifact"
     },
     "topics": [
       "ae/07-dbt-state/state-selection"
@@ -160,8 +160,8 @@
       "C": "versus when a comma with no space separates them"
     },
     "distractor_traps": {
-      "C": "T1: fabricated \u2014 dbt's selection syntax has no comma-as-exclusion rule",
-      "D": "T3: confusable sibling \u2014 order matters in some contexts, but the documentation explicitly says it does not change an intersection's final set"
+      "C": "T1: fabricated — dbt's selection syntax has no comma-as-exclusion rule",
+      "D": "T3: confusable sibling — order matters in some contexts, but the documentation explicitly says it does not change an intersection's final set"
     },
     "topics": [
       "ae/07-dbt-state/state-selection"
@@ -175,12 +175,12 @@
     "difficulty_estimate": "L2",
     "stem": "A team sets up a CI job so that opening a pull request (PR) triggers a build in a temporary schema. The PR modifies exactly one model. The platform engineer needs to know exactly what gets built and tested for this PR, as distinct from a full nightly job, including whether that one model's downstream dependents are built too. What is actually built and tested?",
     "option_texts": {
-      "A": "Only the modified data assets in the pull request and their downstream dependencies, in a temporary schema unique to that PR",
+      "A": "Whatever was built in the most recent nightly production run, independent of this request, replayed unchanged",
       "B": "Every model, seed, and snapshot in the entire project, rebuilt from scratch in the temporary schema",
       "C": "Only the single file that was changed, with no downstream models included",
-      "D": "Whatever was built in the most recent nightly production run, independent of this request, replayed unchanged"
+      "D": "Only the modified data assets in the pull request and their downstream dependencies, in a temporary schema unique to that PR"
     },
-    "drill_answer": "A",
+    "drill_answer": "D",
     "drill_answer_short": "CI builds only the modified assets in the PR plus their downstream dependencies, in a temp schema",
     "decision_hinge": "When you run a CI job, only the modified data assets in your pull request (PR) and their downstream dependencies are built and tested in a staging schema.",
     "sources": [
@@ -190,13 +190,13 @@
       "B": "as distinct from a full nightly job"
     },
     "eliminated_by": {
-      "C": "whether that one model's downstream dependents are built too",
-      "D": "triggers a build in a temporary schema"
+      "A": "triggers a build in a temporary schema",
+      "C": "whether that one model's downstream dependents are built too"
     },
     "distractor_traps": {
-      "B": "T7: over-engineering \u2014 CI is documented to scope down to modified assets plus dependents, not rebuild everything",
-      "C": "T4: breaks a stated fact \u2014 downstream dependencies are explicitly included, not excluded",
-      "D": "T1: fabricated \u2014 a CI run builds the PR's changes, not a replay of a previous production run"
+      "A": "T1: fabricated — a CI run builds the PR's changes, not a replay of a previous production run",
+      "B": "T7: over-engineering — CI is documented to scope down to modified assets plus dependents, not rebuild everything",
+      "C": "T4: breaks a stated fact — downstream dependencies are explicitly included, not excluded"
     },
     "topics": [
       "ae/07-dbt-state/state-selection"
@@ -210,12 +210,12 @@
     "difficulty_estimate": "L4",
     "stem": "A CI job must build only `state:modified` resources, but any `ref()` they make to unselected, unbuilt parent models must resolve to the production versions of those parents instead of failing. The team needs the exact command-line combination that achieves this against a `prod-artifacts` directory. Which combination is correct?",
     "option_texts": {
-      "A": "`dbt build --select state:modified --defer --state path/to/prod-artifacts/`, so unselected nodes not yet built here resolve to production via deferral",
-      "B": "`dbt build --select state:modified --full-refresh`, since full-refresh also resolves any unselected missing upstream parents automatically",
+      "A": "`dbt build --select state:modified --full-refresh`, since full-refresh also resolves any unselected missing upstream parents automatically",
+      "B": "`dbt build --select state:modified --defer --state path/to/prod-artifacts/`, so unselected nodes not yet built here resolve to production via deferral",
       "C": "`dbt build --select state:modified --exclude prod-artifacts`, so the build does not try to resolve unselected production objects at all",
       "D": "`dbt clone --select state:modified --state path/to/prod-artifacts/`, which copies the production parents into the CI schema first"
     },
-    "drill_answer": "A",
+    "drill_answer": "B",
     "drill_answer_short": "--defer with --state redirects unselected, unbuilt refs to the production manifest",
     "decision_hinge": "When deferral conditions are met, dbt will resolve ref calls using the state manifest instead, but only if the node isn't among the selected nodes, and it doesn't exist in the database.",
     "sources": [
@@ -225,13 +225,13 @@
       "D": "must resolve to the production versions of those parents instead of failing"
     },
     "eliminated_by": {
-      "B": "must build only `state:modified` resources",
+      "A": "must build only `state:modified` resources",
       "C": "against a `prod-artifacts` directory"
     },
     "distractor_traps": {
-      "B": "T1: fabricated \u2014 full-refresh rebuilds incremental models from scratch, it does not resolve missing upstream parents",
-      "C": "T1: fabricated \u2014 `--exclude` removes resources from selection, it is not a state or deferral mechanism",
-      "D": "T7: over-engineering \u2014 cloning copies objects into the schema; deferral achieves the same ref resolution without copying anything"
+      "A": "T1: fabricated — full-refresh rebuilds incremental models from scratch, it does not resolve missing upstream parents",
+      "C": "T1: fabricated — `--exclude` removes resources from selection, it is not a state or deferral mechanism",
+      "D": "T7: over-engineering — cloning copies objects into the schema; deferral achieves the same ref resolution without copying anything"
     },
     "topics": [
       "ae/07-dbt-state/state-selection"
@@ -245,12 +245,12 @@
     "difficulty_estimate": "L5",
     "stem": "A CI run executes `dbt build --select state:modified+ --defer --state ./prod-manifest/`. Only `stg_orders` was modified; `fct_orders` refs `stg_orders` and is selected as a downstream descendant; `dim_customers` is an unrelated, unselected, already-built parent that `fct_orders` also refs. The team needs to know what happens to `dim_customers` during this run. What happens?",
     "option_texts": {
-      "A": "dbt resolves the `ref()` to `dim_customers` using the production manifest, since it is not among the selected nodes and already exists there",
+      "A": "The build fails, because `dim_customers` was not explicitly selected and `--defer` cannot resolve unselected parents",
       "B": "`dim_customers` is rebuilt anyway, because the trailing `+` after `state:modified` also selects all of its ancestors",
-      "C": "The build fails, because `dim_customers` was not explicitly selected and `--defer` cannot resolve unselected parents",
+      "C": "dbt resolves the `ref()` to `dim_customers` using the production manifest, since it is not among the selected nodes and already exists there",
       "D": "`dim_customers` is skipped entirely and `fct_orders` builds without any data from it"
     },
-    "drill_answer": "A",
+    "drill_answer": "C",
     "drill_answer_short": "An unselected parent that already exists in the database gets deferred to the production manifest",
     "decision_hinge": "When deferral conditions are met, dbt will resolve ref calls using the state manifest instead, but only if the node isn't among the selected nodes, and it doesn't exist in the database (or --favor-state is used).",
     "sources": [
@@ -260,16 +260,16 @@
       "B": "`fct_orders` refs `stg_orders` and is selected as a downstream descendant"
     },
     "eliminated_by": {
-      "C": {
+      "A": {
         "signal": "is an unrelated, unselected, already-built parent that `fct_orders` also refs",
         "requires_fact": "When deferral conditions are met, dbt resolves ref calls using the state manifest instead, when the node isn't among the selected nodes and it doesn't exist in the database."
       },
       "D": "`fct_orders` refs `stg_orders` and is selected as a downstream descendant"
     },
     "distractor_traps": {
-      "B": "T3: confusable sibling \u2014 a trailing `+` selects descendants of the modified node, not ancestors of every node it references",
-      "C": "T4: breaks a stated fact \u2014 resolving an unselected, already-built parent via the state manifest is exactly what deferral does",
-      "D": "T1: fabricated \u2014 dbt does not silently drop an unselected parent's data"
+      "A": "T4: breaks a stated fact — resolving an unselected, already-built parent via the state manifest is exactly what deferral does",
+      "B": "T3: confusable sibling — a trailing `+` selects descendants of the modified node, not ancestors of every node it references",
+      "D": "T1: fabricated — dbt does not silently drop an unselected parent's data"
     },
     "topics": [
       "ae/07-dbt-state/state-selection"
@@ -301,8 +301,8 @@
       "D": "changes a model's `materialized` config from `view` to `table`"
     },
     "distractor_traps": {
-      "C": "T3: confusable sibling \u2014 most YAML property changes do count, but tags and meta are an explicit, documented exception",
-      "D": "T1: fabricated \u2014 a config change in YAML, not only raw SQL edits, triggers state:modified"
+      "C": "T3: confusable sibling — most YAML property changes do count, but tags and meta are an explicit, documented exception",
+      "D": "T1: fabricated — a config change in YAML, not only raw SQL edits, triggers state:modified"
     },
     "topics": [
       "ae/07-dbt-state/state-selection"
@@ -316,12 +316,12 @@
     "difficulty_estimate": "L3",
     "stem": "A CI selector is written as `state:modified+`. The reviewer needs to know exactly what the trailing `+` contributes here, beyond selecting the modified nodes themselves. What does it add?",
     "option_texts": {
-      "A": "All descendants (downstream dependencies) of each modified node, because a trailing `+` expands a selection to include descendants",
+      "A": "Nothing additional; a trailing `+` after `state:modified` is a no-op kept only for readability",
       "B": "Enhanced, more verbose logging output for every modified node, with no change to which nodes are selected",
       "C": "All ancestors (upstream dependencies) of each modified node",
-      "D": "Nothing additional; a trailing `+` after `state:modified` is a no-op kept only for readability"
+      "D": "All descendants (downstream dependencies) of each modified node, because a trailing `+` expands a selection to include descendants"
     },
-    "drill_answer": "A",
+    "drill_answer": "D",
     "drill_answer_short": "A trailing + adds descendants of the matched nodes to the selection",
     "decision_hinge": "Placed after a model/resource, the + operator includes the resource itself and all its descendants (downstream dependencies). Placed before, it includes ancestors (upstream dependencies) instead.",
     "sources": [
@@ -331,16 +331,16 @@
       "C": "exactly what the trailing `+` contributes here"
     },
     "eliminated_by": {
-      "B": "beyond selecting the modified nodes themselves",
-      "D": {
+      "A": {
         "signal": "beyond selecting the modified nodes themselves",
         "requires_fact": "Placed after a model/resource, the + operator includes the resource itself and all its descendants (downstream dependencies)."
-      }
+      },
+      "B": "beyond selecting the modified nodes themselves"
     },
     "distractor_traps": {
-      "B": "T1: fabricated \u2014 + changes which nodes are selected, it is not a logging-verbosity switch",
-      "C": "T3: confusable sibling \u2014 a leading + adds ancestors; a trailing + adds descendants instead",
-      "D": "T4: breaks a stated fact \u2014 a trailing + does change the selection by adding descendants"
+      "A": "T4: breaks a stated fact — a trailing + does change the selection by adding descendants",
+      "B": "T1: fabricated — + changes which nodes are selected, it is not a logging-verbosity switch",
+      "C": "T3: confusable sibling — a leading + adds ancestors; a trailing + adds descendants instead"
     },
     "topics": [
       "ae/07-dbt-state/state-selection"
@@ -372,8 +372,8 @@
       "D": "sets only `warn_after: {count: 12}`"
     },
     "distractor_traps": {
-      "C": "T8: scope error \u2014 the documented behaviour is a parse warning, not a hard error that halts the project",
-      "D": "T1: fabricated \u2014 dbt does not auto-fill a missing time unit with a default period"
+      "C": "T8: scope error — the documented behaviour is a parse warning, not a hard error that halts the project",
+      "D": "T1: fabricated — dbt does not auto-fill a missing time unit with a default period"
     },
     "topics": [
       "ae/06-external-dependencies/source-freshness"
@@ -409,9 +409,9 @@
       }
     },
     "distractor_traps": {
-      "B": "T3: confusable sibling \u2014 some exposure properties are optional metadata, but owner is explicitly required",
-      "C": "T1: fabricated \u2014 depends_on commonly references models, not only sources",
-      "D": "T1: fabricated \u2014 name must be snake case; spaces and capitals belong in the separate label property"
+      "B": "T3: confusable sibling — some exposure properties are optional metadata, but owner is explicitly required",
+      "C": "T1: fabricated — depends_on commonly references models, not only sources",
+      "D": "T1: fabricated — name must be snake case; spaces and capitals belong in the separate label property"
     },
     "topics": [
       "ae/06-external-dependencies/exposures"
@@ -447,9 +447,9 @@
       }
     },
     "distractor_traps": {
-      "B": "T3: confusable sibling \u2014 the leading + traverses the full upstream chain, not just the direct parents",
-      "C": "T1: fabricated \u2014 the + operator scopes to the exposure's own lineage, not the whole project",
-      "D": "T1: fabricated \u2014 exposure selectors work with dbt build just like other selection methods"
+      "B": "T3: confusable sibling — the leading + traverses the full upstream chain, not just the direct parents",
+      "C": "T1: fabricated — the + operator scopes to the exposure's own lineage, not the whole project",
+      "D": "T1: fabricated — exposure selectors work with dbt build just like other selection methods"
     },
     "topics": [
       "ae/06-external-dependencies/exposures"

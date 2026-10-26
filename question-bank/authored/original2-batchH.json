@@ -1,0 +1,324 @@
+[
+  {
+    "id": "draft-orig2-ae07-result-selectors-valid",
+    "domain": "ae-07",
+    "blueprint_task": "7.1",
+    "qtype": "multiple_response",
+    "difficulty_estimate": "L3",
+    "stem": "After a failed `dbt build`, a developer wants to re-run only the nodes that genuinely need it, using `result:` selectors against the prior invocation's artifacts. Which TWO of the following are valid, documented `result` selectors?",
+    "option_texts": {
+      "A": "`result:error`, selecting resources that generated errors on the prior invocation",
+      "B": "`result:fail`, selecting tests that failed on the prior invocation",
+      "C": "`result:skipped`, selecting resources that were skipped because an upstream resource failed",
+      "D": "`result:pending`, selecting resources that have not been run yet in this invocation"
+    },
+    "drill_answer": "A,B",
+    "drill_answer_short": "result:error and result:fail are the documented result selectors",
+    "decision_hinge": "The result method can be used to select resources based on their result status from a prior run. Run all models that generated errors on the prior invocation of dbt run using result:error. Run all tests that failed on the prior invocation of dbt test using result:fail.",
+    "sources": [
+      "https://docs.getdbt.com/reference/node-selection/methods"
+    ],
+    "plausible_options": {
+      "C": "wants to re-run only the nodes that genuinely need it, using `result:` selectors against the prior invocation's artifacts"
+    },
+    "eliminated_by": {
+      "D": "using `result:` selectors against the prior invocation's artifacts"
+    },
+    "distractor_traps": {
+      "C": "T3: confusable sibling \u2014 skip propagation is real dbt behavior, but it is not exposed as a result: selector value",
+      "D": "T1: fabricated \u2014 dbt's documented result method does not define a pending value"
+    },
+    "topics": [
+      "ae/07-dbt-state/state-selection"
+    ]
+  },
+  {
+    "id": "draft-orig2-ae07-defer-flag-purpose",
+    "domain": "ae-07",
+    "blueprint_task": "7.1",
+    "qtype": "multiple_choice",
+    "difficulty_estimate": "L3",
+    "stem": "A Slim CI pipeline only selects `state:modified` resources, but several of those modified models `ref()` parents that were never selected and don't yet exist in the CI schema. The team needs to know exactly what `--defer` does in this pipeline to prevent those refs from failing. What does `--defer` do?",
+    "option_texts": {
+      "A": "It resolves `ref()` calls for unselected, not-yet-built parents using a specified production state manifest instead",
+      "B": "It defers execution of failed models and their parents to a later retry, after the rest of the build finishes",
+      "C": "It postpones running any tests until every model in the selection has finished building",
+      "D": "It skips building any model that `--select` did not explicitly name, without touching how refs resolve"
+    },
+    "drill_answer": "A",
+    "drill_answer_short": "--defer resolves unselected, unbuilt parent refs using a specified state manifest",
+    "decision_hinge": "When deferral conditions are met, dbt will resolve ref calls using the state manifest instead, but only if the node isn't among the selected nodes, and it doesn't exist in the database.",
+    "sources": [
+      "https://docs.getdbt.com/reference/node-selection/defer"
+    ],
+    "plausible_options": {
+      "D": "several of those modified models `ref()` parents that were never selected and don't yet exist in the CI schema"
+    },
+    "eliminated_by": {
+      "B": "The team needs to know exactly what `--defer` does in this pipeline to prevent those refs from failing",
+      "C": "The team needs to know exactly what `--defer` does in this pipeline to prevent those refs from failing"
+    },
+    "distractor_traps": {
+      "B": "T1: fabricated \u2014 --defer is about ref resolution for unselected nodes, not retry scheduling for failures",
+      "C": "T1: fabricated \u2014 --defer does not reorder when tests run relative to models",
+      "D": "T3: confusable sibling \u2014 --select already decides which nodes build; --defer changes only how refs to the rest resolve"
+    },
+    "topics": [
+      "ae/07-dbt-state/state-selection"
+    ]
+  },
+  {
+    "id": "draft-orig2-ae07-build-changed-body-command",
+    "domain": "ae-07",
+    "blueprint_task": "7.1",
+    "qtype": "multiple_choice",
+    "difficulty_estimate": "L4",
+    "stem": "A Slim CI pipeline must build only models whose SQL body genuinely changed compared to production, deliberately ignoring config-only changes like a renamed `tags` entry or a relocated schema. Which command is correct for this narrower scope?",
+    "option_texts": {
+      "A": "`dbt run --select state:modified.body --state ./prod-artifacts`",
+      "B": "`dbt run --select state:modified.configs --state ./prod-artifacts`",
+      "C": "`dbt run --select state:modified.relation --state ./prod-artifacts`",
+      "D": "`dbt run --select state:modified --state ./prod-artifacts`, since the full modified criteria is always narrower than any subselector"
+    },
+    "drill_answer": "A",
+    "drill_answer_short": "state:modified.body selects only changes to the node body, such as model SQL",
+    "decision_hinge": "state:modified.body: Changes to node body (e.g. model SQL, seed values). state:modified.configs: Changes to any node configs, excluding database/schema/alias/tags/meta.",
+    "sources": [
+      "https://docs.getdbt.com/reference/node-selection/methods"
+    ],
+    "plausible_options": {
+      "B": "deliberately ignoring config-only changes like a renamed `tags` entry or a relocated schema"
+    },
+    "eliminated_by": {
+      "C": "deliberately ignoring config-only changes like a renamed `tags` entry or a relocated schema",
+      "D": {
+        "signal": "must build only models whose SQL body genuinely changed compared to production",
+        "requires_fact": "state:modified subselectors each include a subset of the full modified criteria; the full state:modified is the broadest, not narrower than its own subselectors."
+      }
+    },
+    "distractor_traps": {
+      "B": "T3: confusable sibling \u2014 .configs tracks config changes, excluding tags and meta, which is the opposite scope from body changes",
+      "C": "T3: confusable sibling \u2014 .relation tracks database/schema/alias changes, not the SQL body itself",
+      "D": "T4: breaks a stated fact \u2014 subselectors are narrower subsets of the full modified criteria, not the other way around"
+    },
+    "topics": [
+      "ae/07-dbt-state/state-selection"
+    ]
+  },
+  {
+    "id": "draft-orig2-ae07-body-vs-configs-subselector",
+    "domain": "ae-07",
+    "blueprint_task": "7.1",
+    "qtype": "multiple_choice",
+    "difficulty_estimate": "L4",
+    "stem": "A model's SQL stays byte-for-byte identical, but its `materialized` config changes from `view` to `table`. A reviewer needs to know which of the two `state:modified` subselectors, `.body` or `.configs`, actually flags this specific change. Which one does, and why?",
+    "option_texts": {
+      "A": "`.configs`, because it tracks config edits, and `.body` only tracks the node's SQL or seed values",
+      "B": "`.body`, because any functional change to how a model builds counts as a body change",
+      "C": "Both subselectors flag it, since a materialization config change ultimately alters the node's compiled configs too",
+      "D": "Neither subselector flags it, since only a full `state:modified` catches any node configs change"
+    },
+    "drill_answer": "A",
+    "drill_answer_short": ".configs tracks config changes like materialized; .body only tracks the SQL or seed values themselves",
+    "decision_hinge": "state:modified.body: Changes to node body (e.g. model SQL, seed values). state:modified.configs: Changes to any node configs, excluding database/schema/alias/tags/meta.",
+    "sources": [
+      "https://docs.getdbt.com/reference/node-selection/methods"
+    ],
+    "plausible_options": {
+      "B": "A model's SQL stays byte-for-byte identical, but its `materialized` config changes"
+    },
+    "eliminated_by": {
+      "C": "A model's SQL stays byte-for-byte identical, but its `materialized` config changes",
+      "D": "A model's SQL stays byte-for-byte identical, but its `materialized` config changes"
+    },
+    "distractor_traps": {
+      "B": "T3: confusable sibling \u2014 .body is specifically about node body, which the stem says stayed byte-for-byte identical",
+      "C": "T4: breaks a stated fact \u2014 the stem says the SQL itself is unchanged, so the body subselector does not fire",
+      "D": "T1: fabricated \u2014 the .configs subselector is specifically designed to catch exactly this kind of config change"
+    },
+    "topics": [
+      "ae/07-dbt-state/state-selection"
+    ]
+  },
+  {
+    "id": "draft-orig2-ae01-test-scope-incremental-model",
+    "domain": "ae-01",
+    "blueprint_task": "1.11",
+    "qtype": "multiple_choice",
+    "difficulty_estimate": "L4",
+    "stem": "A `unique` test is declared on an incremental model's primary key column. The team needs to know exactly which rows that test query evaluates when `dbt test` runs: only the rows inserted or merged during the most recent incremental run, or something broader. What does the test actually evaluate?",
+    "option_texts": {
+      "A": "The model's entire current relation in the warehouse, since a generic test resolves `{{ model }}` to the full existing table, not a batch of recent rows",
+      "B": "Only the rows affected by the most recent incremental run, since dbt tracks which rows were just inserted or merged",
+      "C": "Only the rows that existed before the incremental model's very first run",
+      "D": "No rows at all, since data tests cannot run against incremental models"
+    },
+    "drill_answer": "A",
+    "drill_answer_short": "A data test queries the model's full current relation, not just the latest incremental batch",
+    "decision_hinge": "A generic data test is defined in a test block with a parameterized query, templating model and column_name. The ref() function returns a Relation for a model, pointing at its current database object.",
+    "sources": [
+      "https://docs.getdbt.com/docs/build/data-tests",
+      "https://docs.getdbt.com/reference/dbt-jinja-functions/ref"
+    ],
+    "plausible_options": {
+      "B": "only the rows inserted or merged during the most recent incremental run, or something broader"
+    },
+    "eliminated_by": {
+      "C": "The team needs to know exactly which rows that test query evaluates when `dbt test` runs",
+      "D": "The team needs to know exactly which rows that test query evaluates when `dbt test` runs"
+    },
+    "distractor_traps": {
+      "B": "T3: confusable sibling \u2014 dbt does not scope a generic test query to only the most recently changed rows",
+      "C": "T1: fabricated \u2014 a test query has no documented mechanism to isolate pre-first-run rows specifically",
+      "D": "T1: fabricated \u2014 data tests fully support incremental models, the same as any other materialization"
+    },
+    "topics": [
+      "ae/01-developing-and-optimizing-models/incremental-models"
+    ]
+  },
+  {
+    "id": "draft-orig2-ae07-space-union-selector",
+    "domain": "ae-07",
+    "blueprint_task": "7.1",
+    "qtype": "multiple_choice",
+    "difficulty_estimate": "L3",
+    "stem": "A CI/CD pipeline uses `dbt build --select state:modified+ result:error+ --defer --state ./prod-artifacts --target ci`. The team needs to know what the plain space between `state:modified+` and `result:error+` actually means for how these two selector expressions combine. What does the space mean here?",
+    "option_texts": {
+      "A": "A union: any resource matching either `state:modified+` or `result:error+` is selected",
+      "B": "An intersection: a resource must match both `state:modified+` and `result:error+` to be selected",
+      "C": "Exclusion: resources matching `result:error+` are removed from the `state:modified+` selection",
+      "D": "Sequencing: `state:modified+` runs first, then `result:error+` runs as a separate, later step"
+    },
+    "drill_answer": "A",
+    "drill_answer_short": "A space between selector expressions is a union (OR)",
+    "decision_hinge": "A union merges the node sets from several selector expressions; every resource that matches any of those expressions is selected. With unions, you can pass multiple arguments separated by spaces.",
+    "sources": [
+      "https://docs.getdbt.com/reference/node-selection/set-operators"
+    ],
+    "plausible_options": {
+      "B": "what the plain space between `state:modified+` and `result:error+` actually means for how these two selector expressions combine"
+    },
+    "eliminated_by": {
+      "C": "what the plain space between `state:modified+` and `result:error+` actually means",
+      "D": "what the plain space between `state:modified+` and `result:error+` actually means"
+    },
+    "distractor_traps": {
+      "B": "T3: confusable sibling \u2014 an intersection is written with a comma and no space, the opposite of this syntax",
+      "C": "T1: fabricated \u2014 dbt's selection syntax defines no comma-free exclusion operator",
+      "D": "T1: fabricated \u2014 both expressions are resolved and combined into one set for a single invocation, not run as sequential steps"
+    },
+    "topics": [
+      "ae/07-dbt-state/state-selection"
+    ]
+  },
+  {
+    "id": "draft-orig2-ae07-state-modified-configs-definition",
+    "domain": "ae-07",
+    "blueprint_task": "7.1",
+    "qtype": "multiple_choice",
+    "difficulty_estimate": "L4",
+    "stem": "A reviewer needs the precise, documented scope of the `state:modified.configs` selector: which kinds of changes it tracks, and which specific ones it explicitly excludes. What does `state:modified.configs` identify?",
+    "option_texts": {
+      "A": "Changes to any node config, excluding changes to `database`, `schema`, `alias`, `tags`, or `meta`",
+      "B": "Changes to a model's schema YAML descriptions compared to the previous state artifact",
+      "C": "Changes to the database or schema a node resolves into, regardless of any other config",
+      "D": "Changes to upstream macros, whether called directly or indirectly by another macro"
+    },
+    "drill_answer": "A",
+    "drill_answer_short": "state:modified.configs tracks config changes, excluding database/schema/alias/tags/meta",
+    "decision_hinge": "state:modified.configs: Changes to any node configs, excluding database/schema/alias/tags/meta.",
+    "sources": [
+      "https://docs.getdbt.com/reference/node-selection/methods"
+    ],
+    "plausible_options": {
+      "B": "A reviewer needs the precise, documented scope of the `state:modified.configs` selector"
+    },
+    "eliminated_by": {
+      "C": "which kinds of changes it tracks, and which specific ones it explicitly excludes",
+      "D": "which kinds of changes it tracks, and which specific ones it explicitly excludes"
+    },
+    "distractor_traps": {
+      "B": "T3: confusable sibling \u2014 description changes are tracked by the separate .persisted_descriptions subselector, not .configs",
+      "C": "T3: confusable sibling \u2014 database and schema changes are tracked by .relation, and .configs explicitly excludes them",
+      "D": "T3: confusable sibling \u2014 upstream macro changes are tracked by the separate .macros subselector"
+    },
+    "topics": [
+      "ae/07-dbt-state/state-selection"
+    ]
+  },
+  {
+    "id": "draft-orig2-ae06-freshness-sla-fib",
+    "domain": "ae-06",
+    "blueprint_task": "6.2",
+    "qtype": "fill_in_blank",
+    "difficulty_estimate": "L3",
+    "stem": "Your data team has an SLA that the `reviews` source must be no more than 1 hour old before a freshness check reports a warning. Complete the config: `freshness: { warn_after: { count: 1, period: ____ } }`",
+    "accepted_answers": [
+      "hour",
+      "hours"
+    ],
+    "drill_answer": "hour",
+    "drill_answer_short": "period: hour, paired with count: 1, sets a one-hour warn threshold",
+    "decision_hinge": "warn_after: How old the most recent data can be before a freshness check reports a warning. Requires both count and period.",
+    "sources": [
+      "https://docs.getdbt.com/reference/resource-properties/freshness"
+    ],
+    "topics": [
+      "ae/06-external-dependencies/source-freshness"
+    ]
+  },
+  {
+    "id": "draft-orig2-ae07-state-flag-fib",
+    "domain": "ae-07",
+    "blueprint_task": "7.1",
+    "qtype": "fill_in_blank",
+    "difficulty_estimate": "L2",
+    "stem": "What flag do you pass to `dbt build` to specify the filesystem path to a previous invocation's state artifacts, so selectors like `state:modified` have something to compare against? Complete the command: `dbt build --select state:modified ____ ./prod-artifacts`",
+    "accepted_answers": [
+      "--state",
+      "--state ./prod-artifacts"
+    ],
+    "drill_answer": "--state",
+    "drill_answer_short": "--state points dbt at the directory containing the comparison manifest",
+    "decision_hinge": "The state method is used to select nodes by comparing them against a previous version of the same project. The file path of the comparison manifest must be specified via the --state flag.",
+    "sources": [
+      "https://docs.getdbt.com/reference/node-selection/methods"
+    ],
+    "topics": [
+      "ae/07-dbt-state/state-selection"
+    ]
+  },
+  {
+    "id": "draft-orig2-ae04-at-operator-lineage-two-statements",
+    "domain": "ae-04",
+    "blueprint_task": "4.1",
+    "qtype": "multiple_response",
+    "difficulty_estimate": "L4",
+    "stem": "Looking at a lineage graph, a CI job runs `dbt ls --select @mart_fullmoon_reviews`. The team needs to confirm exactly what the `@` operator selects here, compared to a plain `+mart_fullmoon_reviews`. Which TWO statements are correct?",
+    "option_texts": {
+      "A": "`@mart_fullmoon_reviews` lists every node reachable as mart_fullmoon_reviews itself, its descendants, and the ancestors of those descendants",
+      "B": "`@` is useful in CI so a model's descendants can build successfully even if some of their other ancestors do not yet exist in the schema",
+      "C": "`@mart_fullmoon_reviews` and `+mart_fullmoon_reviews` always select exactly the same set of nodes",
+      "D": "`@` can only be placed after a model name, the same position where a trailing `+` goes"
+    },
+    "drill_answer": "A,B",
+    "drill_answer_short": "@ selects a node, its descendants, and the ancestors of those descendants, useful for CI",
+    "decision_hinge": "The @ operator is similar to +, but will also include all ancestors of all descendants of the selected model. This is useful in continuous integration environments where you want to build a model and all of its descendants, but the ancestors of those descendants might not exist in the schema yet.",
+    "sources": [
+      "https://docs.getdbt.com/reference/node-selection/graph-operators"
+    ],
+    "plausible_options": {
+      "C": "compared to a plain `+mart_fullmoon_reviews`"
+    },
+    "eliminated_by": {
+      "D": "The team needs to confirm exactly what the `@` operator selects here"
+    },
+    "distractor_traps": {
+      "C": "T3: confusable sibling \u2014 @ additionally pulls in ancestors of descendants, which a plain + does not, so the two sets can differ",
+      "D": "T1: fabricated \u2014 the @ operator is documented as placed at the front of the model name, not after it"
+    },
+    "topics": [
+      "ae/04-troubleshooting-pipelines/dag-failure-points"
+    ]
+  }
+]

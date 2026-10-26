@@ -7,19 +7,19 @@
     "difficulty_estimate": "L2",
     "stem": "A project has models, tests, snapshots, and seeds. A developer currently runs `dbt seed`, then `dbt snapshot`, then `dbt run`, then `dbt test`, as four separate invocations. The developer wants one command that runs all of these resource types together, respecting the DAG so a failing upstream resource skips its downstream dependents. Which single command replaces the four, and why?",
     "option_texts": {
-      "A": "`dbt build`, because it runs models, tests, snapshots, and seeds together in DAG order for the selected resources",
-      "B": "`dbt run`, because run also executes tests and snapshots together with models once they finish",
+      "A": "`dbt run`, because run also executes tests and snapshots together with models once they finish",
+      "B": "`dbt build`, because it runs models, tests, snapshots, and seeds together in DAG order for the selected resources",
       "C": "`dbt compile`, because compiling the project triggers every resource type to execute afterward",
       "D": "`dbt docs generate`, because generating docs also builds every resource type it documents"
     },
-    "drill_answer": "A",
+    "drill_answer": "B",
     "drill_answer_short": "dbt build runs models, tests, snapshots, and seeds together in DAG order",
     "decision_hinge": "The dbt build command will run models, test tests, snapshot snapshots, and seed seeds, in DAG order, for selected resources or an entire project.",
     "sources": [
       "https://docs.getdbt.com/reference/commands/build"
     ],
     "plausible_options": {
-      "B": "wants one command that runs all of these resource types together"
+      "A": "wants one command that runs all of these resource types together"
     },
     "eliminated_by": {
       "C": "respecting the DAG so a failing upstream resource skips its downstream dependents",
@@ -29,9 +29,9 @@
       }
     },
     "distractor_traps": {
-      "B": "T3: confusable sibling \u2014 dbt run only builds models, it does not also execute tests, snapshots, or seeds",
-      "C": "T1: fabricated \u2014 dbt compile does not execute any resource against the warehouse",
-      "D": "T1: fabricated \u2014 generating docs does not build any resource"
+      "A": "T3: confusable sibling — dbt run only builds models, it does not also execute tests, snapshots, or seeds",
+      "C": "T1: fabricated — dbt compile does not execute any resource against the warehouse",
+      "D": "T1: fabricated — generating docs does not build any resource"
     },
     "topics": [
       "ae/01-developing-and-optimizing-models/dbt-commands"
@@ -45,19 +45,19 @@
     "difficulty_estimate": "L2",
     "stem": "After running `dbt docs generate` and opening the generated site, a new team member clicks into the lineage graph for `fct_orders` to understand the pipeline before making a change. What information does that lineage graph actually show them?",
     "option_texts": {
-      "A": "A DAG of the project showing how models, sources, and other resources connect to and depend on each other",
+      "A": "Row-level lineage, tracing which individual source rows produced each row currently in `fct_orders`",
       "B": "The Git commit history of the project, showing how `fct_orders` has changed release over release",
-      "C": "Row-level lineage, tracing which individual source rows produced each row currently in `fct_orders`",
+      "C": "A DAG of the project showing how models, sources, and other resources connect to and depend on each other",
       "D": "Real-time warehouse query activity for every model that is currently running"
     },
-    "drill_answer": "A",
+    "drill_answer": "C",
     "drill_answer_short": "The lineage graph is a DAG of how project resources connect to and depend on each other",
     "decision_hinge": "dbt generates documentation for your project using descriptions and commands. The documentation for your project includes information about your project, including model code, a DAG of your project, any tests you've added to a column, and more.",
     "sources": [
       "https://docs.getdbt.com/docs/collaborate/documentation"
     ],
     "plausible_options": {
-      "C": "to understand the pipeline before making a change"
+      "A": "to understand the pipeline before making a change"
     },
     "eliminated_by": {
       "B": {
@@ -67,9 +67,9 @@
       "D": "After running `dbt docs generate` and opening the generated site"
     },
     "distractor_traps": {
-      "B": "T1: fabricated \u2014 the generated site documents the project's resources and dependencies, not its git history",
-      "C": "T8: scope error \u2014 the graph shows resource-level dependencies, not row-level provenance",
-      "D": "T1: fabricated \u2014 the generated docs site is a static artifact, not a live query monitor"
+      "A": "T8: scope error — the graph shows resource-level dependencies, not row-level provenance",
+      "B": "T1: fabricated — the generated site documents the project's resources and dependencies, not its git history",
+      "D": "T1: fabricated — the generated docs site is a static artifact, not a live query monitor"
     },
     "topics": [
       "ae/01-developing-and-optimizing-models/dbt-commands"
@@ -101,8 +101,8 @@
       "C": "genuinely useful to new analysts, not just technically present"
     },
     "distractor_traps": {
-      "C": "T1: fabricated \u2014 the docs site is not organized by matching file names to schema names",
-      "D": "T8: scope error \u2014 persist_docs writes descriptions into the warehouse as comments; it does not control the docs site itself"
+      "C": "T1: fabricated — the docs site is not organized by matching file names to schema names",
+      "D": "T8: scope error — persist_docs writes descriptions into the warehouse as comments; it does not control the docs site itself"
     },
     "topics": [
       "ae/01-developing-and-optimizing-models/dbt-commands"
@@ -116,19 +116,19 @@
     "difficulty_estimate": "L3",
     "stem": "A project sets `persist_docs: {relation: true, columns: true}` on a group of models. The analytics engineer needs to know what actually changes in the warehouse once this config is applied and the models are rebuilt. What happens?",
     "option_texts": {
-      "A": "dbt writes the model and column descriptions as relation and column comments directly in the database",
+      "A": "Nothing changes in the database; persist_docs only affects the generated docs site",
       "B": "dbt generates markdown documentation files on disk for every affected model",
       "C": "dbt enforces the described column types as constraints at build time",
-      "D": "Nothing changes in the database; persist_docs only affects the generated docs site"
+      "D": "dbt writes the model and column descriptions as relation and column comments directly in the database"
     },
-    "drill_answer": "A",
+    "drill_answer": "D",
     "drill_answer_short": "persist_docs writes descriptions as column and relation comments in the database",
     "decision_hinge": "persist_docs optionally persists resource descriptions as column and relation comments in the database. By default, documentation persistence is disabled.",
     "sources": [
       "https://docs.getdbt.com/reference/resource-configs/persist_docs"
     ],
     "plausible_options": {
-      "D": "needs to know what actually changes in the warehouse once this config is applied"
+      "A": "needs to know what actually changes in the warehouse once this config is applied"
     },
     "eliminated_by": {
       "B": "needs to know what actually changes in the warehouse once this config is applied",
@@ -138,9 +138,9 @@
       }
     },
     "distractor_traps": {
-      "B": "T1: fabricated \u2014 persist_docs writes comments into the database, not markdown files to disk",
-      "C": "T3: confusable sibling \u2014 enforcing column types is what a model contract does, not persist_docs",
-      "D": "T3: confusable sibling \u2014 persist_docs changes the database directly; it is independent of the docs site refresh"
+      "A": "T3: confusable sibling — persist_docs changes the database directly; it is independent of the docs site refresh",
+      "B": "T1: fabricated — persist_docs writes comments into the database, not markdown files to disk",
+      "C": "T3: confusable sibling — enforcing column types is what a model contract does, not persist_docs"
     },
     "topics": [
       "ae/01-developing-and-optimizing-models/dbt-commands"
@@ -154,19 +154,19 @@
     "difficulty_estimate": "L3",
     "stem": "A project keeps diagrams in an `assets/` folder at the project root and wants those image files copied into the generated docs site when `dbt docs generate` runs, without dbt treating them as models or other resources. Which config accomplishes this, and why?",
     "option_texts": {
-      "A": "`asset-paths: ['assets']` in `dbt_project.yml`, because it copies the listed directories into the target directory as part of docs generate",
-      "B": "`model-paths: ['assets']`, because any directory listed there is copied into the docs site",
+      "A": "`model-paths: ['assets']`, because any directory listed there is copied into the docs site",
+      "B": "`asset-paths: ['assets']` in `dbt_project.yml`, because it copies the listed directories into the target directory as part of docs generate",
       "C": "`docs-paths: ['assets']`, since documentation-related folders need their own dedicated config key",
       "D": "Nothing extra is needed, because `dbt docs generate` copies every project folder into the target directory by default"
     },
-    "drill_answer": "A",
+    "drill_answer": "B",
     "drill_answer_short": "asset-paths copies listed directories into the target directory during docs generate",
     "decision_hinge": "asset-paths optionally specifies a custom list of directories to copy to the target directory as part of the docs generate command. By default, dbt will not copy any additional files as part of docs generate.",
     "sources": [
       "https://docs.getdbt.com/reference/project-configs/asset-paths"
     ],
     "plausible_options": {
-      "B": "wants those image files copied into the generated docs site when `dbt docs generate` runs"
+      "A": "wants those image files copied into the generated docs site when `dbt docs generate` runs"
     },
     "eliminated_by": {
       "C": "without dbt treating them as models or other resources",
@@ -176,9 +176,9 @@
       }
     },
     "distractor_traps": {
-      "B": "T3: confusable sibling \u2014 model-paths tells dbt where to look for model files, not which folders to copy for docs",
-      "C": "T1: fabricated \u2014 dbt defines no docs-paths config key",
-      "D": "T4: breaks a stated requirement \u2014 dbt copies no additional files by default, so the images would not appear"
+      "A": "T3: confusable sibling — model-paths tells dbt where to look for model files, not which folders to copy for docs",
+      "C": "T1: fabricated — dbt defines no docs-paths config key",
+      "D": "T4: breaks a stated requirement — dbt copies no additional files by default, so the images would not appear"
     },
     "topics": [
       "ae/01-developing-and-optimizing-models/project-config-and-flags"
@@ -192,19 +192,19 @@
     "difficulty_estimate": "L3",
     "stem": "A team writes a long paragraph describing `fct_orders` inside a `{% docs fct_orders_overview %} ... {% enddocs %}` block in a `.md` file, and wants that text to appear as the model's description in `schema.yml` without retyping it. Which syntax in `schema.yml` pulls in that block's content?",
     "option_texts": {
-      "A": "`description: '{{ doc(\"fct_orders_overview\") }}'`",
+      "A": "`description: '{% docs fct_orders_overview %}'`",
       "B": "`description: '{{ ref(\"fct_orders_overview\") }}'`",
-      "C": "`description: '{% docs fct_orders_overview %}'`",
+      "C": "`description: '{{ doc(\"fct_orders_overview\") }}'`",
       "D": "List the block's name under a `docs:` property, and schema.yml inlines it automatically"
     },
-    "drill_answer": "A",
+    "drill_answer": "C",
     "drill_answer_short": "Reference a docs block from schema.yml with the doc() function",
     "decision_hinge": "To use a docs block, reference it from your schema.yml file with the doc() function in place of a markdown string.",
     "sources": [
       "https://docs.getdbt.com/docs/collaborate/documentation"
     ],
     "plausible_options": {
-      "C": "inside a `{% docs fct_orders_overview %} ... {% enddocs %}` block"
+      "A": "inside a `{% docs fct_orders_overview %} ... {% enddocs %}` block"
     },
     "eliminated_by": {
       "B": "wants that text to appear as the model's description in `schema.yml`",
@@ -214,9 +214,9 @@
       }
     },
     "distractor_traps": {
-      "B": "T3: confusable sibling \u2014 ref() resolves a model, seed, or snapshot, not a markdown docs block",
-      "C": "T3: confusable sibling \u2014 that tag defines a docs block, it does not reference one from schema.yml",
-      "D": "T1: fabricated \u2014 schema.yml has no automatic docs: property"
+      "A": "T3: confusable sibling — that tag defines a docs block, it does not reference one from schema.yml",
+      "B": "T3: confusable sibling — ref() resolves a model, seed, or snapshot, not a markdown docs block",
+      "D": "T1: fabricated — schema.yml has no automatic docs: property"
     },
     "topics": [
       "ae/01-developing-and-optimizing-models/dbt-commands"

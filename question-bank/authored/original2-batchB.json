@@ -1,0 +1,287 @@
+[
+  {
+    "id": "draft-orig2-ae01-snapshot-strategy-switch-required",
+    "domain": "ae-01",
+    "blueprint_task": "1.10",
+    "qtype": "multiple_choice",
+    "difficulty_estimate": "L3",
+    "stem": "A snapshot is currently configured with `strategy: timestamp` and `updated_at: last_modified`. The team switches it to `strategy: check` for a future run. Before that switch can work, which additional config becomes required that was not required under the timestamp strategy?",
+    "option_texts": {
+      "A": "`check_cols`, the list of columns dbt compares to detect a change",
+      "B": "`updated_at`, a timestamp column indicating when each record last changed",
+      "C": "`unique_key`, a column or expression identifying each record",
+      "D": "`hard_deletes`, which controls how deleted source rows are handled"
+    },
+    "drill_answer": "A",
+    "drill_answer_short": "Switching to the check strategy requires check_cols, the columns dbt compares for changes",
+    "decision_hinge": "check_cols: if using the check strategy, then the columns to check. Only if using the check strategy.",
+    "sources": [
+      "https://docs.getdbt.com/docs/build/snapshots"
+    ],
+    "plausible_options": {
+      "B": "currently configured with `strategy: timestamp` and `updated_at: last_modified`"
+    },
+    "eliminated_by": {
+      "C": "The team switches it to `strategy: check` for a future run",
+      "D": {
+        "signal": "Before that switch can work, which additional config becomes required",
+        "requires_fact": "check_cols is required only if using the check strategy; hard_deletes defaults to ignore and is not required by either strategy."
+      }
+    },
+    "distractor_traps": {
+      "B": "T3: confusable sibling \u2014 updated_at is required for the timestamp strategy, which this snapshot is switching away from",
+      "C": "T8: scope error \u2014 unique_key is already required for every snapshot strategy, not a new requirement introduced by switching",
+      "D": "T3: confusable sibling \u2014 hard_deletes is an optional config independent of which strategy is chosen"
+    },
+    "topics": [
+      "ae/01-developing-and-optimizing-models/snapshots"
+    ]
+  },
+  {
+    "id": "draft-orig2-ae01-staging-naming-convention",
+    "domain": "ae-01",
+    "blueprint_task": "1.3",
+    "qtype": "multiple_choice",
+    "difficulty_estimate": "L2",
+    "stem": "A project ingests data from two source systems, `stripe` and an internal `jaffle_shop` database, both containing an `orders` table. The team needs a staging file-naming pattern that keeps the two `orders` staging models visually distinct by source. Which naming pattern does dbt's documented guidance recommend?",
+    "option_texts": {
+      "A": "`stg_[source]__[entity]s.sql`, using a double underscore between the source system and the entity name",
+      "B": "`[entity]_stg_[source].sql`, putting the entity name first and the source system last",
+      "C": "`stg_[entity]s.sql`, omitting the source system entirely since folders already separate sources",
+      "D": "`[source]_[entity]s_staging.sql`, putting \"staging\" as a suffix rather than a prefix"
+    },
+    "drill_answer": "A",
+    "drill_answer_short": "stg_[source]__[entity]s.sql, with a double underscore separating source and entity",
+    "decision_hinge": "Creating a consistent pattern of file naming is crucial in dbt. We recommend putting as much clear information into the file name as possible, including a prefix for the layer the model exists in. stg_[source]__[entity]s.sql -- the double underscore between source system and entity helps visually distinguish the separate parts in the case of a source name having multiple words.",
+    "sources": [
+      "https://docs.getdbt.com/best-practices/how-we-structure/2-staging"
+    ],
+    "plausible_options": {
+      "C": "keeps the two `orders` staging models visually distinct by source"
+    },
+    "eliminated_by": {
+      "B": "needs a staging file-naming pattern that keeps the two `orders` staging models visually distinct by source",
+      "D": "needs a staging file-naming pattern that keeps the two `orders` staging models visually distinct by source"
+    },
+    "distractor_traps": {
+      "B": "T3: confusable sibling \u2014 the recommended pattern leads with the layer prefix, not the entity name",
+      "C": "T3: confusable sibling \u2014 folders group by source, but the file name itself still needs the source to stay distinct",
+      "D": "T3: confusable sibling \u2014 the documented prefix is the stg_ layer marker, not a staging suffix"
+    },
+    "topics": [
+      "ae/01-developing-and-optimizing-models/dbt-commands"
+    ]
+  },
+  {
+    "id": "draft-orig2-ae01-full-refresh-scenarios",
+    "domain": "ae-01",
+    "blueprint_task": "1.11",
+    "qtype": "multiple_response",
+    "difficulty_estimate": "L4",
+    "stem": "A team maintains several incremental models and needs to recognize when `dbt run --full-refresh` genuinely becomes necessary, rather than just a safe habit. In which TWO scenarios is a full refresh actually required for an incremental model?",
+    "option_texts": {
+      "A": "The model's incremental logic changed, so new rows would be transformed differently from the historical rows already in the target table",
+      "B": "The model's column data types changed in a way existing incremental runs cannot reconcile without rebuilding the table from scratch",
+      "C": "The team wants to add a single new incremental test to the model's YAML without changing its SQL",
+      "D": "The team wants to rename the project without changing any model logic"
+    },
+    "drill_answer": "A,B",
+    "drill_answer_short": "A changed incremental transformation or an unreconcilable schema change both require a full rebuild",
+    "decision_hinge": "If your incremental model logic has changed, the transformations on your new rows of data may diverge from the historical transformations, which are stored in your target table. In this case, you should rebuild your incremental model. To force dbt to rebuild the entire incremental model from scratch, use the --full-refresh flag.",
+    "sources": [
+      "https://docs.getdbt.com/docs/build/incremental-models"
+    ],
+    "plausible_options": {
+      "C": "needs to recognize when `dbt run --full-refresh` genuinely becomes necessary, rather than just a safe habit"
+    },
+    "eliminated_by": {
+      "D": "needs to recognize when `dbt run --full-refresh` genuinely becomes necessary, rather than just a safe habit"
+    },
+    "distractor_traps": {
+      "C": "T8: scope error \u2014 adding a test does not change the model's transformation logic or stored historical rows",
+      "D": "T1: fabricated \u2014 renaming a project does not by itself invalidate any model's historical incremental data"
+    },
+    "topics": [
+      "ae/01-developing-and-optimizing-models/incremental-models"
+    ]
+  },
+  {
+    "id": "draft-orig2-ae01-hooks-true-statements",
+    "domain": "ae-01",
+    "blueprint_task": "1.6",
+    "qtype": "multiple_response",
+    "difficulty_estimate": "L2",
+    "stem": "A platform engineer is deciding between `on-run-start` and `on-run-end` hooks for setting up and tearing down an audit table around an entire invocation. Which TWO statements about these two hooks are correct?",
+    "option_texts": {
+      "A": "`on-run-start` executes once at the start of commands such as `dbt build`, `dbt run`, `dbt seed`, and `dbt test`",
+      "B": "`on-run-end` executes once at the end of the same set of commands that trigger `on-run-start`",
+      "C": "`on-run-start` and `on-run-end` each run once per model, seed, or snapshot built during the invocation",
+      "D": "`on-run-start` and `on-run-end` can only be configured inside a model's own SQL file, never in `dbt_project.yml`"
+    },
+    "drill_answer": "A,B",
+    "drill_answer_short": "on-run-start and on-run-end each fire once per invocation, at the start and end respectively",
+    "decision_hinge": "on-run-start is executed at the start of dbt build, dbt compile, dbt docs generate, dbt run, dbt seed, dbt snapshot, or dbt test. on-run-end is executed at the end of the invocation.",
+    "sources": [
+      "https://docs.getdbt.com/docs/build/hooks-operations"
+    ],
+    "plausible_options": {
+      "C": "setting up and tearing down an audit table around an entire invocation"
+    },
+    "eliminated_by": {
+      "D": "deciding between `on-run-start` and `on-run-end` hooks for setting up and tearing down an audit table"
+    },
+    "distractor_traps": {
+      "C": "T3: confusable sibling \u2014 pre-hook and post-hook run once per model, seed, or snapshot; on-run-start and on-run-end run once per invocation",
+      "D": "T1: fabricated \u2014 these hooks are typically configured at the project level in dbt_project.yml"
+    },
+    "topics": [
+      "ae/01-developing-and-optimizing-models/project-config-and-flags"
+    ]
+  },
+  {
+    "id": "draft-orig2-ae01-var-jinja-function",
+    "domain": "ae-01",
+    "blueprint_task": "1.6",
+    "qtype": "multiple_choice",
+    "difficulty_estimate": "L2",
+    "stem": "A `dbt_project.yml` file declares `vars: {region: us}` as a project-wide default. A model needs to read that declared value from inside its SQL, with the option to override it at runtime using `--vars`. Which Jinja function accesses a value declared this way?",
+    "option_texts": {
+      "A": "`var()`, which returns the value defined in the project or passed using `--vars`, based on precedence",
+      "B": "`env_var()`, which reads values from the operating system's environment variables",
+      "C": "`this()`, which returns the database representation of the current model",
+      "D": "`ref()`, which returns a Relation for a model, seed, or snapshot"
+    },
+    "drill_answer": "A",
+    "drill_answer_short": "var() reads a value declared under vars: in dbt_project.yml, with --vars overriding it",
+    "decision_hinge": "To retrieve a variable inside a model, hook, or macro, use the var() function. The var() function returns the value defined in your project or passed using --vars, based on precedence.",
+    "sources": [
+      "https://docs.getdbt.com/reference/dbt-jinja-functions/var"
+    ],
+    "plausible_options": {
+      "B": "with the option to override it at runtime using `--vars`"
+    },
+    "eliminated_by": {
+      "C": "A `dbt_project.yml` file declares `vars: {region: us}` as a project-wide default",
+      "D": "needs to read that declared value from inside its SQL"
+    },
+    "distractor_traps": {
+      "B": "T3: confusable sibling \u2014 env_var() reads operating-system environment variables, not values declared under vars: in dbt_project.yml",
+      "C": "T1: fabricated \u2014 this() points at the current model's own relation, unrelated to project variables",
+      "D": "T1: fabricated \u2014 ref() resolves a dependency relationship, it does not read a declared variable"
+    },
+    "topics": [
+      "ae/01-developing-and-optimizing-models/project-config-and-flags"
+    ]
+  },
+  {
+    "id": "draft-orig2-ae01-dbt-build-single-command",
+    "domain": "ae-01",
+    "blueprint_task": "1.4",
+    "qtype": "multiple_choice",
+    "difficulty_estimate": "L2",
+    "stem": "A pipeline currently needs to run seeds, models, snapshots, and tests, all respecting the dependency graph, with a failing upstream test skipping its downstream resources automatically. The team wants exactly one command for this instead of four separate invocations. Which command accomplishes this?",
+    "option_texts": {
+      "A": "`dbt build`, which runs models, tests, snapshots, and seeds together in DAG order for the selected resources",
+      "B": "`dbt run`, which also runs seeds, snapshots, and tests once models finish successfully",
+      "C": "`dbt compile`, which prepares all four resource types as selected resources to run automatically afterward",
+      "D": "`dbt docs generate`, which also builds every resource type it then documents"
+    },
+    "drill_answer": "A",
+    "drill_answer_short": "dbt build runs models, tests, snapshots, and seeds together in DAG order",
+    "decision_hinge": "The dbt build command will run models, test tests, snapshot snapshots, and seed seeds, in DAG order, for selected resources or an entire project.",
+    "sources": [
+      "https://docs.getdbt.com/reference/commands/build"
+    ],
+    "plausible_options": {
+      "B": "needs to run seeds, models, snapshots, and tests, all respecting the dependency graph"
+    },
+    "eliminated_by": {
+      "C": "with a failing upstream test skipping its downstream resources automatically",
+      "D": {
+        "signal": "wants exactly one command for this instead of four separate invocations",
+        "requires_fact": "The dbt build command will run models, test tests, snapshot snapshots, and seed seeds, in DAG order, for selected resources or an entire project."
+      }
+    },
+    "distractor_traps": {
+      "B": "T3: confusable sibling \u2014 dbt run only builds models, it does not also run seeds, snapshots, or tests",
+      "C": "T1: fabricated \u2014 dbt compile does not execute any resource against the warehouse",
+      "D": "T1: fabricated \u2014 generating docs does not build any resource"
+    },
+    "topics": [
+      "ae/01-developing-and-optimizing-models/dbt-commands"
+    ]
+  },
+  {
+    "id": "draft-orig2-ae01-full-refresh-ignores-is-incremental",
+    "domain": "ae-01",
+    "blueprint_task": "1.11",
+    "qtype": "multiple_choice",
+    "difficulty_estimate": "L3",
+    "stem": "A developer runs `dbt run --full-refresh --select fct_reviews`, where `fct_reviews` is materialized as incremental and wraps its filtering logic in an `is_incremental()` block. The team needs to know exactly what dbt does to the existing target table, and whether that `is_incremental()` filter still applies. What happens?",
+    "option_texts": {
+      "A": "dbt drops the existing target table and rebuilds it for all-time, since `is_incremental()` evaluates to `False` during a full refresh",
+      "B": "Only new rows are processed, because the `is_incremental()` filter still applies even during a full refresh",
+      "C": "dbt appends a second copy of all historical target rows on top of the existing table, doubling the row count",
+      "D": "dbt leaves the existing table completely untouched, since `--full-refresh` only affects downstream models"
+    },
+    "drill_answer": "A",
+    "drill_answer_short": "--full-refresh drops and rebuilds the table for all-time; is_incremental() returns False",
+    "decision_hinge": "The --full-refresh flag will cause dbt to drop the existing target table in the database before rebuilding it for all-time. The is_incremental() macro will return True only if the full-refresh flag is not passed, among other conditions.",
+    "sources": [
+      "https://docs.getdbt.com/docs/build/incremental-models"
+    ],
+    "plausible_options": {
+      "B": "wraps its filtering logic in an `is_incremental()` block"
+    },
+    "eliminated_by": {
+      "C": "The team needs to know exactly what dbt does to the existing target table",
+      "D": {
+        "signal": "The team needs to know exactly what dbt does to the existing target table",
+        "requires_fact": "The --full-refresh flag will cause dbt to drop the existing target table in the database before rebuilding it for all-time."
+      }
+    },
+    "distractor_traps": {
+      "B": "T3: confusable sibling \u2014 is_incremental() depends on the full-refresh flag, so it does not keep filtering during one",
+      "C": "T1: fabricated \u2014 a full refresh drops and rebuilds the table, it does not append a duplicate copy",
+      "D": "T1: fabricated \u2014 --full-refresh rebuilds the selected model's own table, not only its downstream models"
+    },
+    "topics": [
+      "ae/01-developing-and-optimizing-models/incremental-models"
+    ]
+  },
+  {
+    "id": "draft-orig2-ae01-macro-definition",
+    "domain": "ae-01",
+    "blueprint_task": "1.3",
+    "qtype": "multiple_choice",
+    "difficulty_estimate": "L1",
+    "stem": "A developer notices the same CASE statement repeated across five models and wants to extract it into a single, parameterized, reusable piece of Jinja that any model can call by name. Which dbt concept actually describes what they should write?",
+    "option_texts": {
+      "A": "A piece of Jinja code written once and called from many files, similar to a function in most programming languages",
+      "B": "A pre-built template shipped with dbt Core and reused across runs automatically during `dbt run`",
+      "C": "A snapshot: a way to capture how a resource's output changes across time",
+      "D": "A seed: a CSV file loaded into the warehouse and referenced like a model"
+    },
+    "drill_answer": "A",
+    "drill_answer_short": "A macro is reusable Jinja code, similar to a function, callable from many models",
+    "decision_hinge": "Macros in Jinja are pieces of code that can be reused multiple times, they are analogous to functions in most programming languages, and are extremely useful if you find yourself repeating code across multiple models.",
+    "sources": [
+      "https://docs.getdbt.com/docs/build/jinja-macros"
+    ],
+    "plausible_options": {
+      "B": "wants to extract it into a single, parameterized, reusable piece of Jinja that any model can call by name"
+    },
+    "eliminated_by": {
+      "C": "notices the same CASE statement repeated across five models",
+      "D": "notices the same CASE statement repeated across five models"
+    },
+    "distractor_traps": {
+      "B": "T3: confusable sibling \u2014 dbt ships no library of pre-built model templates reused across runs",
+      "C": "T3: confusable sibling \u2014 a snapshot captures historical change in data, it is not a reusable code block",
+      "D": "T3: confusable sibling \u2014 a seed loads a static CSV, it does not package reusable Jinja logic"
+    },
+    "topics": [
+      "ae/01-developing-and-optimizing-models/dbt-commands"
+    ]
+  }
+]

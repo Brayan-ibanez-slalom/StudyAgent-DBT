@@ -1,0 +1,249 @@
+[
+  {
+    "id": "draft-orig2-ae01-persist-docs-config-name",
+    "domain": "ae-01",
+    "blueprint_task": "1.5",
+    "qtype": "multiple_choice",
+    "difficulty_estimate": "L2",
+    "stem": "A team wants their model and column descriptions to show up as actual comments on the warehouse's tables and columns, visible from the warehouse's own catalog tools, not only inside the generated dbt docs site. Which configuration allows dbt to persist column-level descriptions as comments directly in the data warehouse?",
+    "option_texts": {
+      "A": "`persist_docs`, set with `relation` and `columns` keys to control what gets written as comments",
+      "B": "`asset-paths`, since it controls what dbt copies into the generated documentation site, columns included",
+      "C": "`persist_docs` only writes to the dbt docs site HTML, never to the warehouse itself",
+      "D": "`meta`, a free-form dictionary that the warehouse automatically renders as column comments"
+    },
+    "drill_answer": "A",
+    "drill_answer_short": "persist_docs writes descriptions as relation and column comments in the warehouse",
+    "decision_hinge": "persist_docs optionally persists resource descriptions as column and relation comments in the database. By default, documentation persistence is disabled.",
+    "sources": [
+      "https://docs.getdbt.com/reference/resource-configs/persist_docs"
+    ],
+    "plausible_options": {
+      "B": "visible from the warehouse's own catalog tools, not only inside the generated dbt docs site"
+    },
+    "eliminated_by": {
+      "C": "wants their model and column descriptions to show up as actual comments on the warehouse's tables and columns",
+      "D": "wants their model and column descriptions to show up as actual comments on the warehouse's tables and columns"
+    },
+    "distractor_traps": {
+      "B": "T3: confusable sibling \u2014 asset-paths copies static files for the docs site, it does not write comments into the warehouse",
+      "C": "T4: breaks a stated fact \u2014 persist_docs is documented to write comments into the database, not only the generated HTML site",
+      "D": "T1: fabricated \u2014 the warehouse does not automatically turn a meta dictionary into column comments"
+    },
+    "topics": [
+      "ae/01-developing-and-optimizing-models/dbt-commands"
+    ]
+  },
+  {
+    "id": "draft-orig2-ae01-docs-block-definition-syntax",
+    "domain": "ae-01",
+    "blueprint_task": "1.5",
+    "qtype": "multiple_choice",
+    "difficulty_estimate": "L2",
+    "stem": "A column description references `{{ doc(\"dim_listings_cleansed__minimum_nights\") }}` from `schema.yml`. The team needs to know how that named docs block is actually defined, in the separate `.md` file where its content lives. How is it defined there?",
+    "option_texts": {
+      "A": "Using `{% docs dim_listings_cleansed__minimum_nights %} ... {% enddocs %}`, wrapping the markdown content between those two tags",
+      "B": "Using `{% macro doc_block(name) %} ... {% endmacro %}`, treating the docs block like any other reusable macro",
+      "C": "Using a `description:` property directly inside `schema.yml`, with the content needing no separate `.md` file",
+      "D": "Using `{{ doc(\"dim_listings_cleansed__minimum_nights\") }}` itself as both the definition and the reference"
+    },
+    "drill_answer": "A",
+    "drill_answer_short": "A docs block is defined with {% docs name %} ... {% enddocs %} in a markdown file",
+    "decision_hinge": "events.md: {% docs table_events %} This table contains clickstream events from the marketing website. ... {% enddocs %}",
+    "sources": [
+      "https://docs.getdbt.com/docs/collaborate/documentation"
+    ],
+    "plausible_options": {
+      "B": "The team needs to know how that named docs block is actually defined, in the separate `.md` file where its content lives"
+    },
+    "eliminated_by": {
+      "C": "in the separate `.md` file where its content lives",
+      "D": "in the separate `.md` file where its content lives"
+    },
+    "distractor_traps": {
+      "B": "T3: confusable sibling \u2014 a docs block uses its own dedicated tag pair, not the generic macro tag pair",
+      "C": "T4: breaks a stated fact \u2014 the stem says the content lives in a separate .md file, which a bare description: property would not use",
+      "D": "T1: fabricated \u2014 doc() references a block from schema.yml; it does not also define the block's content"
+    },
+    "topics": [
+      "ae/01-developing-and-optimizing-models/dbt-commands"
+    ]
+  },
+  {
+    "id": "draft-orig2-ae01-docs-sources-vs-models",
+    "domain": "ae-01",
+    "blueprint_task": "1.5",
+    "qtype": "multiple_response",
+    "difficulty_estimate": "L4",
+    "stem": "A team wants to document both sources and models consistently, and also wants to know whether current dbt behavior still treats freshness checking as an exclusively source-only concept. Which TWO statements about documenting sources versus models are correct?",
+    "option_texts": {
+      "A": "Both sources and models can have descriptions added via a `description:` property, and both can reference the same `{{ doc(...) }}` block",
+      "B": "In current dbt, freshness can be configured for both sources and models, checked together with the `dbt freshness` command",
+      "C": "Only models can have column-level descriptions right now, current freshness rules aside; sources can only be described at the table level",
+      "D": "Sources cannot use `{{ doc(...) }}` references at all under current freshness rules, since docs blocks are reserved exclusively for models"
+    },
+    "drill_answer": "A,B",
+    "drill_answer_short": "Both resource types support descriptions and doc() blocks; freshness now applies to models too",
+    "decision_hinge": "dbt provides a way to add descriptions to models, columns, sources, and more. Use the following fields to configure freshness for sources and models unless otherwise noted. Run dbt freshness to check every source and model with freshness configured.",
+    "sources": [
+      "https://docs.getdbt.com/docs/collaborate/documentation",
+      "https://docs.getdbt.com/reference/resource-properties/freshness"
+    ],
+    "plausible_options": {
+      "C": "wants to know whether current dbt behavior still treats freshness checking as an exclusively source-only concept"
+    },
+    "eliminated_by": {
+      "D": "wants to document both sources and models consistently"
+    },
+    "distractor_traps": {
+      "C": "T6: stale behaviour \u2014 column-level descriptions for sources were historically more limited, but the documented mechanism now supports descriptions broadly across models, columns, and sources",
+      "D": "T1: fabricated \u2014 dbt adds descriptions to sources too, and the doc() function is not restricted to models"
+    },
+    "topics": [
+      "ae/01-developing-and-optimizing-models/dbt-commands"
+    ]
+  },
+  {
+    "id": "draft-orig2-ae01-docs-block-closing-tag",
+    "domain": "ae-01",
+    "blueprint_task": "1.5",
+    "qtype": "multiple_choice",
+    "difficulty_estimate": "L1",
+    "stem": "A `.md` file opens a docs block with `{% docs dim_listing_cleansed__minimum_nights %}`. The team needs the exact, correctly spelled closing tag dbt expects, since a near-miss won't parse. What's the closing tag?",
+    "option_texts": {
+      "A": "`{% enddocs %}`",
+      "B": "`{% end docs %}`",
+      "C": "`{% /docs %}`",
+      "D": "`{% enddoc %}`"
+    },
+    "drill_answer": "A",
+    "drill_answer_short": "A docs block closes with {% enddocs %}, one word, matching {% docs %}",
+    "decision_hinge": "{% docs table_events %} This table contains clickstream events from the marketing website. ... {% enddocs %}",
+    "sources": [
+      "https://docs.getdbt.com/docs/collaborate/documentation"
+    ],
+    "eliminated_by": {
+      "C": "since a near-miss won't parse",
+      "D": "since a near-miss won't parse"
+    },
+    "distractor_traps": {
+      "B": "T3: confusable sibling \u2014 Jinja block tags are plausible to misremember with extra spacing, but dbt expects one unbroken word",
+      "C": "T1: fabricated \u2014 Jinja block tags do not use a slash-based closing syntax",
+      "D": "T1: fabricated \u2014 the closing tag matches the plural docs opening tag, so it is enddocs, not enddoc"
+    },
+    "topics": [
+      "ae/01-developing-and-optimizing-models/dbt-commands"
+    ],
+    "plausible_options": {
+      "B": "opens a docs block with `{% docs dim_listing_cleansed__minimum_nights %}`"
+    }
+  },
+  {
+    "id": "draft-orig2-ae01-reuse-description-downstream",
+    "domain": "ae-01",
+    "blueprint_task": "1.5",
+    "qtype": "multiple_choice",
+    "difficulty_estimate": "L3",
+    "stem": "A column already has a description defined in its upstream model's `schema.yml`. A data analyst wants the exact same wording to appear for that column in a downstream model, without retyping the text and without relying on any automatic inheritance between models. What should they do?",
+    "option_texts": {
+      "A": "Reference the same `{{ doc(...) }}` block downstream that the model upstream already points at",
+      "B": "Do nothing; dbt automatically copies a column's description to every downstream model that selects it",
+      "C": "Set `inherit_description: true` on the downstream column to pull the value from its upstream source",
+      "D": "Reference the upstream model's SQL file, which was already compiled, directly from the downstream column's `description:` property"
+    },
+    "drill_answer": "A",
+    "drill_answer_short": "Reference the same doc() block again downstream; descriptions are not auto-inherited",
+    "decision_hinge": "To use a docs block, reference it from your schema.yml file with the doc() function in place of a markdown string.",
+    "sources": [
+      "https://docs.getdbt.com/docs/collaborate/documentation"
+    ],
+    "plausible_options": {
+      "C": "without relying on any automatic inheritance between models"
+    },
+    "eliminated_by": {
+      "B": "without relying on any automatic inheritance between models",
+      "D": "without retyping the text"
+    },
+    "distractor_traps": {
+      "B": "T4: breaks a stated fact \u2014 the stem explicitly rules out automatic inheritance, since no such mechanism is documented",
+      "C": "T3: confusable sibling \u2014 dbt defines no inherit_description property, but the idea of an inheritance flag is a natural guess",
+      "D": "T1: fabricated \u2014 a description property takes markdown text or a doc() call, not a path to compiled SQL"
+    },
+    "topics": [
+      "ae/01-developing-and-optimizing-models/dbt-commands"
+    ]
+  },
+  {
+    "id": "draft-orig2-ae06-loaded-at-field-type",
+    "domain": "ae-06",
+    "blueprint_task": "6.2",
+    "qtype": "multiple_choice",
+    "difficulty_estimate": "L3",
+    "stem": "A source sets `loaded_at_field: date` so freshness checks can find each record's most recent loaded timestamp without relying on adapter metadata. A reviewer needs to know what dbt actually requires of that column, rather than assuming a specific text format. What must be true about it?",
+    "option_texts": {
+      "A": "It is a column dbt can query to find that timestamp; it becomes required only when adapter metadata is unavailable",
+      "B": "It must be stored as plain text in strict ISO 8601 format, or the check silently returns no results",
+      "C": "It must be the same adapter timestamp column used as the model's `unique_key`, since freshness and deduplication share one column",
+      "D": "It must be declared in every source's config, even on adapters where that same timestamp metadata is already available automatically"
+    },
+    "drill_answer": "A",
+    "drill_answer_short": "loaded_at_field is a column dbt queries for the latest loaded timestamp, required only without adapter metadata",
+    "decision_hinge": "loaded_at_field: Column dbt queries to determine the most recent loaded timestamp. Required when adapter metadata is unavailable.",
+    "sources": [
+      "https://docs.getdbt.com/reference/resource-properties/freshness"
+    ],
+    "plausible_options": {
+      "B": "without relying on adapter metadata"
+    },
+    "eliminated_by": {
+      "C": "A reviewer needs to know what dbt actually requires of that column, rather than assuming a specific text format",
+      "D": {
+        "signal": "A reviewer needs to know what dbt actually requires of that column, rather than assuming a specific text format",
+        "requires_fact": "loaded_at_field is Required when adapter metadata is unavailable."
+      }
+    },
+    "distractor_traps": {
+      "B": "T3: confusable sibling \u2014 dbt documents this field by its purpose, querying for a timestamp, not by a mandated text format",
+      "C": "T1: fabricated \u2014 loaded_at_field has no documented relationship to a model's unique_key",
+      "D": "T4: breaks a stated fact \u2014 it is explicitly required only when adapter metadata is unavailable"
+    },
+    "topics": [
+      "ae/06-external-dependencies/source-freshness"
+    ]
+  },
+  {
+    "id": "draft-orig2-ae06-exposure-required-property",
+    "domain": "ae-06",
+    "blueprint_task": "6.1",
+    "qtype": "multiple_choice",
+    "difficulty_estimate": "L3",
+    "stem": "A team drafts an exposure definition and needs to know which single property below is actually REQUIRED by dbt's documented exposure schema, as opposed to optional metadata that merely looks important.",
+    "option_texts": {
+      "A": "`owner`, satisfied by either a `name` or an `email` under it",
+      "B": "`maturity`, with values `high`, `medium`, or `low`",
+      "C": "`url`, a link to the dashboard or report the exposure represents",
+      "D": "`description`, a markdown string explaining the exposure's purpose"
+    },
+    "drill_answer": "A",
+    "drill_answer_short": "owner is a required exposure property; maturity, url, and description are optional",
+    "decision_hinge": "Required: name, a unique exposure name written in snake case; owner, name or email required, additional properties allowed.",
+    "sources": [
+      "https://docs.getdbt.com/docs/build/exposures"
+    ],
+    "eliminated_by": {
+      "C": "which single property below is actually REQUIRED by dbt's documented exposure schema, as opposed to optional metadata",
+      "D": "which single property below is actually REQUIRED by dbt's documented exposure schema, as opposed to optional metadata"
+    },
+    "distractor_traps": {
+      "B": "T8: scope error \u2014 maturity indicates confidence level, it is optional documentation metadata, not required",
+      "C": "T8: scope error \u2014 url is useful context for consumers, but it is not required",
+      "D": "T8: scope error \u2014 description adds helpful context, but it is not required"
+    },
+    "topics": [
+      "ae/06-external-dependencies/exposures"
+    ],
+    "plausible_options": {
+      "B": "which single property below is actually REQUIRED by dbt's documented exposure schema"
+    }
+  }
+]

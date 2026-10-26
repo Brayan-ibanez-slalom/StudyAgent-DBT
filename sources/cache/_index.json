@@ -1,7 +1,7 @@
 {
   "version": 1,
-  "count": 97,
-  "updated_at": "2026-10-22",
+  "count": 100,
+  "updated_at": "2026-10-26",
   "entries": [
     {
       "url": "https://docs.getdbt.com/docs/build/incremental-models",
@@ -777,6 +777,30 @@
       "title": "Node selector methods | dbt Developer Hub",
       "fetched_at": "2026-10-22",
       "sha256": "13d026a18f5444d2c8d7f25d872219d4f325b20044a88e5e361e7daec85a1d7f",
+      "source": "mcp-cache_fetch"
+    },
+    {
+      "url": "https://docs.getdbt.com/reference/resource-configs/snowflake-configs",
+      "path": "sources/cache/_raw/docs.getdbt.com/reference/resource-configs/snowflake-configs.txt",
+      "title": "Snowflake configurations | dbt Developer Hub",
+      "fetched_at": "2026-10-26",
+      "sha256": "1e103f5eef3b06ee6158951b355364677f59c52c7c59ff0ddb413535b8f1a906",
+      "source": "mcp-cache_fetch"
+    },
+    {
+      "url": "https://docs.getdbt.com/best-practices/how-we-structure/2-staging",
+      "path": "sources/cache/_raw/docs.getdbt.com/best-practices/how-we-structure/2-staging.txt",
+      "title": "Staging: Preparing our atomic building blocks | dbt Developer Hub",
+      "fetched_at": "2026-10-26",
+      "sha256": "983c414b9a810a4b343e30162a4107ab959eb4a2a724fa31852073b3ac3558c1",
+      "source": "mcp-cache_fetch"
+    },
+    {
+      "url": "https://docs.getdbt.com/reference/resource-configs/store_failures_as",
+      "path": "sources/cache/_raw/docs.getdbt.com/reference/resource-configs/store_failures_as.txt",
+      "title": "store_failures_as | dbt Developer Hub",
+      "fetched_at": "2026-10-26",
+      "sha256": "e8e902f638744402473557decd9a9e2a707a7543681dc68717efcef4b99d7724",
       "source": "mcp-cache_fetch"
     }
   ]
