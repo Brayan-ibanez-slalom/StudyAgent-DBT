@@ -15,6 +15,11 @@ describes behaviour from older dbt versions, so seeding from it would poison the
 
 Items are authored from `docs.getdbt.com` through the gate instead. Run `/author`.
 
+Have a third-party practice exam to draw inspiration from instead? See the
+[import-practice-questions skill](../.github/skills/import-practice-questions/SKILL.md) —
+it turns a pasted quiz dump into original, independently-verified items through the same
+gate, rather than reproducing it.
+
 ## Record shape
 
 ```jsonc
