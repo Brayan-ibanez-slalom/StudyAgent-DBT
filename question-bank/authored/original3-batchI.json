@@ -1,0 +1,282 @@
+[
+  {
+    "id": "draft-orig3-ae01-schema-override-arg-fib",
+    "domain": "ae-01",
+    "blueprint_task": "1.6",
+    "qtype": "fill_in_blank",
+    "difficulty_estimate": "L3",
+    "stem": "A team overrides `generate_schema_name` so models in `models/dim/` build into a schema literally called `dim`, not `DEV_dim`. Complete the macro's `{%- else -%}` branch, which must reference the schema name argument directly with no concatenation: {% macro generate_schema_name(custom_schema_name, node) -%}    {%- if custom_schema_name is none -%}        {{ target.schema }}    {%- else -%}        {{ ____ | trim }}    {%- endif -%}{%- endmacro %}",
+    "accepted_answers": [
+      "custom_schema_name"
+    ],
+    "drill_answer": "custom_schema_name",
+    "drill_answer_short": "Return custom_schema_name directly, with no default_schema concatenation, to drop the DEV_ prefix",
+    "decision_hinge": "dbt uses a default macro called generate_schema_name to determine the name of the schema that a model should be built in. The custom_schema_name argument is the schema value configured on the model.",
+    "sources": [
+      "https://docs.getdbt.com/docs/build/custom-schemas"
+    ],
+    "topics": [
+      "ae/01-developing-and-optimizing-models/project-config-and-flags"
+    ]
+  },
+  {
+    "id": "draft-orig3-ae01-ephemeral-ref-no-object",
+    "domain": "ae-01",
+    "blueprint_task": "1.2",
+    "qtype": "multiple_choice",
+    "difficulty_estimate": "L2",
+    "stem": "A staging model `src_listings` is configured as `materialized='ephemeral'` in `dbt_project.yml`, and its SQL selects from `{{ source('airbnb', 'listings') }}`. A downstream model references `{{ ref('src_listings') }}`. The team needs to know exactly what happens in the warehouse, and how the downstream model actually gets this data. What happens?",
+    "option_texts": {
+      "A": "No warehouse object is created; dbt injects the model's SQL as a CTE into the downstream model at compile time",
+      "B": "A view named `src_listings` is created in the warehouse, and the downstream model queries it directly",
+      "C": "A table named `src_listings` is created in the target schema, and the downstream model reads from that table",
+      "D": "An error occurs, because ephemeral models cannot use the `source()` function to reference raw data"
+    },
+    "drill_answer": "A",
+    "drill_answer_short": "An ephemeral model is injected as a CTE at compile time; no database object is ever created",
+    "decision_hinge": "An ephemeral model is not built directly into the database. Instead, dbt interpolates the code from this model into dependent models as a common table expression.",
+    "sources": [
+      "https://docs.getdbt.com/docs/build/materializations"
+    ],
+    "plausible_options": {
+      "C": "its SQL selects from `{{ source('airbnb', 'listings') }}`"
+    },
+    "eliminated_by": {
+      "B": "is configured as `materialized='ephemeral'` in `dbt_project.yml`",
+      "D": {
+        "signal": "its SQL selects from `{{ source('airbnb', 'listings') }}`",
+        "requires_fact": "Ephemeral models can use the source() function the same way any other model does; there is no restriction tying source() to a particular materialization."
+      }
+    },
+    "distractor_traps": {
+      "B": "T3: confusable sibling \u2014 a view is created for the view materialization, not ephemeral, which creates no object at all",
+      "C": "T3: confusable sibling \u2014 a table is created for the table materialization, not ephemeral",
+      "D": "T1: fabricated \u2014 dbt defines no such restriction between source() and ephemeral models"
+    },
+    "topics": [
+      "ae/01-developing-and-optimizing-models/materializations"
+    ]
+  },
+  {
+    "id": "draft-orig3-ae01-graph-plus-suffix-downstream",
+    "domain": "ae-01",
+    "blueprint_task": "1.5",
+    "qtype": "multiple_choice",
+    "difficulty_estimate": "L3",
+    "stem": "A team wants to rebuild everything downstream of `fct_reviews`, so they run `dbt run --select fct_reviews+`. `fct_reviews` has two separate downstream chains feeding two different marts, with no shared descendants. The release engineer needs to confirm exactly which models this selector includes. What does it include?",
+    "option_texts": {
+      "A": "`fct_reviews` itself plus every model across both of its downstream branches",
+      "B": "Only `fct_reviews` itself, since the downstream graph splits into two separate branches",
+      "C": "`fct_reviews` plus its upstream ancestors, since the trailing `+` traverses backward",
+      "D": "Only the first downstream chain dbt encounters, stopping once the graph branches"
+    },
+    "drill_answer": "A",
+    "drill_answer_short": "A trailing + includes the resource and all of its descendants, regardless of how many branches exist",
+    "decision_hinge": "Placed after a model/resource, the + operator includes the resource itself and all its descendants (downstream dependencies).",
+    "sources": [
+      "https://docs.getdbt.com/reference/node-selection/graph-operators"
+    ],
+    "plausible_options": {
+      "B": "has two separate downstream chains feeding two different marts, with no shared descendants"
+    },
+    "eliminated_by": {
+      "C": "so they run `dbt run --select fct_reviews+`",
+      "D": {
+        "signal": "has two separate downstream chains feeding two different marts",
+        "requires_fact": "Placed after a model/resource, the + operator includes the resource itself and all its descendants, not merely the first branch dbt happens to traverse."
+      }
+    },
+    "distractor_traps": {
+      "B": "T3: confusable sibling \u2014 a branching DAG does not stop the + operator from including every descendant",
+      "C": "T3: confusable sibling \u2014 a trailing + selects descendants; a leading + selects ancestors instead",
+      "D": "T1: fabricated \u2014 dbt's graph operators do not stop at the first encountered branch"
+    },
+    "topics": [
+      "ae/04-troubleshooting-pipelines/dag-failure-points"
+    ]
+  },
+  {
+    "id": "draft-orig3-ae01-view-join-perf",
+    "domain": "ae-01",
+    "blueprint_task": "1.2",
+    "qtype": "multiple_choice",
+    "difficulty_estimate": "L3",
+    "stem": "A combined dimension model is materialized as a `view` and must perform a LEFT JOIN between listings and hosts on every dashboard query. Analysts report slow dashboard queries, and the team needs the documented reason this happens, so they can pick the right fix. Why can a view cause this slowdown, and what's the documented alternative for a significant transformation?",
+    "option_texts": {
+      "A": "A view re-runs its full query, including the join, every time it is read; table or incremental once that cost matters",
+      "B": "A view always caches its result set after the first query, so repeated slowness must come from the warehouse, not the materialization",
+      "C": "A view cannot contain a LEFT JOIN at all, so the query silently falls back to an INNER JOIN each time",
+      "D": "A view only slows down once it exceeds a hardcoded row-count limit dbt enforces internally"
+    },
+    "drill_answer": "A",
+    "drill_answer_short": "A view re-executes its full query on every read; table or incremental suit significant transformations",
+    "decision_hinge": "view: create view as. Light transformation -- renaming, recasting. Slow to query if the transformation is significant or views are stacked. table: queried by BI tools; slow transformations feeding many downstream models.",
+    "sources": [
+      "https://docs.getdbt.com/docs/build/materializations"
+    ],
+    "plausible_options": {
+      "B": "must perform a LEFT JOIN between listings and hosts on every dashboard query"
+    },
+    "eliminated_by": {
+      "C": "must perform a LEFT JOIN between listings and hosts on every dashboard query",
+      "D": "Analysts report slow dashboard queries"
+    },
+    "distractor_traps": {
+      "B": "T3: confusable sibling \u2014 a view is explicitly described as slow precisely because it is not cached and re-executes the query",
+      "C": "T1: fabricated \u2014 a view materialization imposes no restriction on join types",
+      "D": "T1: fabricated \u2014 dbt defines no internal row-count threshold for view performance"
+    },
+    "topics": [
+      "ae/01-developing-and-optimizing-models/materializations"
+    ]
+  },
+  {
+    "id": "draft-orig3-ae01-ephemeral-lineage-visible",
+    "domain": "ae-01",
+    "blueprint_task": "1.2",
+    "qtype": "multiple_choice",
+    "difficulty_estimate": "L4",
+    "stem": "A team needs a staging model that is only ever an input to one fact model and should never be queried directly, but they still want it to show up in dbt's lineage graph for documentation purposes. Which materialization satisfies both needs, and why?",
+    "option_texts": {
+      "A": "`ephemeral`, because it still participates in the DAG and lineage graph through `ref()`, even though it creates no queryable database object",
+      "B": "`view`, because only a view materialization is tracked in the lineage graph at all",
+      "C": "`table`, since only materializations with a real database object appear in dbt's documentation",
+      "D": "No materialization satisfies both needs; a model is either queryable or absent from the lineage graph entirely"
+    },
+    "drill_answer": "A",
+    "drill_answer_short": "An ephemeral model is tracked in the DAG via ref() even though it has no queryable database object",
+    "decision_hinge": "An ephemeral model is not built directly into the database; dbt interpolates its code into dependent models as a CTE. dbt still tracks dependencies between resources using ref(), which is useful for documentation and node selection.",
+    "sources": [
+      "https://docs.getdbt.com/docs/build/materializations",
+      "https://docs.getdbt.com/reference/dbt-jinja-functions/ref"
+    ],
+    "plausible_options": {
+      "C": "should never be queried directly, but they still want it to show up in dbt's lineage graph"
+    },
+    "eliminated_by": {
+      "B": "should never be queried directly, but they still want it to show up in dbt's lineage graph",
+      "D": {
+        "signal": "should never be queried directly, but they still want it to show up in dbt's lineage graph",
+        "requires_fact": "ref() creates dependencies between the referenced node and the current model, which is useful for documentation and node selection, regardless of whether that node is a queryable database object."
+      }
+    },
+    "distractor_traps": {
+      "B": "T4: breaks a stated fact \u2014 lineage tracking comes from ref(), not from a specific materialization type",
+      "C": "T3: confusable sibling \u2014 lineage tracking comes from ref() dependencies, not from whether a materialization creates a real object",
+      "D": "T4: breaks a stated fact \u2014 ephemeral is exactly documented as queryable-nothing plus full DAG participation"
+    },
+    "topics": [
+      "ae/01-developing-and-optimizing-models/materializations"
+    ]
+  },
+  {
+    "id": "draft-orig3-ae01-source-identifier-vs-name",
+    "domain": "ae-01",
+    "blueprint_task": "1.1",
+    "qtype": "multiple_choice",
+    "difficulty_estimate": "L3",
+    "stem": "A source table in the warehouse is physically named `raw_listings`, but the team wants to reference it in models as simply `listings`. The YAML sets `identifier: raw_listings` under a table entry named `listings`. A developer needs to know what argument to pass into `{{ source(...) }}` to select from this table. Which argument should they pass as the table name?",
+    "option_texts": {
+      "A": "`listings`, the `name:` defined under the `tables:` key, not the `identifier`",
+      "B": "`raw_listings`, the `identifier`, since that is the table's real name in the database",
+      "C": "Both `listings` and `raw_listings` work interchangeably as the second argument to `source()`",
+      "D": "Neither; `identifier` tables must be queried with `{{ ref(...) }}` instead of `source()`"
+    },
+    "drill_answer": "A",
+    "drill_answer_short": "source() takes the table's name: property; identifier only changes the underlying physical name it resolves to",
+    "decision_hinge": "source(source_name, table_name): table_name is the name: defined under a tables: key. If names are less-than-perfect, use the schema and identifier properties to define the names as per the database, and use your name: property for the name that makes sense.",
+    "sources": [
+      "https://docs.getdbt.com/reference/dbt-jinja-functions/source",
+      "https://docs.getdbt.com/docs/build/sources"
+    ],
+    "plausible_options": {
+      "B": "the YAML sets `identifier: raw_listings` under a table entry named `listings`"
+    },
+    "eliminated_by": {
+      "C": "A developer needs to know what argument to pass into `{{ source(...) }}` to select from this table",
+      "D": "A developer needs to know what argument to pass into `{{ source(...) }}` to select from this table"
+    },
+    "distractor_traps": {
+      "B": "T3: confusable sibling \u2014 identifier sets the real database name, but source() is still called with the name: property",
+      "C": "T1: fabricated \u2014 only the name: property is a valid second argument to source()",
+      "D": "T1: fabricated \u2014 source() is exactly the function for referencing raw, non-dbt-built data regardless of its identifier"
+    },
+    "topics": [
+      "ae/01-developing-and-optimizing-models/dbt-commands"
+    ]
+  },
+  {
+    "id": "draft-orig3-ae01-dispatch-cross-platform-macro",
+    "domain": "ae-01",
+    "blueprint_task": "1.3",
+    "qtype": "multiple_choice",
+    "difficulty_estimate": "L4",
+    "stem": "A team needs one macro call that compiles to `DATE_TRUNC('month', review_date)` on Snowflake but `DATE_TRUNC(review_date, MONTH)` on BigQuery, without an `{% if target.type %}` branch hardcoded into every model that calls it. What is the recommended dbt pattern for this, and how does it pick the right implementation?",
+    "option_texts": {
+      "A": "Use `adapter.dispatch()` inside the macro; dbt searches for an adapter-prefixed version like `snowflake__my_macro` or `bigquery__my_macro` before falling back to a default",
+      "B": "Define the macro once with a single SQL body, since dbt automatically rewrites `DATE_TRUNC` syntax per adapter under the hood",
+      "C": "Write five near-identical macros, one hardcoded per supported adapter, and call the right one by name in every model",
+      "D": "Use `{% if target.type == 'snowflake' %}` inside every model that needs this date truncation"
+    },
+    "drill_answer": "A",
+    "drill_answer_short": "adapter.dispatch() routes to an adapter-prefixed macro implementation automatically",
+    "decision_hinge": "dbt can extend functionality across Supported Data Platforms through a system of multiple dispatch. Adapter-specific macros are prefixed with the lowercase adapter name and two underscores; given a macro named my_macro, dbt will look for snowflake__my_macro or bigquery__my_macro, falling back to the default implementation if none is found.",
+    "sources": [
+      "https://docs.getdbt.com/reference/dbt-jinja-functions/dispatch"
+    ],
+    "plausible_options": {
+      "C": "without an `{% if target.type %}` branch hardcoded into every model that calls it"
+    },
+    "eliminated_by": {
+      "B": "needs one macro call that compiles to `DATE_TRUNC('month', review_date)` on Snowflake but `DATE_TRUNC(review_date, MONTH)` on BigQuery",
+      "D": "without an `{% if target.type %}` branch hardcoded into every model that calls it"
+    },
+    "distractor_traps": {
+      "B": "T1: fabricated \u2014 dbt does not auto-translate arbitrary SQL functions between adapters",
+      "C": "T7: over-engineering \u2014 dispatch already solves this without writing and separately naming one macro per adapter",
+      "D": "T4: breaks a stated requirement \u2014 the stem explicitly rules out a hardcoded conditional in every calling model"
+    },
+    "topics": [
+      "ae/01-developing-and-optimizing-models/dbt-commands"
+    ],
+    "s": null
+  },
+  {
+    "id": "draft-orig3-ae01-materialized-folder-cascade",
+    "domain": "ae-01",
+    "blueprint_task": "1.6",
+    "qtype": "multiple_choice",
+    "difficulty_estimate": "L3",
+    "stem": "A `dbt_project.yml` sets `airbnb: +materialized: view` at the top level, `dim: +materialized: table` for the `dim/` subfolder, and `src: +materialized: ephemeral` for the `src/` subfolder. A model file sits at `models/fct/fct_reviews.sql`, in a `fct/` folder that has no materialized setting of its own and no in-file `config()` block. The team needs to predict which materialization it actually builds as. Which one wins?",
+    "option_texts": {
+      "A": "`view`, because `fct_reviews` falls through to the top-level `airbnb` default once `fct/` has no more specific setting",
+      "B": "`table`, because dbt always defaults an unconfigured model to table regardless of any project-level setting",
+      "C": "`ephemeral`, because the most restrictive materialization anywhere in the project always wins as a fallback",
+      "D": "dbt raises a compilation error, because `fct/` must declare its own materialized config explicitly"
+    },
+    "drill_answer": "A",
+    "drill_answer_short": "With no folder-specific override, a model falls through to the project's top-level default",
+    "decision_hinge": "The most specific configuration always takes precedence. In the project YAML file, configurations applied to a subdirectory take precedence over configurations applied to the entire project.",
+    "sources": [
+      "https://docs.getdbt.com/reference/model-configs"
+    ],
+    "plausible_options": {
+      "C": "has no materialized setting of its own and no in-file `config()` block"
+    },
+    "eliminated_by": {
+      "B": {
+        "signal": "sets `airbnb: +materialized: view` at the top level",
+        "requires_fact": "The most specific configuration always takes precedence; in the project YAML file, configurations applied to a subdirectory take precedence over configurations applied to the entire project."
+      },
+      "D": "has no materialized setting of its own and no in-file `config()` block"
+    },
+    "distractor_traps": {
+      "B": "T1: fabricated \u2014 dbt defines no universal table default that overrides an explicit project-level setting",
+      "C": "T3: confusable sibling \u2014 a folder's own override would take precedence by specificity, but no such override is declared here",
+      "D": "T1: fabricated \u2014 a missing folder-level override is not an error; it simply falls back to a less specific config"
+    },
+    "topics": [
+      "ae/01-developing-and-optimizing-models/materializations"
+    ]
+  }
+]

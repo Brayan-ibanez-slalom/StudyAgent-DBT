@@ -1,0 +1,205 @@
+[
+  {
+    "id": "draft-orig3-ae04-retry-after-transient-failure-scope",
+    "domain": "ae-04",
+    "blueprint_task": "4.1",
+    "qtype": "multiple_choice",
+    "difficulty_estimate": "L4",
+    "stem": "A nightly run of 50 models fails at `fct_reviews` due to a transient database timeout, after 30 models had already succeeded and before 19 others ran at all. The developer fixes the connectivity issue and runs `dbt retry`. The team needs to know exactly how many models dbt attempts to build on this retry. How many?",
+    "option_texts": {
+      "A": "20, the failed model plus the models that never got a chance to run, since retry resumes from the point of failure",
+      "B": "50, every model in the original selection, since retry always re-executes the full original invocation",
+      "C": "30, the models that already succeeded, since retry re-validates every prior success",
+      "D": "0, because a transient database timeout means there are no recorded nodes to retry from"
+    },
+    "drill_answer": "A",
+    "drill_answer_short": "Retry resumes from the point of failure, covering the failed node plus anything that hadn't run yet",
+    "decision_hinge": "Retry re-executes the last invocation from the point of failure. Once some nodes have run, you can use retry to re-execute from any new point of failure.",
+    "sources": [
+      "https://docs.getdbt.com/reference/commands/retry"
+    ],
+    "plausible_options": {
+      "C": "after 30 models had already succeeded and before 19 others ran at all"
+    },
+    "eliminated_by": {
+      "B": "The developer fixes the connectivity issue and runs `dbt retry`",
+      "D": {
+        "signal": "after 30 models had already succeeded and before 19 others ran at all",
+        "requires_fact": "If no nodes are executed before the failure there are no recorded nodes to retry from; here, 30 nodes already ran successfully before the failure, so this case does not apply."
+      }
+    },
+    "distractor_traps": {
+      "B": "T4: breaks a stated fact \u2014 retry resumes from the point of failure, it does not re-run an already-successful invocation from scratch",
+      "C": "T3: confusable sibling \u2014 retry resumes forward from the failure, it does not re-validate a model that already succeeded",
+      "D": "T3: confusable sibling \u2014 the no-recorded-nodes case applies only when the failure happens before anything runs, not after 30 successes"
+    },
+    "topics": [
+      "ae/07-dbt-state/dbt-retry"
+    ]
+  },
+  {
+    "id": "draft-orig3-ae04-ci-only-changed-plus-downstream",
+    "domain": "ae-04",
+    "blueprint_task": "4.1",
+    "qtype": "multiple_choice",
+    "difficulty_estimate": "L3",
+    "stem": "A CI pipeline should only build and test models changed in a pull request, plus their downstream dependents, using a production manifest artifact available at `prod-artifacts/`. The team needs the single `--select` expression that achieves this precise scope. Which selector is correct?",
+    "option_texts": {
+      "A": "`state:modified+ --state prod-artifacts/`, selecting modified nodes plus their descendants, compared against the production manifest",
+      "B": "`+state:modified --state prod-artifacts/`, selecting modified nodes plus their ancestors",
+      "C": "`state:modified --state prod-artifacts/`, selecting only the modified nodes against the production manifest, no further scope needed",
+      "D": "`@state:modified --state prod-artifacts/`, selecting modified nodes plus ancestors of their descendants too"
+    },
+    "drill_answer": "A",
+    "drill_answer_short": "A trailing + on state:modified includes descendants, which is what this CI scope needs",
+    "decision_hinge": "Placed after a model/resource, the + operator includes the resource itself and all its descendants (downstream dependencies).",
+    "sources": [
+      "https://docs.getdbt.com/reference/node-selection/graph-operators"
+    ],
+    "plausible_options": {
+      "D": "plus their downstream dependents, using a production manifest artifact available at `prod-artifacts/`"
+    },
+    "eliminated_by": {
+      "B": "plus their downstream dependents, using a production manifest artifact available at `prod-artifacts/`",
+      "C": {
+        "signal": "plus their downstream dependents",
+        "requires_fact": "Placed after a model/resource, the + operator includes the resource itself and all its descendants; without it, only the modified nodes themselves would be selected."
+      }
+    },
+    "distractor_traps": {
+      "B": "T3: confusable sibling \u2014 a leading + selects ancestors (upstream), the opposite of the downstream dependents this CI job needs",
+      "C": "T4: breaks a stated requirement \u2014 the stem explicitly needs downstream dependents included too, which bare state:modified omits",
+      "D": "T7: over-engineering \u2014 @ additionally pulls in ancestors of descendants, useful for a different CI concern than simply building changed models and their dependents"
+    },
+    "topics": [
+      "ae/07-dbt-state/state-selection"
+    ]
+  },
+  {
+    "id": "draft-orig3-ae04-run-results-artifact-name",
+    "domain": "ae-04",
+    "blueprint_task": "4.1",
+    "qtype": "fill_in_blank",
+    "difficulty_estimate": "L2",
+    "stem": "After a `dbt run`, dbt writes an artifact to the `target/` directory containing the execution time and status for every node in that invocation. Name this JSON artifact file: ____",
+    "accepted_answers": [
+      "run_results.json",
+      "run-results.json"
+    ],
+    "drill_answer": "run_results.json",
+    "drill_answer_short": "run_results.json records timing and status info for each executed node",
+    "decision_hinge": "This file contains information about a completed invocation of dbt, including timing and status info for each node that was executed.",
+    "sources": [
+      "https://docs.getdbt.com/reference/artifacts/run-results-json"
+    ],
+    "topics": [
+      "ae/07-dbt-state/state-selection"
+    ]
+  },
+  {
+    "id": "draft-orig3-ae04-clone-state-modified-ci-pattern",
+    "domain": "ae-04",
+    "blueprint_task": "4.2",
+    "qtype": "multiple_choice",
+    "difficulty_estimate": "L4",
+    "stem": "A Snowflake CI pipeline runs `dbt clone --state prod-artifacts/ --select +state:modified` as its first step, before the rest of the job runs tests. The team needs to know exactly why this step exists, what it prevents on a platform like Snowflake. What's the documented purpose?",
+    "option_texts": {
+      "A": "It clones modified incremental models' upstream ancestors cheaply up front, preventing a costly full-refresh build for warehouses that support zero-copy cloning",
+      "B": "It permanently deletes any model not selected by `+state:modified`, keeping the CI schema small",
+      "C": "It runs the full test suite immediately, using the production data as a substitute for CI data",
+      "D": "It replaces `--defer` entirely, so the job no longer needs a `--state` flag on later steps"
+    },
+    "drill_answer": "A",
+    "drill_answer_short": "Cloning modified incremental models' ancestors up front avoids a costly full-refresh, on zero-copy-capable platforms",
+    "decision_hinge": "You may want to clone your modified incremental models as the first step of your dbt CI job to prevent costly full-refresh builds for warehouses that support zero-copy cloning.",
+    "sources": [
+      "https://docs.getdbt.com/reference/commands/clone"
+    ],
+    "plausible_options": {
+      "C": "before the rest of the job runs tests"
+    },
+    "eliminated_by": {
+      "B": "runs `dbt clone --state prod-artifacts/ --select +state:modified` as its first step",
+      "D": "before the rest of the job runs tests"
+    },
+    "distractor_traps": {
+      "B": "T1: fabricated \u2014 dbt clone copies selected nodes into the target schema, it does not delete anything",
+      "C": "T3: confusable sibling \u2014 cloning objects into a schema is not the same action as running a test suite against them",
+      "D": "T3: confusable sibling \u2014 dbt clone itself relies on the --defer feature, it does not replace the need for --state elsewhere in the job"
+    },
+    "topics": [
+      "ae/04-troubleshooting-pipelines/dbt-clone"
+    ]
+  },
+  {
+    "id": "draft-orig3-ae04-per-developer-isolated-schema",
+    "domain": "ae-04",
+    "blueprint_task": "4.1",
+    "qtype": "multiple_response",
+    "difficulty_estimate": "L3",
+    "stem": "A team of 5 developers each needs to write to their own isolated schema during development, without manually configuring a different schema name for every model. The platform engineer needs the TWO configuration elements that genuinely achieve this by default. Which TWO are correct?",
+    "option_texts": {
+      "A": "Each developer's own `profiles.yml` target sets their personal `schema`, which the generate_schema_name macro uses as the base",
+      "B": "dbt's default `generate_schema_name` macro combines the target schema with any custom schema, so each developer's models land under their own target schema automatically",
+      "C": "Every model must set an explicit `schema:` config pointing at that one developer's name, repeated per model",
+      "D": "A single shared `dbt_project.yml` schema setting is what dbt uses by default, applying identically to every developer regardless of their own profile"
+    },
+    "drill_answer": "A,B",
+    "drill_answer_short": "Each developer's own target.schema, combined by the default generate_schema_name macro, isolates them automatically",
+    "decision_hinge": "dbt uses a default macro called generate_schema_name to determine the name of the schema that a model should be built in. By default, dbt concatenates the target schema and the custom schema.",
+    "sources": [
+      "https://docs.getdbt.com/docs/build/custom-schemas"
+    ],
+    "plausible_options": {
+      "C": "without manually configuring a different schema name for every model"
+    },
+    "eliminated_by": {
+      "D": "without manually configuring a different schema name for every model"
+    },
+    "distractor_traps": {
+      "C": "T7: over-engineering \u2014 a per-model, per-developer schema override is unnecessary when the default macro already isolates by target.schema",
+      "D": "T4: breaks a stated requirement \u2014 a single shared setting cannot isolate developers from each other by definition"
+    },
+    "topics": [
+      "ae/01-developing-and-optimizing-models/project-config-and-flags"
+    ]
+  },
+  {
+    "id": "draft-orig3-ae04-not-null-error-skips-downstream-mart",
+    "domain": "ae-04",
+    "blueprint_task": "4.1",
+    "qtype": "multiple_choice",
+    "difficulty_estimate": "L3",
+    "stem": "During a `dbt build`, a `not_null` test on `fct_reviews.reviewer_name` fails with `severity: error`. `mart_fullmoon_reviews` depends on `fct_reviews`. The team needs to know exactly what happens to `mart_fullmoon_reviews` in this same invocation. What happens?",
+    "option_texts": {
+      "A": "`mart_fullmoon_reviews` is skipped, because a test failure on an upstream resource blocks and skips its downstream resources",
+      "B": "`mart_fullmoon_reviews` still builds normally, since the test failure is isolated to `fct_reviews` alone",
+      "C": "`mart_fullmoon_reviews` builds, but with a warning logged alongside the test failure",
+      "D": "The entire `dbt build` invocation aborts immediately, stopping every other unrelated model too"
+    },
+    "drill_answer": "A",
+    "drill_answer_short": "A failing error-severity test on an upstream resource skips its downstream dependents",
+    "decision_hinge": "Tests on upstream resources will block downstream resources from running, and a test failure will cause those downstream resources to skip entirely.",
+    "sources": [
+      "https://docs.getdbt.com/reference/commands/build"
+    ],
+    "plausible_options": {
+      "D": "fails with `severity: error`"
+    },
+    "eliminated_by": {
+      "B": {
+        "signal": "fails with `severity: error`",
+        "requires_fact": "A test failure will cause those downstream resources to skip entirely; the failure is not isolated to only the model the test is attached to."
+      },
+      "C": "fails with `severity: error`"
+    },
+    "distractor_traps": {
+      "B": "T4: breaks a stated fact \u2014 a failing test blocks and skips downstream resources, it is not isolated to its own model",
+      "C": "T1: fabricated \u2014 a skip is not the same as a successful build with a warning attached",
+      "D": "T3: confusable sibling \u2014 aborting the whole invocation is --fail-fast behaviour, not the default skip rule for one failing test"
+    },
+    "topics": [
+      "ae/04-troubleshooting-pipelines/dag-failure-points"
+    ]
+  }
+]

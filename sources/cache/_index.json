@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "count": 100,
+  "count": 106,
   "updated_at": "2026-10-26",
   "entries": [
     {
@@ -801,6 +801,54 @@
       "title": "store_failures_as | dbt Developer Hub",
       "fetched_at": "2026-10-26",
       "sha256": "e8e902f638744402473557decd9a9e2a707a7543681dc68717efcef4b99d7724",
+      "source": "mcp-cache_fetch"
+    },
+    {
+      "url": "https://docs.getdbt.com/docs/build/sources#selecting-from-a-source",
+      "path": "sources/cache/_raw/docs.getdbt.com/docs/build/sources.txt",
+      "title": "Add sources to your DAG | dbt Developer Hub",
+      "fetched_at": "2026-10-26",
+      "sha256": "e3934236f62c512efc9756eb0921dab0770f7abc124dd36b93241f2b78dc2967",
+      "source": "mcp-cache_fetch"
+    },
+    {
+      "url": "https://docs.getdbt.com/docs/build/sample-flag",
+      "path": "sources/cache/_raw/docs.getdbt.com/docs/build/sample-flag.txt",
+      "title": "About the sample flag | dbt Developer Hub",
+      "fetched_at": "2026-10-26",
+      "sha256": "0390f8742189720f503f14b5acb010765f2426bd29b71d9fa7728482645414f7",
+      "source": "mcp-cache_fetch"
+    },
+    {
+      "url": "https://docs.getdbt.com/reference/dbt-jinja-functions/source",
+      "path": "sources/cache/_raw/docs.getdbt.com/reference/dbt-jinja-functions/source.txt",
+      "title": "About source function | dbt Developer Hub",
+      "fetched_at": "2026-10-26",
+      "sha256": "dc683f80ac458458be578e13000c6f48f542126da066c793ef636f038fe12757",
+      "source": "mcp-cache_fetch"
+    },
+    {
+      "url": "https://docs.getdbt.com/reference/dbt-jinja-functions/dispatch",
+      "path": "sources/cache/_raw/docs.getdbt.com/reference/dbt-jinja-functions/dispatch.txt",
+      "title": "About dispatch config | dbt Developer Hub",
+      "fetched_at": "2026-10-26",
+      "sha256": "146748ff883e3eba7734d4676e4bce580dd93d04b35455829696e90149b8901c",
+      "source": "mcp-cache_fetch"
+    },
+    {
+      "url": "https://docs.getdbt.com/docs/core/connect-data-platform/profiles.yml",
+      "path": "sources/cache/_raw/docs.getdbt.com/docs/core/connect-data-platform/profiles.yml.txt",
+      "title": "About profiles.yml | dbt Developer Hub",
+      "fetched_at": "2026-10-26",
+      "sha256": "0dd4b7d5d3255ef1ca56372861ff2ca16daee259d3eea4458f80508145ea64d1",
+      "source": "mcp-cache_fetch"
+    },
+    {
+      "url": "https://docs.getdbt.com/docs/build/materializations#table",
+      "path": "sources/cache/_raw/docs.getdbt.com/docs/build/materializations.txt",
+      "title": "Materializations | dbt Developer Hub",
+      "fetched_at": "2026-10-26",
+      "sha256": "d63f838f11e81a9f05de87780c490cf25094ce601c0685fed2954d623177ce01",
       "source": "mcp-cache_fetch"
     }
   ]

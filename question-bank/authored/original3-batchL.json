@@ -1,0 +1,292 @@
+[
+  {
+    "id": "draft-orig3-ae03-node-not-found-compilation-error",
+    "domain": "ae-03",
+    "blueprint_task": "3.1",
+    "qtype": "multiple_choice",
+    "difficulty_estimate": "L2",
+    "stem": "After running `dbt run`, a developer sees `Compilation Error in model src_listings (models/src/src_listings.sql) 'listings' is undefined`, pointing at a `{{ ref('listings') }}` call where no model named `listings` actually exists in the project. The team needs the fastest documented fix. What should they do?",
+    "option_texts": {
+      "A": "Open the file the error names, search for the misspelled reference, and correct it to the actual model's file name",
+      "B": "Run `dbt deps`, since an undefined reference always means a missing package dependency",
+      "C": "Add a `source()` block for `listings`, since any undefined `ref()` should be converted to a source",
+      "D": "Ignore it; an undefined reference to a nonexistent model resolves automatically to the closest matching name"
+    },
+    "drill_answer": "A",
+    "drill_answer_short": "An undefined ref() name means the referenced model doesn't exist; fix the reference to the real model name",
+    "decision_hinge": "Model 'model.jaffle_shop.customers' (models/customers.sql) depends on a node named 'stg_customer' which was not found. There must be a file named stg_customer.sql for this to work. Replace this reference with a reference to another model, in this case stg_customers.",
+    "sources": [
+      "https://docs.getdbt.com/guides/debug-errors"
+    ],
+    "plausible_options": {
+      "B": "no model named `listings` actually exists in the project"
+    },
+    "eliminated_by": {
+      "C": "where no model named `listings` actually exists in the project",
+      "D": "where no model named `listings` actually exists in the project"
+    },
+    "distractor_traps": {
+      "B": "T3: confusable sibling \u2014 a missing package macro is a different failure than a ref() pointing at a nonexistent model",
+      "C": "T1: fabricated \u2014 dbt gives no rule for silently converting an undefined ref() into a source() call",
+      "D": "T1: fabricated \u2014 dbt never auto-resolves an undefined reference to the nearest matching name"
+    },
+    "topics": [
+      "ae/03-debugging-modeling-errors/compiled-code-and-logs"
+    ]
+  },
+  {
+    "id": "draft-orig3-ae03-syntax-error-database-error",
+    "domain": "ae-03",
+    "blueprint_task": "3.1",
+    "qtype": "multiple_choice",
+    "difficulty_estimate": "L2",
+    "stem": "A production run fails with `Database Error in model dim_listings_cleansed (models/dim/dim_listings_cleansed.sql) 001003 (42000): SQL compilation error: syntax error line 14`, and the model's Jinja and YAML had already parsed successfully earlier in the same run. The team needs to know which step of dbt's process actually produced this error. Which step is it?",
+    "option_texts": {
+      "A": "SQL execution, since the warehouse rejected the compiled SQL it was sent, after Jinja and YAML had already parsed",
+      "B": "Parsing, since a syntax error always means the Jinja template itself already failed before anything parsed cleanly",
+      "C": "Graph validation, since a dependency cycle often shows up as a warehouse error code during that step",
+      "D": "Initialize, since the connection check must have failed before this specific model could even be selected"
+    },
+    "drill_answer": "A",
+    "drill_answer_short": "A warehouse-reported syntax error at a specific line is a Database Error, at the SQL execution stage",
+    "decision_hinge": "SQL execution: Run the models -- Database Error. Database Errors come from your data warehouse, and dbt passes the message on.",
+    "sources": [
+      "https://docs.getdbt.com/guides/debug-errors"
+    ],
+    "plausible_options": {
+      "B": "the model's Jinja and YAML had already parsed successfully earlier in the same run"
+    },
+    "eliminated_by": {
+      "C": "the model's Jinja and YAML had already parsed successfully earlier in the same run",
+      "D": "the model's Jinja and YAML had already parsed successfully earlier in the same run"
+    },
+    "distractor_traps": {
+      "B": "T3: confusable sibling \u2014 a syntax error reported by the warehouse happens at SQL execution, a later step than parsing Jinja templates",
+      "C": "T3: confusable sibling \u2014 a numbered error code here comes from the warehouse's own SQL engine, not dbt's graph-cycle check",
+      "D": "T4: breaks a stated fact \u2014 the error names a specific model and line, which requires the project to already be initialized and connected"
+    },
+    "topics": [
+      "ae/03-debugging-modeling-errors/compiled-code-and-logs"
+    ]
+  },
+  {
+    "id": "draft-orig3-ae03-missing-package-macro-deps",
+    "domain": "ae-03",
+    "blueprint_task": "3.1",
+    "qtype": "multiple_choice",
+    "difficulty_estimate": "L3",
+    "stem": "A developer runs `dbt compile` and sees `Compilation Error Could not find a match for macro 'dbt_utils.surrogate_key' in any installed packages`, even though `packages.yml` lists `dbt-labs/dbt_utils`. The team needs the most likely cause and fix, before assuming the macro name itself is wrong. What should they check first?",
+    "option_texts": {
+      "A": "Whether `dbt deps` has actually been run since the package was added; package macros only become available after dbt pulls the dependency into `dbt_packages`",
+      "B": "Whether the project's dbt version is too old to support any third-party packages at all",
+      "C": "Whether the macro needs to be manually copied from GitHub into the `macros/` folder, since packages do not expose macros directly",
+      "D": "Whether `profiles.yml` lists the correct target, since package macros resolve per target environment"
+    },
+    "drill_answer": "A",
+    "drill_answer_short": "Package macros are unavailable until dbt deps has actually pulled the package into dbt_packages",
+    "decision_hinge": "dbt deps pulls the most recent version of the dependencies listed in your packages.yml from git. Run dbt deps to install the package(s). Packages get installed in the dbt_packages directory.",
+    "sources": [
+      "https://docs.getdbt.com/reference/commands/deps",
+      "https://docs.getdbt.com/docs/build/packages"
+    ],
+    "plausible_options": {
+      "B": "even though `packages.yml` lists `dbt-labs/dbt_utils`"
+    },
+    "eliminated_by": {
+      "C": "even though `packages.yml` lists `dbt-labs/dbt_utils`",
+      "D": "even though `packages.yml` lists `dbt-labs/dbt_utils`"
+    },
+    "distractor_traps": {
+      "B": "T3: confusable sibling \u2014 third-party package support is a standard dbt feature, not something a newer dbt version unlocks",
+      "C": "T1: fabricated \u2014 a correctly installed package exposes its macros automatically, with no manual copying required",
+      "D": "T1: fabricated \u2014 package macro availability is not tied to which profiles.yml target is active"
+    },
+    "topics": [
+      "ae/01-developing-and-optimizing-models/packages"
+    ]
+  },
+  {
+    "id": "draft-orig3-ae03-circular-dependency-named-models",
+    "domain": "ae-03",
+    "blueprint_task": "3.1",
+    "qtype": "multiple_choice",
+    "difficulty_estimate": "L3",
+    "stem": "Running `dbt run` produces `Encountered an error: Found a cycle: model.airbnb.dim_listings_cleansed --> model.airbnb.fct_reviews --> model.airbnb.dim_listings_cleansed`. The team needs the correct fix, since neither model can be dropped. What should they do?",
+    "option_texts": {
+      "A": "Update the `ref()` calls so the two models no longer depend on each other, breaking the cycle in the DAG",
+      "B": "Add `{{ this }}` to one of the `ref()` calls, which lets dbt resolve mutual dependencies without breaking the cycle",
+      "C": "Increase `--threads` so dbt can build both models concurrently instead of resolving a strict build order",
+      "D": "Rename one of the two models, since dbt treats identically-structured model names as the cause of dependency cycles"
+    },
+    "drill_answer": "A",
+    "drill_answer_short": "A cycle must be broken by removing one of the mutual ref() dependencies",
+    "decision_hinge": "Your dbt DAG is not acyclic, and needs to be fixed. Update the ref functions to break the cycle. If you need to reference the current model, use the {{ this }} variable instead.",
+    "sources": [
+      "https://docs.getdbt.com/guides/debug-errors"
+    ],
+    "plausible_options": {
+      "C": "since neither model can be dropped"
+    },
+    "eliminated_by": {
+      "B": {
+        "signal": "since neither model can be dropped",
+        "requires_fact": "Update the ref functions to break the cycle; the this variable is for referencing the current model's own relation, not for resolving mutual dependencies between two separate models."
+      },
+      "D": "since neither model can be dropped"
+    },
+    "distractor_traps": {
+      "B": "T3: confusable sibling \u2014 this refers to the current model itself, it does not let two separate models keep referencing each other",
+      "C": "T3: confusable sibling \u2014 thread count controls parallelism, it has no effect on whether the DAG itself is acyclic",
+      "D": "T1: fabricated \u2014 dbt detects cycles from ref() dependencies, not from name similarity"
+    },
+    "topics": [
+      "ae/03-debugging-modeling-errors/compiled-code-and-logs"
+    ]
+  },
+  {
+    "id": "draft-orig3-ae03-ci-fresh-schema-relation-not-found",
+    "domain": "ae-03",
+    "blueprint_task": "3.1",
+    "qtype": "multiple_choice",
+    "difficulty_estimate": "L4",
+    "stem": "A developer runs `dbt run --select fct_reviews` on a brand-new CI schema. `fct_reviews` references an ephemeral model, which in turn selects from a raw table using `source()`. The build fails because that raw table does not exist anywhere the CI run can reach. The team needs to know what actually must exist for this build to succeed, given that the ephemeral model never creates a database object of its own. What's the real requirement?",
+    "option_texts": {
+      "A": "The raw table named under the source() call must already be populated somewhere this run can reach, since dbt never builds source tables itself",
+      "B": "The ephemeral model must first be built as its own standalone object before the downstream model can select from it",
+      "C": "Nothing extra is required; an ephemeral dependency is skipped entirely when building on a brand-new schema",
+      "D": "A `--full-refresh` flag is required before any source can be read for the first time on a new schema"
+    },
+    "drill_answer": "A",
+    "drill_answer_short": "A source table is raw data dbt never creates; it must already exist wherever the run points",
+    "decision_hinge": "Sources make it possible to name and describe the data loaded into your warehouse by your Extract and Load tools. dbt does not build source tables; they must already exist.",
+    "sources": [
+      "https://docs.getdbt.com/docs/build/sources"
+    ],
+    "plausible_options": {
+      "B": "that raw table does not exist anywhere the CI run can reach"
+    },
+    "eliminated_by": {
+      "C": {
+        "signal": "given that the ephemeral model never creates a database object of its own",
+        "requires_fact": "dbt interpolates the code from this model into dependent models using a common table expression; it is not built directly into the database."
+      },
+      "D": "that raw table does not exist anywhere the CI run can reach"
+    },
+    "distractor_traps": {
+      "B": "T3: confusable sibling \u2014 an ephemeral model is never built as a standalone object; its SQL is injected as a CTE wherever referenced",
+      "C": "T4: breaks a stated fact \u2014 an ephemeral model's logic still runs, interpolated into the referencing model, it is not skipped",
+      "D": "T1: fabricated \u2014 --full-refresh rebuilds incremental models; it has no bearing on whether a raw source table exists"
+    },
+    "topics": [
+      "ae/01-developing-and-optimizing-models/materializations"
+    ]
+  },
+  {
+    "id": "draft-orig3-ae03-yaml-list-indentation-error",
+    "domain": "ae-03",
+    "blueprint_task": "3.3",
+    "qtype": "multiple_choice",
+    "difficulty_estimate": "L2",
+    "stem": "Running `dbt parse` on a `sources.yml` file fails with a YAML parsing error referencing a specific line number, and the file's `tables:` list entries are indented inconsistently with the rest of the block. The team needs to know the most likely category of mistake behind this, before guessing at an unrelated config fix. What's the likely cause?",
+    "option_texts": {
+      "A": "Indentation: inconsistent spacing means the YAML parser itself cannot turn the file into a valid dictionary",
+      "B": "An unrecognized top-level property, the same category of error as an unexpected config key",
+      "C": "A missing `source()` call somewhere else in the project referencing this file",
+      "D": "A Jinja tag inside the sources file that was never closed"
+    },
+    "drill_answer": "A",
+    "drill_answer_short": "A YAML parse error pointing at a line number is usually an indentation problem",
+    "decision_hinge": "dbt wasn't able to turn your YAML into a valid dictionary. Usually, it's to do with indentation -- here's the offending YAML that caused this error.",
+    "sources": [
+      "https://docs.getdbt.com/guides/debug-errors"
+    ],
+    "plausible_options": {
+      "B": "The team needs to know the most likely category of mistake behind this"
+    },
+    "eliminated_by": {
+      "C": "the file's `tables:` list entries are indented inconsistently with the rest of the block",
+      "D": "the file's `tables:` list entries are indented inconsistently with the rest of the block"
+    },
+    "distractor_traps": {
+      "B": "T3: confusable sibling \u2014 an unrecognized key is a structurally valid file with a wrong key, a separate error from this one",
+      "C": "T1: fabricated \u2014 a missing source() call elsewhere would not cause a YAML parsing error inside this specific file",
+      "D": "T1: fabricated \u2014 sources.yml contains no Jinja tags that need closing"
+    },
+    "topics": [
+      "ae/03-debugging-modeling-errors/yaml-properties-vs-configs"
+    ]
+  },
+  {
+    "id": "draft-orig3-ae03-insufficient-privileges-database-error",
+    "domain": "ae-03",
+    "blueprint_task": "3.1",
+    "qtype": "multiple_choice",
+    "difficulty_estimate": "L3",
+    "stem": "A model runs successfully in the `DEV` schema but fails in production with `Database Error in model dim_listings_w_hosts Insufficient privileges to operate on schema 'AIRBNB_PROD'`. The team needs to identify which step of dbt's process actually failed here, and what the real cause is. What's going on?",
+    "option_texts": {
+      "A": "A rejection at the SQL execution step; the production role lacks the grants needed to create or modify objects in that schema",
+      "B": "A Compilation Error, because the model's Jinja must reference an invalid schema name string in production",
+      "C": "A Dependency Error, since a permissions message always indicates a missing upstream model",
+      "D": "A Runtime Error, because dbt could not even connect to the warehouse at all in this environment"
+    },
+    "drill_answer": "A",
+    "drill_answer_short": "A warehouse permission rejection at build time is a Database Error, not a compile or connection failure",
+    "decision_hinge": "SQL execution: Run the models -- Database Error. Database Errors come from your data warehouse, and dbt passes the message on; you may need to work with a DBA to confirm access.",
+    "sources": [
+      "https://docs.getdbt.com/guides/debug-errors"
+    ],
+    "plausible_options": {
+      "B": "fails in production with `Database Error in model dim_listings_w_hosts Insufficient privileges to operate on schema 'AIRBNB_PROD'`"
+    },
+    "eliminated_by": {
+      "C": "runs successfully in the `DEV` schema but fails in production",
+      "D": "runs successfully in the `DEV` schema but fails in production"
+    },
+    "distractor_traps": {
+      "B": "T3: confusable sibling \u2014 the error is explicitly labeled a Database Error, a later stage than Jinja/YAML parsing",
+      "C": "T1: fabricated \u2014 insufficient privileges is a permissions issue, unrelated to a missing upstream dependency",
+      "D": "T4: breaks a stated fact \u2014 the model successfully ran in DEV and the error names a specific schema permission issue, implying the connection itself succeeded"
+    },
+    "topics": [
+      "ae/03-debugging-modeling-errors/compiled-code-and-logs"
+    ]
+  },
+  {
+    "id": "draft-orig3-ae03-on-schema-change-append-new-columns-no-backfill",
+    "domain": "ae-03",
+    "blueprint_task": "3.4",
+    "qtype": "multiple_choice",
+    "difficulty_estimate": "L4",
+    "stem": "An incremental model is configured with `on_schema_change='append_new_columns'`. A developer adds a new nullable column to the model's SQL. After the next incremental run, the new column exists in the target table, but the team needs to know what value it holds for rows already present before this change. What's the actual outcome?",
+    "option_texts": {
+      "A": "Existing rows get `NULL`; none of dbt's schema-change behaviors backfill values into old records for a newly added column",
+      "B": "Existing rows are automatically backfilled by re-running the new column's logic against all historical data",
+      "C": "The entire table is silently rebuilt from scratch the next time the model runs, as if `--full-refresh` had been passed",
+      "D": "The build fails, because `append_new_columns` only allows new columns on brand-new rows, not existing tables"
+    },
+    "drill_answer": "A",
+    "drill_answer_short": "append_new_columns adds the column but never backfills historical rows; they get NULL",
+    "decision_hinge": "None of the on_schema_change behaviors backfill values in old records for newly added columns. If you need to populate those values, we recommend running manual updates, or triggering a --full-refresh.",
+    "sources": [
+      "https://docs.getdbt.com/docs/build/incremental-models"
+    ],
+    "plausible_options": {
+      "C": "the new column exists in the target table, but the team needs to know what value it holds for rows already present before this change"
+    },
+    "eliminated_by": {
+      "B": {
+        "signal": "the new column exists in the target table, but the team needs to know what value it holds for rows already present",
+        "requires_fact": "None of the on_schema_change behaviors backfill values in old records for newly added columns; to populate those values you must run manual updates or trigger a full refresh yourself."
+      },
+      "D": "After the next incremental run, the new column exists in the target table"
+    },
+    "distractor_traps": {
+      "B": "T4: breaks a stated fact \u2014 none of the on_schema_change behaviors backfill old records automatically",
+      "C": "T3: confusable sibling \u2014 append_new_columns explicitly avoids a full rebuild; a silent rebuild is not its documented behavior",
+      "D": "T4: breaks a stated fact \u2014 the stem says the column already exists in the table after the run, so the build did not fail"
+    },
+    "topics": [
+      "ae/01-developing-and-optimizing-models/incremental-models"
+    ]
+  }
+]

@@ -1,0 +1,256 @@
+[
+  {
+    "id": "draft-orig3-ae05-custom-generic-test-signature",
+    "domain": "ae-05",
+    "blueprint_task": "5.1",
+    "qtype": "multiple_choice",
+    "difficulty_estimate": "L2",
+    "stem": "A custom generic test is defined as `{% test positive_values(model, column_name) %} SELECT * FROM {{ model }} WHERE {{ column_name }} <= 0 {% endtest %}`, and used in `schema.yml` against several columns across several models. The team needs to confirm what makes this test genuinely reusable across all of them. What's the key mechanism?",
+    "option_texts": {
+      "A": "The macro's two arguments are templated into the query, so dbt passes in the right values for whichever column and model the test is attached to",
+      "B": "The test name `positive_values` must exactly match the file name it's saved in, which is what makes it reusable",
+      "C": "Generic tests are reusable because dbt automatically runs them against every column in the project, not just the ones they're attached to",
+      "D": "The test is only reusable because it happens to use `<=` instead of `<`, which dbt treats as a generic comparison"
+    },
+    "drill_answer": "A",
+    "drill_answer_short": "model and column_name are templated into the query, letting the same test macro apply anywhere",
+    "decision_hinge": "A generic data test is defined in a test block, which contains a parameterized query and accepts arguments. There are two arguments, model and column_name, which are then templated into the query. This is what makes the data test generic.",
+    "sources": [
+      "https://docs.getdbt.com/docs/build/data-tests"
+    ],
+    "plausible_options": {
+      "C": "used in `schema.yml` against several columns across several models"
+    },
+    "eliminated_by": {
+      "B": "used in `schema.yml` against several columns across several models",
+      "D": "used in `schema.yml` against several columns across several models"
+    },
+    "distractor_traps": {
+      "B": "T1: fabricated \u2014 a generic test's name has no required relationship to its containing file's name",
+      "C": "T3: confusable sibling \u2014 dbt only runs a generic test where it is explicitly attached as a property, not on every column automatically",
+      "D": "T1: fabricated \u2014 dbt does not treat any particular SQL comparison operator as inherently generic"
+    },
+    "topics": [
+      "ae/05-implementing-tests/test-types"
+    ]
+  },
+  {
+    "id": "draft-orig3-ae05-custom-test-default-severity-override",
+    "domain": "ae-05",
+    "blueprint_task": "5.3",
+    "qtype": "multiple_choice",
+    "difficulty_estimate": "L4",
+    "stem": "A custom generic test is defined with `{% test minimum_row_count(model, min_row_count) %} {{ config(severity = 'warn') }} SELECT COUNT(*) as cnt FROM {{ model }} ... {% endtest %}`. It is then attached to a specific model in `schema.yml` with `config: severity: error` at the usage site. The team needs to know which severity actually applies for that one usage. Which wins, and why?",
+    "option_texts": {
+      "A": "`error`, because a config set at the point where the test is used overrides the default baked into the test block's own definition",
+      "B": "`warn`, because a `config()` call inside the test's own macro body always wins over any later usage-site override",
+      "C": "Neither; setting severity in two places for the same test is a parse error",
+      "D": "`error`, but only because `min_row_count` was also explicitly passed as an argument"
+    },
+    "drill_answer": "A",
+    "drill_answer_short": "A usage-site config overrides the default severity set inside the test block's own definition",
+    "decision_hinge": "Set the default for all instances of a custom generic test by setting the config inside its test block. Configure a specific instance of a generic test with its own config at the usage site.",
+    "sources": [
+      "https://docs.getdbt.com/reference/resource-configs/severity"
+    ],
+    "plausible_options": {
+      "B": "It is then attached to a specific model in `schema.yml` with `config: severity: error` at the usage site"
+    },
+    "eliminated_by": {
+      "C": "It is then attached to a specific model in `schema.yml` with `config: severity: error` at the usage site",
+      "D": "It is then attached to a specific model in `schema.yml` with `config: severity: error` at the usage site"
+    },
+    "distractor_traps": {
+      "B": "T3: confusable sibling \u2014 the config inside the test block sets the default, not a value that overrides a more specific usage-site config",
+      "C": "T1: fabricated \u2014 setting a default inside the test block and a specific override at the usage site is exactly the documented pattern, not an error",
+      "D": "T8: scope error \u2014 which argument is passed to the test has no bearing on which severity config wins"
+    },
+    "topics": [
+      "ae/05-implementing-tests/test-severity-and-workflow"
+    ]
+  },
+  {
+    "id": "draft-orig3-ae05-unit-tests-only-selector",
+    "domain": "ae-05",
+    "blueprint_task": "5.1",
+    "qtype": "multiple_choice",
+    "difficulty_estimate": "L2",
+    "stem": "A team wants to run just the unit tests in their dbt project, skipping data tests like `not_null` or `unique` in the same invocation. The team needs the exact command that achieves this scope. Which command is correct?",
+    "option_texts": {
+      "A": "`dbt test --select test_type:unit`",
+      "B": "`dbt test --select test_type:data`, which inverts to select only unit tests by exclusion",
+      "C": "`dbt build --select resource_type:unit_test`, since unit tests only run under `dbt build`",
+      "D": "`dbt test`, since `dbt test` already excludes data tests by default"
+    },
+    "drill_answer": "A",
+    "drill_answer_short": "dbt test --select test_type:unit runs only unit tests",
+    "decision_hinge": "To run only your unit tests, use the command: dbt test --select test_type:unit.",
+    "sources": [
+      "https://docs.getdbt.com/docs/build/unit-tests"
+    ],
+    "eliminated_by": {
+      "B": "skipping data tests like `not_null` or `unique` in the same invocation",
+      "C": {
+        "signal": "skipping data tests like `not_null` or `unique` in the same invocation",
+        "requires_fact": "To run only your unit tests, use the command: dbt test --select test_type:unit, which runs under dbt test rather than dbt build."
+      }
+    },
+    "distractor_traps": {
+      "B": "T1: fabricated \u2014 test_type:data is not documented as an inverting selector for unit tests",
+      "C": "T3: confusable sibling \u2014 dbt test, not only dbt build, is the documented way to run unit tests; resource_type:unit_test is not the documented selector",
+      "D": "T3: confusable sibling \u2014 plain dbt test runs both data tests and unit tests by default, it does not exclude either"
+    },
+    "topics": [
+      "ae/05-implementing-tests/test-types"
+    ],
+    "plausible_options": {
+      "D": "skipping data tests like `not_null` or `unique` in the same invocation"
+    }
+  },
+  {
+    "id": "draft-orig3-ae05-singular-test-cross-model-join",
+    "domain": "ae-05",
+    "blueprint_task": "5.1",
+    "qtype": "multiple_choice",
+    "difficulty_estimate": "L3",
+    "stem": "A team writes `SELECT * FROM {{ ref('dim_listings_cleansed') }} l INNER JOIN {{ ref('fct_reviews') }} r USING (listing_id) WHERE l.updated_at < r.review_date` in a `tests/` file, as a one-off consistency check between exactly these two models, not meant to be reused anywhere else. They need to know what kind of test this is, and whether it needs a `test` block to be valid.",
+    "option_texts": {
+      "A": "A singular data test; it needs no `test` block at all, since it's just a raw SQL query returning failing rows",
+      "B": "A generic data test; any file that joins two models via `ref()` must be wrapped in `{% test %}...{% endtest %}`",
+      "C": "An invalid test; `ref()` can only be called once per file inside the `tests/` directory",
+      "D": "A unit test; any assertion comparing values across two different models is classified as a unit test"
+    },
+    "drill_answer": "A",
+    "drill_answer_short": "A one-off SQL assertion with no test block is a singular data test, even when it joins two models",
+    "decision_hinge": "A singular data test is the exact SQL that will return failing records, defined in a .sql file, typically in your tests directory. You can use Jinja, including ref and source, in the test definition, just like you can when creating models.",
+    "sources": [
+      "https://docs.getdbt.com/docs/build/data-tests"
+    ],
+    "plausible_options": {},
+    "eliminated_by": {
+      "B": {
+        "signal": "not meant to be reused anywhere else",
+        "requires_fact": "A singular data test is the exact SQL that will return failing records, defined in a .sql file, needing no test block, regardless of how many models it joins."
+      },
+      "C": "a one-off consistency check between exactly these two models",
+      "D": "a one-off consistency check between exactly these two models"
+    },
+    "distractor_traps": {
+      "B": "T4: breaks a stated fact \u2014 a singular data test needs no test block at all, regardless of how many models it joins",
+      "C": "T1: fabricated \u2014 a singular test file can use ref() as many times as needed, exactly as a model would",
+      "D": "T1: fabricated \u2014 comparing values across models in a test does not make it a unit test; unit tests validate logic against static fixtures, not live cross-model joins"
+    },
+    "topics": [
+      "ae/05-implementing-tests/test-types"
+    ]
+  },
+  {
+    "id": "draft-orig3-ae05-singular-vs-generic-choose-two",
+    "domain": "ae-05",
+    "blueprint_task": "5.1",
+    "qtype": "multiple_response",
+    "difficulty_estimate": "L3",
+    "stem": "A team needs to decide when a singular test is genuinely the better choice over a generic test. Which TWO scenarios favor a singular test?",
+    "option_texts": {
+      "A": "A one-off business rule specific to exactly one model, unlikely to ever be reused elsewhere",
+      "B": "A complex assertion involving a multi-table join that doesn't fit neatly into a reusable, parameterized pattern",
+      "C": "Checking that `listing_id` is unique in a dimension model, with no duplicate values allowed",
+      "D": "Validating that a column only contains values from a short, fixed list across many different models"
+    },
+    "drill_answer": "A,B",
+    "drill_answer_short": "A one-off rule or a complex multi-table join that resists parameterization both favor a singular test",
+    "decision_hinge": "Singular data tests are so easy that you may find yourself writing the same basic structure repeatedly, only changing the name of a column or model. By that point, the test isn't so singular! In that case, we recommend generic data tests.",
+    "sources": [
+      "https://docs.getdbt.com/docs/build/data-tests"
+    ],
+    "plausible_options": {
+      "C": "A team needs to decide when a singular test is genuinely the better choice over a generic test"
+    },
+    "eliminated_by": {
+      "D": {
+        "signal": "A team needs to decide when a singular test is genuinely the better choice over a generic test",
+        "requires_fact": "unique: this data test validates that there are no duplicate values present in a field, one of the four generic tests dbt ships out of the box."
+      }
+    },
+    "distractor_traps": {
+      "C": "T3: confusable sibling \u2014 uniqueness is exactly the built-in unique generic test's job, not a reason to reach for a singular test",
+      "D": "T1: fabricated \u2014 a fixed-list check reused across many models is exactly what accepted_values, a generic test, is for"
+    },
+    "topics": [
+      "ae/05-implementing-tests/test-types"
+    ]
+  },
+  {
+    "id": "draft-orig3-ae05-freshness-loaded-at-field-warn-after",
+    "domain": "ae-05",
+    "blueprint_task": "5.2",
+    "qtype": "multiple_choice",
+    "difficulty_estimate": "L3",
+    "stem": "A reviews source sets `loaded_at_field: date` and `freshness: {warn_after: {count: 1, period: hour}}`, leaving `error_after` out of the block entirely. The platform engineer needs to know whether this `warn_after` config is valid as written, and what follows from leaving `error_after` out. What's true?",
+    "option_texts": {
+      "A": "`warn_after` requires both `count` and `period` together, which are both present here; this reviews source can only ever warn, never error",
+      "B": "`warn_after` is invalid for this reviews source without an accompanying `error_after`; dbt requires both thresholds together",
+      "C": "This reviews source's `period` value is not valid; only `day` and `minute` are accepted period units",
+      "D": "`loaded_at_field` is ignored whenever `warn_after` is configured, since `warn_after` implies dbt uses adapter metadata instead"
+    },
+    "drill_answer": "A",
+    "drill_answer_short": "warn_after needs both count and period; with no error_after, the source can only warn, never error",
+    "decision_hinge": "Each of warn_after and error_after requires both count and period. One or both of warn_after and error_after can be provided. If neither is set, dbt will not check freshness for that resource.",
+    "sources": [
+      "https://docs.getdbt.com/docs/build/sources"
+    ],
+    "plausible_options": {
+      "B": "leaving `error_after` out of the block entirely"
+    },
+    "eliminated_by": {
+      "C": "leaving `error_after` out of the block entirely",
+      "D": {
+        "signal": "A reviews source sets `loaded_at_field: date`",
+        "requires_fact": "warn_after and error_after are independent freshness thresholds; loaded_at_field names the column dbt queries, with no documented interaction disabling either threshold."
+      }
+    },
+    "distractor_traps": {
+      "B": "T3: confusable sibling \u2014 one or both of warn_after and error_after can be provided; neither is required to accompany the other",
+      "C": "T1: fabricated \u2014 hour is a documented, valid period unit alongside day and minute",
+      "D": "T3: confusable sibling \u2014 loaded_at_field and warn_after are independent configs; one does not disable the other"
+    },
+    "topics": [
+      "ae/06-external-dependencies/source-freshness"
+    ]
+  },
+  {
+    "id": "draft-orig3-ae05-relationships-field-argument",
+    "domain": "ae-05",
+    "blueprint_task": "5.2",
+    "qtype": "multiple_choice",
+    "difficulty_estimate": "L3",
+    "stem": "A `relationships` test is configured as `- name: listing_id data_tests: - relationships: to: ref('dim_listings_cleansed') field: listing_id` on `fct_reviews`. The team needs to confirm exactly what the `field` argument names here. What does `field` point at?",
+    "option_texts": {
+      "A": "The column in the referenced model (`dim_listings_cleansed`) that `fct_reviews.listing_id` must have a matching value in",
+      "B": "The column on `fct_reviews` itself that the test is attached to, duplicating what the column property already specifies",
+      "C": "A foreign key constraint object on `dim_listings_cleansed` that must already exist in the warehouse before the test can run",
+      "D": "The data type that both the source and target columns must share for the check to be valid"
+    },
+    "drill_answer": "A",
+    "drill_answer_short": "field names the column in the referenced model that must contain a matching value",
+    "decision_hinge": "relationships: each customer_id in the orders model exists as an id in the customers table. Configured as relationships: arguments: to: ref('customers'), field: id.",
+    "sources": [
+      "https://docs.getdbt.com/docs/build/data-tests"
+    ],
+    "plausible_options": {
+      "B": "configured as `- name: listing_id data_tests: - relationships: to: ref('dim_listings_cleansed') field: listing_id`"
+    },
+    "eliminated_by": {
+      "C": "The team needs to confirm exactly what the `field` argument names here",
+      "D": "The team needs to confirm exactly what the `field` argument names here"
+    },
+    "distractor_traps": {
+      "B": "T3: confusable sibling \u2014 name: identifies the column under test on the current model; field: identifies the matching column on the referenced model",
+      "C": "T1: fabricated \u2014 relationships is a dbt-side SQL test, it requires no pre-existing warehouse foreign key object",
+      "D": "T1: fabricated \u2014 the test checks that values match, not that the two columns share an identical declared data type"
+    },
+    "topics": [
+      "ae/05-implementing-tests/test-types"
+    ]
+  }
+]

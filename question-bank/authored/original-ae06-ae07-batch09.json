@@ -387,19 +387,19 @@
     "difficulty_estimate": "L3",
     "stem": "A team declares a new exposure in YAML for a dashboard, listing a `name`, a `type`, and `depends_on` referencing two models. The reviewer notices the `owner` property is missing entirely. The team needs to know whether this exposure is valid as written. Is it, and why?",
     "option_texts": {
-      "A": "No, because `owner` is a required property, satisfied by either a `name` or an `email` under it",
-      "B": "Yes, because the `owner` property is optional metadata used only for documentation purposes",
+      "A": "Yes, because the `owner` property is optional metadata used only for documentation purposes",
+      "B": "No, because `owner` is a required property, satisfied by either a `name` or an `email` under it",
       "C": "No, because `depends_on` must reference a `source`, not models, for any exposure",
       "D": "Yes, as long as the exposure's `name` contains spaces or capital letters for readability"
     },
-    "drill_answer": "A",
+    "drill_answer": "B",
     "drill_answer_short": "owner is required on an exposure, satisfied by name or email",
     "decision_hinge": "Required: name, a unique exposure name written in snake case; owner, name or email required, additional properties allowed.",
     "sources": [
       "https://docs.getdbt.com/docs/build/exposures"
     ],
     "plausible_options": {
-      "B": "The reviewer notices the `owner` property is missing entirely"
+      "A": "The reviewer notices the `owner` property is missing entirely"
     },
     "eliminated_by": {
       "C": "listing a `name`, a `type`, and `depends_on` referencing two models",
@@ -409,7 +409,7 @@
       }
     },
     "distractor_traps": {
-      "B": "T3: confusable sibling — some exposure properties are optional metadata, but owner is explicitly required",
+      "A": "T3: confusable sibling — some exposure properties are optional metadata, but owner is explicitly required",
       "C": "T1: fabricated — depends_on commonly references models, not only sources",
       "D": "T1: fabricated — name must be snake case; spaces and capitals belong in the separate label property"
     },
@@ -425,12 +425,12 @@
     "difficulty_estimate": "L3",
     "stem": "A command runs `dbt build --select +exposure:weekly_kpis`. The exposure `weekly_kpis` depends on two models, each with their own separate upstream chains. The release manager needs to know exactly which resources this builds. What gets built?",
     "option_texts": {
-      "A": "Every model upstream of `weekly_kpis`, following both of its dependency chains back to their sources, plus the exposure's direct parents",
+      "A": "Every model in the project, since an exposure like `weekly_kpis` can depend on anything upstream",
       "B": "Only `weekly_kpis`'s two direct parent models, not anything further up either chain",
-      "C": "Every model in the project, since an exposure like `weekly_kpis` can depend on anything upstream",
+      "C": "Every model upstream of `weekly_kpis`, following both of its dependency chains back to their sources, plus the exposure's direct parents",
       "D": "Nothing is built; `exposure:weekly_kpis` only supports `dbt test` and `dbt ls` across both upstream chains, never `dbt build`"
     },
-    "drill_answer": "A",
+    "drill_answer": "C",
     "drill_answer_short": "+exposure:name selects the exposure's full upstream lineage, not just its direct parents",
     "decision_hinge": "dbt run --select +exposure:weekly_kpis runs all models that feed into the weekly_kpis exposure.",
     "sources": [
@@ -440,15 +440,15 @@
       "B": "each with their own separate upstream chains"
     },
     "eliminated_by": {
-      "C": "The release manager needs to know exactly which resources this builds",
+      "A": "The release manager needs to know exactly which resources this builds",
       "D": {
         "signal": "The release manager needs to know exactly which resources this builds",
         "requires_fact": "dbt run --select +exposure:weekly_kpis runs all models that feed into the weekly_kpis exposure."
       }
     },
     "distractor_traps": {
+      "A": "T1: fabricated — the + operator scopes to the exposure's own lineage, not the whole project",
       "B": "T3: confusable sibling — the leading + traverses the full upstream chain, not just the direct parents",
-      "C": "T1: fabricated — the + operator scopes to the exposure's own lineage, not the whole project",
       "D": "T1: fabricated — exposure selectors work with dbt build just like other selection methods"
     },
     "topics": [

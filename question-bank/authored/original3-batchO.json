@@ -1,0 +1,307 @@
+[
+  {
+    "id": "draft-orig3-ae01-generate-schema-name-package-override",
+    "domain": "ae-01",
+    "blueprint_task": "1.6",
+    "qtype": "multiple_choice",
+    "difficulty_estimate": "L4",
+    "stem": "A root dbt project defines its own custom macro for generating a model's schema name. Two installed packages, unrelated to each other, each also happen to define a macro with that exact same name. A developer needs to know which of these three definitions dbt actually uses when it builds a model. Which one wins, and why?",
+    "option_texts": {
+      "A": "The root project's own macro wins, because dbt always ignores a same-named macro coming from any package",
+      "B": "Whichever package happens to be listed first in `packages.yml` wins over the project's own macro",
+      "C": "dbt raises a compilation error, since three separate definitions of the same macro name is ambiguous",
+      "D": "dbt merges the logic from all three definitions into a single combined macro at parse time"
+    },
+    "drill_answer": "A",
+    "drill_answer_short": "A project's own generate_schema_name macro wins; dbt ignores any package-defined versions",
+    "decision_hinge": "If your dbt project has a custom macro called generate_schema_name, dbt will use it instead of the default macro. Be careful: dbt will ignore any custom generate_schema_name macros included in installed packages.",
+    "sources": [
+      "https://docs.getdbt.com/docs/build/custom-schemas"
+    ],
+    "plausible_options": {},
+    "eliminated_by": {
+      "B": {
+        "signal": "Two installed packages, unrelated to each other, each also happen to define a macro with that exact same name",
+        "requires_fact": "dbt will ignore any custom generate_schema_name macros included in installed packages, regardless of install order."
+      },
+      "C": "A developer needs to know which of these three definitions dbt actually uses when it builds a model",
+      "D": "A developer needs to know which of these three definitions dbt actually uses when it builds a model"
+    },
+    "distractor_traps": {
+      "B": "T4: breaks a stated fact \u2014 a package-defined version of this macro is ignored entirely, regardless of install order",
+      "C": "T1: fabricated \u2014 dbt resolves this deterministically in favor of the project's own macro, it does not error",
+      "D": "T1: fabricated \u2014 dbt does not merge multiple macro definitions together"
+    },
+    "topics": [
+      "ae/01-developing-and-optimizing-models/project-config-and-flags"
+    ]
+  },
+  {
+    "id": "draft-orig3-ae01-grants-post-hook-project-config",
+    "domain": "ae-01",
+    "blueprint_task": "1.9",
+    "qtype": "multiple_choice",
+    "difficulty_estimate": "L3",
+    "stem": "A `dbt_project.yml` sets `models: airbnb: +grants: {select: [\"transform\", \"reporter\"]} +post-hook: [\"INSERT INTO {{ target.schema }}.audit_log VALUES (...)\"]`. The team needs to know what each of these two configs actually controls once a model in `airbnb` finishes building. What does each one do?",
+    "option_texts": {
+      "A": "`+grants` ensures the model's view or table grants match the configured privileges; `+post-hook` runs the given SQL statement right after the model is built",
+      "B": "`+grants` runs SQL after the build finishes; `+post-hook` ensures permissions match the configured privileges",
+      "C": "Both configs do the same thing: they run arbitrary SQL statements after the model builds",
+      "D": "`+grants` and `+post-hook` only apply to seeds and snapshots, never to models"
+    },
+    "drill_answer": "A",
+    "drill_answer_short": "grants reconciles permissions to match config; post-hook runs SQL right after the model builds",
+    "decision_hinge": "When your model finishes building, dbt ensures that the grants on its view or table match exactly the grants you have configured. post-hook is executed after a model, seed or snapshot is built.",
+    "sources": [
+      "https://docs.getdbt.com/reference/resource-configs/grants",
+      "https://docs.getdbt.com/reference/resource-configs/pre-hook-post-hook"
+    ],
+    "plausible_options": {
+      "C": "once a model in `airbnb` finishes building"
+    },
+    "eliminated_by": {
+      "B": "once a model in `airbnb` finishes building",
+      "D": "once a model in `airbnb` finishes building"
+    },
+    "distractor_traps": {
+      "B": "T3: confusable sibling \u2014 the two configs' roles are swapped here; grants reconciles permissions, post-hook runs SQL",
+      "C": "T3: confusable sibling \u2014 grants reconciles permissions to match config; running arbitrary SQL is what hooks are for",
+      "D": "T1: fabricated \u2014 both grants and hooks apply to models, seeds, and snapshots alike"
+    },
+    "topics": [
+      "ae/01-developing-and-optimizing-models/grants"
+    ]
+  },
+  {
+    "id": "draft-orig3-ae01-doc-reference-mechanism",
+    "domain": "ae-01",
+    "blueprint_task": "1.5",
+    "qtype": "multiple_choice",
+    "difficulty_estimate": "L2",
+    "stem": "A column description in `schema.yml` uses `description: '{{ doc(\"dim_listing_cleansed__minimum_nights\") }}'` instead of a plain markdown string. The team needs to know what this `{{ doc() }}` reference actually does when the docs site is generated. What does it do?",
+    "option_texts": {
+      "A": "It expands to the text content defined in a separate `{% docs %}` block with that same name",
+      "B": "It runs a SQL query against the model to generate a live description from the data itself",
+      "C": "It inserts the column's data type automatically, inferred from the model's compiled SQL",
+      "D": "It creates a new docs block with that name if one doesn't already exist"
+    },
+    "drill_answer": "A",
+    "drill_answer_short": "doc() expands to the markdown content of a matching {% docs %} block",
+    "decision_hinge": "To use a docs block, reference it from your schema.yml file with the doc() function in place of a markdown string. In the resulting documentation, the doc() reference will be expanded to the markdown defined in that docs block.",
+    "sources": [
+      "https://docs.getdbt.com/docs/collaborate/documentation"
+    ],
+    "plausible_options": {
+      "C": "instead of a plain markdown string"
+    },
+    "eliminated_by": {
+      "B": "The team needs to know what this `{{ doc() }}` reference actually does when the docs site is generated",
+      "D": "The team needs to know what this `{{ doc() }}` reference actually does when the docs site is generated"
+    },
+    "distractor_traps": {
+      "B": "T1: fabricated \u2014 doc() expands a static markdown block, it does not query the model's data",
+      "C": "T3: confusable sibling \u2014 doc() expands markdown text, it has no connection to inferring a data type from compiled SQL",
+      "D": "T1: fabricated \u2014 doc() references an existing block; it does not create one automatically"
+    },
+    "topics": [
+      "ae/01-developing-and-optimizing-models/dbt-commands"
+    ]
+  },
+  {
+    "id": "draft-orig3-ae01-persist-docs-ephemeral-incompatible",
+    "domain": "ae-01",
+    "blueprint_task": "1.5",
+    "qtype": "multiple_choice",
+    "difficulty_estimate": "L4",
+    "stem": "A team sets `persist_docs: {relation: true, columns: true}` on an ephemeral model, hoping its column descriptions will appear as warehouse comments. The team needs to know whether this actually works, given what `persist_docs` writes and what an ephemeral model creates. What happens?",
+    "option_texts": {
+      "A": "Nothing is written anywhere, because an ephemeral model produces no database object for `persist_docs` to attach comments to",
+      "B": "The comments are written onto the CTE this ephemeral model compiles into inside its downstream models",
+      "C": "`persist_docs` silently converts the model to a view so it has something to comment on",
+      "D": "The comments are written to the generated docs site HTML instead of the warehouse"
+    },
+    "drill_answer": "A",
+    "drill_answer_short": "persist_docs writes comments on database objects; an ephemeral model creates none to write to",
+    "decision_hinge": "persist_docs optionally persists resource descriptions as column and relation comments in the database. An ephemeral model is not built directly into the database; dbt interpolates its code into dependent models as a CTE.",
+    "sources": [
+      "https://docs.getdbt.com/reference/resource-configs/persist_docs",
+      "https://docs.getdbt.com/docs/build/materializations"
+    ],
+    "plausible_options": {
+      "C": "hoping its column descriptions will appear as warehouse comments"
+    },
+    "eliminated_by": {
+      "B": "hoping its column descriptions will appear as warehouse comments",
+      "D": "given what `persist_docs` writes and what an ephemeral model creates"
+    },
+    "distractor_traps": {
+      "B": "T1: fabricated \u2014 persist_docs comments attach to a database object, not to an interpolated CTE fragment",
+      "C": "T3: confusable sibling \u2014 persist_docs has no documented ability to override a model's own configured materialization",
+      "D": "T3: confusable sibling \u2014 persist_docs is explicitly about database comments, a separate mechanism from the generated docs site itself"
+    },
+    "topics": [
+      "ae/01-developing-and-optimizing-models/materializations"
+    ]
+  },
+  {
+    "id": "draft-orig3-ae01-docs-block-markdown-syntax",
+    "domain": "ae-01",
+    "blueprint_task": "1.5",
+    "qtype": "fill_in_blank",
+    "difficulty_estimate": "L2",
+    "stem": "A team wants to add a Markdown-formatted description to a model that is too long for inline YAML, so they write a doc block in a `.md` file. Complete the opening tag syntax for a docs block named `dim_listing_cleansed__minimum_nights`: ____ dim_listing_cleansed__minimum_nights %}",
+    "accepted_answers": [
+      "{% docs",
+      "{%docs",
+      "{% docs %}"
+    ],
+    "drill_answer": "{% docs",
+    "drill_answer_short": "A docs block opens with {% docs <name> %} and closes with {% enddocs %}",
+    "decision_hinge": "{% docs table_events %} This table contains clickstream events from the marketing website. ... {% enddocs %}",
+    "sources": [
+      "https://docs.getdbt.com/docs/collaborate/documentation"
+    ],
+    "topics": [
+      "ae/01-developing-and-optimizing-models/dbt-commands"
+    ]
+  },
+  {
+    "id": "draft-orig3-ae06-exposure-required-vs-optional",
+    "domain": "ae-06",
+    "blueprint_task": "6.1",
+    "qtype": "multiple_response",
+    "difficulty_estimate": "L3",
+    "stem": "A team drafts an exposure with `name: executive_dashboard`, `label: Executive Dashboard`, `type: dashboard`, `maturity: low`, and a `url`, but no `owner` property anywhere. The reviewer needs to know which TWO statements about this draft are correct, before approving it.",
+    "option_texts": {
+      "A": "`name` and `type` are both required, and both are present and valid here",
+      "B": "The exposure is invalid as drafted, because `owner` is a required property and it is missing entirely",
+      "C": "`maturity` is a required property too, so this exposure would be invalid even if `owner` were added",
+      "D": "`url` is a required property too, so this exposure would be invalid even if `owner` were added"
+    },
+    "drill_answer": "A,B",
+    "drill_answer_short": "name and type are required and present; owner is also required but missing here",
+    "decision_hinge": "Required: name, a unique exposure name written in snake case; type, one of dashboard, notebook, analysis, ml, application; owner, name or email required.",
+    "sources": [
+      "https://docs.getdbt.com/docs/build/exposures"
+    ],
+    "plausible_options": {
+      "C": "A team drafts an exposure with `name: executive_dashboard`, `label: Executive Dashboard`, `type: dashboard`, `maturity: low`, and a `url`, but no `owner` property anywhere"
+    },
+    "eliminated_by": {
+      "D": "A team drafts an exposure with `name: executive_dashboard`, `label: Executive Dashboard`, `type: dashboard`, `maturity: low`, and a `url`, but no `owner` property anywhere"
+    },
+    "distractor_traps": {
+      "C": "T3: confusable sibling \u2014 maturity is optional documentation metadata, not a required property",
+      "D": "T3: confusable sibling \u2014 url is optional context for consumers, not a mandatory field"
+    },
+    "topics": [
+      "ae/06-external-dependencies/exposures"
+    ]
+  },
+  {
+    "id": "draft-orig3-ae06-exposure-selector-build-scope",
+    "domain": "ae-06",
+    "blueprint_task": "6.1",
+    "qtype": "multiple_choice",
+    "difficulty_estimate": "L3",
+    "stem": "A release engineer runs `dbt build --select +exposure:executive_dashboard`. The exposure depends on two models, which each have their own upstream chains feeding into them. The team needs to know exactly which resources this command builds. What gets built?",
+    "option_texts": {
+      "A": "Every model upstream of the exposure, following both dependency chains back to their sources, plus the exposure's two direct parents",
+      "B": "Only the exposure's two direct parent models, since `exposure:` selectors do not traverse further upstream",
+      "C": "Every model in the entire project, since an exposure feeding off two upstream chains could in principle depend on anything",
+      "D": "Nothing is built; exposure selectors only work with `dbt test` and `dbt ls`, never `dbt build`"
+    },
+    "drill_answer": "A",
+    "drill_answer_short": "A leading + on an exposure selector traverses its full upstream lineage, not just its direct parents",
+    "decision_hinge": "dbt run --select +exposure:weekly_kpis runs all models that feed into the weekly_kpis exposure. Placed before a model/resource, the + operator includes the resource itself and all its ancestors.",
+    "sources": [
+      "https://docs.getdbt.com/reference/node-selection/methods",
+      "https://docs.getdbt.com/reference/node-selection/graph-operators"
+    ],
+    "plausible_options": {
+      "B": "which each have their own upstream chains feeding into them"
+    },
+    "eliminated_by": {
+      "C": "The team needs to know exactly which resources this command builds",
+      "D": "The team needs to know exactly which resources this command builds"
+    },
+    "distractor_traps": {
+      "B": "T3: confusable sibling \u2014 the leading + traverses the full upstream lineage, not just the direct parents",
+      "C": "T1: fabricated \u2014 the + operator scopes to the exposure's own lineage, not the whole project",
+      "D": "T1: fabricated \u2014 exposure selectors work with dbt build the same as other selection methods"
+    },
+    "topics": [
+      "ae/06-external-dependencies/exposures"
+    ]
+  },
+  {
+    "id": "draft-orig3-ae01-package-macros-available-after-deps",
+    "domain": "ae-01",
+    "blueprint_task": "1.7",
+    "qtype": "multiple_choice",
+    "difficulty_estimate": "L2",
+    "stem": "A `packages.yml` lists `dbt-labs/dbt_utils` and `calogica/dbt_expectations`. The team needs to know exactly what makes the macros from both packages available for use in project models, since just editing `packages.yml` alone does not seem to be enough. What's the missing step, and why?",
+    "option_texts": {
+      "A": "Running `dbt deps`; package macros only become available once dbt has actually pulled each listed dependency into the project",
+      "B": "Nothing else is needed; editing `packages.yml` makes every listed package's macros available immediately",
+      "C": "Restarting the warehouse connection, since package macros are registered at the database level, not the project level",
+      "D": "Manually copying each package's macro files into the project's own `macros/` folder"
+    },
+    "drill_answer": "A",
+    "drill_answer_short": "dbt deps must run to actually pull listed packages before their macros are available",
+    "decision_hinge": "dbt deps pulls the most recent version of the dependencies listed in your packages.yml from git. Run dbt deps to install the package(s).",
+    "sources": [
+      "https://docs.getdbt.com/reference/commands/deps"
+    ],
+    "plausible_options": {
+      "C": "since just editing `packages.yml` alone does not seem to be enough"
+    },
+    "eliminated_by": {
+      "B": "since just editing `packages.yml` alone does not seem to be enough",
+      "D": "since just editing `packages.yml` alone does not seem to be enough"
+    },
+    "distractor_traps": {
+      "B": "T4: breaks a stated fact \u2014 editing packages.yml alone is exactly what the stem says is insufficient",
+      "C": "T3: confusable sibling \u2014 package macro availability has nothing to do with the warehouse connection itself",
+      "D": "T7: over-engineering \u2014 dbt deps already pulls the package in; manually copying files duplicates that mechanism"
+    },
+    "topics": [
+      "ae/01-developing-and-optimizing-models/packages"
+    ]
+  },
+  {
+    "id": "draft-orig3-ae01-snapshot-relation-source-yaml",
+    "domain": "ae-01",
+    "blueprint_task": "1.10",
+    "qtype": "multiple_choice",
+    "difficulty_estimate": "L4",
+    "stem": "A snapshot is configured as YAML with a `relation:` property pointing at a raw table via `source()`, plus `config: {unique_key: id, strategy: timestamp, updated_at: updated_at}`. The team needs to know exactly what `relation` points at here, and whether a `source()` call is valid syntax for it. What's true?",
+    "option_texts": {
+      "A": "`relation` names the input this snapshot reads from, and both `source(...)` and `ref(...)` are valid values for it",
+      "B": "`relation` is a deprecated alias for `target_schema`, which must be replaced before this config will parse",
+      "C": "`relation` only accepts a bare table name string, never a `source()` or `ref()` call",
+      "D": "`relation` configures where the snapshot's own output table is written, not what it reads from"
+    },
+    "drill_answer": "A",
+    "drill_answer_short": "relation names the source or model the snapshot reads from, accepting source() or ref()",
+    "decision_hinge": "relation: relation # source('my_source', 'my_table') or ref('my_model'). This is how to reference the ephemeral model or source in the relation field.",
+    "sources": [
+      "https://docs.getdbt.com/docs/build/snapshots"
+    ],
+    "plausible_options": {
+      "C": "exactly what `relation` points at here, and whether a `source()` call is valid syntax for it"
+    },
+    "eliminated_by": {
+      "B": "exactly what `relation` points at here, and whether a `source()` call is valid syntax for it",
+      "D": "exactly what `relation` points at here, and whether a `source()` call is valid syntax for it"
+    },
+    "distractor_traps": {
+      "B": "T1: fabricated \u2014 relation is a current, documented YAML snapshot property, not a deprecated target_schema alias",
+      "C": "T3: confusable sibling \u2014 some older config styles only took a bare table name; the current relation property accepts source() or ref()",
+      "D": "T3: confusable sibling \u2014 relation names the input being snapshotted; the output table's location is controlled by separate schema/database config"
+    },
+    "topics": [
+      "ae/01-developing-and-optimizing-models/snapshots"
+    ]
+  }
+]

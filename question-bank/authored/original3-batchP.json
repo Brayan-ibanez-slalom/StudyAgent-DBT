@@ -1,0 +1,312 @@
+[
+  {
+    "id": "draft-orig3-ae07-store-failures-schema-project-level",
+    "domain": "ae-07",
+    "blueprint_task": "7.1",
+    "qtype": "multiple_choice",
+    "difficulty_estimate": "L3",
+    "stem": "A `dbt_project.yml` sets `data_tests: {+store_failures: true, +schema: test_audit}` at the project level. The team needs to know exactly what effect this combination has on every test in the project, by default. What's the effect?",
+    "option_texts": {
+      "A": "Every test's failures are stored in the database, landing in a custom schema instead of the default one dbt would otherwise use",
+      "B": "Only tests explicitly tagged `store_failures` in their own YAML are affected by default; the project-level setting is purely documentation",
+      "C": "Test failures are stored only in memory for the duration of the run, never written to the warehouse",
+      "D": "This configuration is invalid; `store_failures` and `schema` cannot be set together at the project level"
+    },
+    "drill_answer": "A",
+    "drill_answer_short": "Project-level +store_failures and +schema set the default storage behavior and location for every test",
+    "decision_hinge": "Set the default for all tests in a package or project: data_tests: +store_failures: true. By default, store_failures uses a schema named {{ profile.schema }}_dbt_test__audit, but you can configure the schema to a different value.",
+    "sources": [
+      "https://docs.getdbt.com/reference/resource-configs/store_failures"
+    ],
+    "plausible_options": {
+      "B": "The team needs to know exactly what effect this combination has on every test in the project, by default"
+    },
+    "eliminated_by": {
+      "C": "The team needs to know exactly what effect this combination has on every test in the project, by default",
+      "D": "The team needs to know exactly what effect this combination has on every test in the project, by default"
+    },
+    "distractor_traps": {
+      "B": "T3: confusable sibling \u2014 a + prefixed project-level config sets the default for every test in scope, it is not merely documentation",
+      "C": "T1: fabricated \u2014 store_failures writes failing rows into a database table, not an in-memory, non-persistent structure",
+      "D": "T1: fabricated \u2014 dbt defines no such restriction preventing these two configs from being set together"
+    },
+    "topics": [
+      "ae/05-implementing-tests/test-severity-and-workflow"
+    ]
+  },
+  {
+    "id": "draft-orig3-ae07-defer-without-building-upstream",
+    "domain": "ae-07",
+    "blueprint_task": "7.1",
+    "qtype": "multiple_choice",
+    "difficulty_estimate": "L4",
+    "stem": "A developer wants to test changes to `fct_reviews` locally without building all 15 upstream models from scratch. Their company stores production artifacts in S3, which has been downloaded locally to `./prod-manifest/`. The team needs the command that lets `fct_reviews`'s unbuilt, unselected parents resolve against that production state instead. Which command achieves this?",
+    "option_texts": {
+      "A": "`dbt build --select fct_reviews --defer --state ./prod-manifest/`",
+      "B": "`dbt build --select +fct_reviews --full-refresh`",
+      "C": "`dbt build --select fct_reviews --state ./prod-manifest/`, with no `--defer` flag needed",
+      "D": "`dbt clone --select fct_reviews --state ./prod-manifest/`"
+    },
+    "drill_answer": "A",
+    "drill_answer_short": "--defer with --state resolves unselected, unbuilt parent refs using the production manifest",
+    "decision_hinge": "When --defer is enabled, dbt resolves ref calls using the state manifest instead, but only if the node isn't among the selected nodes and it doesn't exist in the database. Deferral requires both --defer and --state to be set.",
+    "sources": [
+      "https://docs.getdbt.com/reference/node-selection/defer"
+    ],
+    "plausible_options": {
+      "B": "without building all 15 upstream models from scratch"
+    },
+    "eliminated_by": {
+      "C": {
+        "signal": "without building all 15 upstream models from scratch",
+        "requires_fact": "Deferral requires both --defer and --state to be set; --state alone does not enable ref calls to resolve against the state manifest."
+      },
+      "D": "without building all 15 upstream models from scratch"
+    },
+    "distractor_traps": {
+      "B": "T3: confusable sibling \u2014 --full-refresh rebuilds an incremental model from scratch, it does nothing to avoid building unselected upstream parents",
+      "C": "T4: breaks a stated fact \u2014 deferral explicitly requires both --defer and --state together, not --state alone",
+      "D": "T7: over-engineering \u2014 dbt clone copies objects into the schema; deferral achieves the same ref resolution without copying anything"
+    },
+    "topics": [
+      "ae/07-dbt-state/state-selection"
+    ]
+  },
+  {
+    "id": "draft-orig3-ae07-pr-change-classification-state-modified",
+    "domain": "ae-07",
+    "blueprint_task": "7.1",
+    "qtype": "multiple_response",
+    "difficulty_estimate": "L4",
+    "stem": "A PR makes two changes: it edits the SQL logic in `dim_listings_cleansed.sql`, and it adds a new column description to `dim_hosts_cleansed` in the YAML, without changing `dim_hosts_cleansed`'s SQL at all, and with `persist_docs` not enabled on that column. The team needs to know which of these two changes `state:modified` actually flags. Which TWO statements are correct?",
+    "option_texts": {
+      "A": "The SQL edit to `dim_listings_cleansed` is detected, since state:modified.body tracks changes to node body",
+      "B": "The new column description on `dim_hosts_cleansed` is NOT flagged, because persisted_descriptions only counts a description change when persist_docs is turned on at that level",
+      "C": "The new column description on `dim_hosts_cleansed` is detected regardless of whether persist_docs is on, since any YAML edit counts as modified",
+      "D": "Neither change is detected, since `state:modified` only tracks changes to `.sql` files directly"
+    },
+    "drill_answer": "A,B",
+    "drill_answer_short": "A SQL edit is detected via .body; a description-only change is detected only when persist_docs is enabled",
+    "decision_hinge": "state:modified.body: Changes to node body. state:modified.persisted_descriptions: Changes to relation- or column-level description, if and only if persist_docs is enabled at each level.",
+    "sources": [
+      "https://docs.getdbt.com/reference/node-selection/methods"
+    ],
+    "plausible_options": {
+      "C": "adds a new column description to `dim_hosts_cleansed` in the YAML, without changing `dim_hosts_cleansed`'s SQL at all"
+    },
+    "eliminated_by": {
+      "D": "it edits the SQL logic in `dim_listings_cleansed.sql`"
+    },
+    "distractor_traps": {
+      "C": "T3: confusable sibling \u2014 a description change is gated specifically on persist_docs being enabled, not any YAML edit in general",
+      "D": "T4: breaks a stated fact \u2014 the SQL edit to dim_listings_cleansed is explicitly detected, contradicting neither being detected"
+    },
+    "topics": [
+      "ae/07-dbt-state/state-selection"
+    ]
+  },
+  {
+    "id": "draft-orig3-ae07-favor-state-beyond-defer",
+    "domain": "ae-07",
+    "blueprint_task": "7.1",
+    "qtype": "multiple_choice",
+    "difficulty_estimate": "L4",
+    "stem": "A CI job already uses `--defer --state ./prod-artifacts/`. The team adds `--favor-state` too, and needs to know exactly what it adds beyond what `--defer` already provides on its own -- specifically for a node that already exists in the local database but was not selected. What does `--favor-state` do beyond plain `--defer`?",
+    "option_texts": {
+      "A": "It forces dbt to resolve an unselected node's ref using the production manifest even though a local copy is already present, which plain `--defer` alone would not do",
+      "B": "It forces dbt to always use the production version for every ref, even for nodes that are included in the current selection",
+      "C": "It disables `--defer` entirely once a node is already present locally, replacing it with a stricter, production-only resolution mode",
+      "D": "It has no additional effect; `--favor-state` and `--defer` are aliases for the same behavior"
+    },
+    "drill_answer": "A",
+    "drill_answer_short": "--favor-state prioritizes the production manifest even for unselected nodes that already exist locally",
+    "decision_hinge": "When --favor-state is passed, dbt prioritizes node definitions from the --state directory. However, this doesn't apply if the node is also part of the selected nodes. Plain --defer only substitutes when the node doesn't exist in the database.",
+    "sources": [
+      "https://docs.getdbt.com/reference/node-selection/defer"
+    ],
+    "plausible_options": {},
+    "eliminated_by": {
+      "B": {
+        "signal": "specifically for a node that already exists in the local database but was not selected",
+        "requires_fact": "--favor-state does not apply if the node is also part of the selected nodes; it only changes resolution for unselected nodes."
+      },
+      "C": "already uses `--defer --state ./prod-artifacts/`",
+      "D": "needs to know exactly what it adds beyond what `--defer` already provides on its own"
+    },
+    "distractor_traps": {
+      "B": "T3: confusable sibling \u2014 --favor-state explicitly does not apply to a node that is part of the current selection",
+      "C": "T1: fabricated \u2014 --favor-state does not disable --defer; it changes one condition of how defer resolves refs",
+      "D": "T4: breaks a stated fact \u2014 the docs describe a specific behavioral difference, so the two flags are not interchangeable aliases"
+    },
+    "topics": [
+      "ae/07-dbt-state/state-selection"
+    ]
+  },
+  {
+    "id": "draft-orig3-ae07-retry-scope-partial-failure",
+    "domain": "ae-07",
+    "blueprint_task": "7.2",
+    "qtype": "multiple_choice",
+    "difficulty_estimate": "L3",
+    "stem": "A production run resulted in 30 models succeeding, 1 model (`fct_reviews`) failing, and 15 models being skipped as a result. The developer runs `dbt retry` after fixing the underlying issue. The team needs to know how many models dbt will attempt to build on this retry. How many?",
+    "option_texts": {
+      "A": "16, the failed model plus the 15 that were skipped because of it",
+      "B": "All 46 models, since retry always re-executes every node from the original invocation",
+      "C": "30, since retry re-validates every model that previously succeeded",
+      "D": "1, since retry only re-attempts the single node that failed, leaving the skipped ones alone"
+    },
+    "drill_answer": "A",
+    "drill_answer_short": "Retry resumes from the point of failure, covering the failed node plus everything skipped because of it",
+    "decision_hinge": "Retry re-executes the last invocation from the point of failure. Once some nodes have run, you can use retry to re-execute from any new point of failure.",
+    "sources": [
+      "https://docs.getdbt.com/reference/commands/retry"
+    ],
+    "plausible_options": {
+      "C": "A production run resulted in 30 models succeeding, 1 model (`fct_reviews`) failing, and 15 models being skipped as a result"
+    },
+    "eliminated_by": {
+      "B": "The developer runs `dbt retry` after fixing the underlying issue",
+      "D": {
+        "signal": "A production run resulted in 30 models succeeding, 1 model (`fct_reviews`) failing, and 15 models being skipped as a result",
+        "requires_fact": "Retry re-executes the last invocation from the point of failure, which includes everything that did not complete, not only the single failed node."
+      }
+    },
+    "distractor_traps": {
+      "B": "T4: breaks a stated fact \u2014 retry resumes from the point of failure, it does not re-run an already-successful invocation from scratch",
+      "C": "T3: confusable sibling \u2014 retry resumes forward from the failure, it does not re-validate nodes that already succeeded",
+      "D": "T8: scope error \u2014 the point of failure includes everything that did not complete, which covers the skipped nodes too, not only the one that errored"
+    },
+    "topics": [
+      "ae/07-dbt-state/dbt-retry"
+    ]
+  },
+  {
+    "id": "draft-orig3-ae07-defer-unmodified-parent-not-rebuilt",
+    "domain": "ae-07",
+    "blueprint_task": "7.1",
+    "qtype": "multiple_choice",
+    "difficulty_estimate": "L5",
+    "stem": "A CI pipeline runs `dbt build --select state:modified+ --defer --state ./prod-artifacts/`. A developer modifies `dim_listings_cleansed.sql` but does NOT modify `dim_hosts_cleansed`, which `dim_listings_w_hosts` (a descendant of the modified model) also references as a second parent. The team needs to know what happens to the unmodified `dim_hosts_cleansed` during this run. What happens?",
+    "option_texts": {
+      "A": "dbt resolves `dim_listings_w_hosts`'s ref to `dim_hosts_cleansed` using the production manifest, since it is unselected and already exists there",
+      "B": "`dim_hosts_cleansed` is rebuilt anyway, because it is a parent of a selected descendant node",
+      "C": "The build fails, because `dim_hosts_cleansed` was never explicitly selected or deferred",
+      "D": "`dim_listings_w_hosts` builds without any data from `dim_hosts_cleansed`, since it was not selected"
+    },
+    "drill_answer": "A",
+    "drill_answer_short": "An unselected, unmodified parent that already exists gets deferred to the production manifest",
+    "decision_hinge": "When deferral conditions are met, dbt resolves ref calls using the state manifest instead, but only if the node isn't among the selected nodes, and it doesn't exist in the database (or --favor-state is used).",
+    "sources": [
+      "https://docs.getdbt.com/reference/node-selection/defer"
+    ],
+    "plausible_options": {
+      "B": "which `dim_listings_w_hosts` (a descendant of the modified model) also references as a second parent"
+    },
+    "eliminated_by": {
+      "C": {
+        "signal": "does NOT modify `dim_hosts_cleansed`",
+        "requires_fact": "When deferral conditions are met, dbt resolves ref calls using the state manifest instead, for nodes that are not selected and already exist in the database."
+      },
+      "D": "does NOT modify `dim_hosts_cleansed`"
+    },
+    "distractor_traps": {
+      "B": "T3: confusable sibling \u2014 being a parent of a selected descendant does not itself select a node; selection follows state:modified+, not every ancestor of a selected node",
+      "C": "T4: breaks a stated fact \u2014 resolving an unselected, already-built parent via the state manifest is exactly what deferral does, not a failure",
+      "D": "T1: fabricated \u2014 dbt does not silently drop an unselected parent's data; it defers to the production version instead"
+    },
+    "topics": [
+      "ae/07-dbt-state/state-selection"
+    ]
+  },
+  {
+    "id": "draft-orig3-ae07-ls-state-modified-fib",
+    "domain": "ae-07",
+    "blueprint_task": "7.1",
+    "qtype": "fill_in_blank",
+    "difficulty_estimate": "L2",
+    "stem": "To list all modified models without actually running or building them, complete this command: `dbt ____ --select state:modified --state ./prod-artifacts/`",
+    "accepted_answers": [
+      "ls",
+      "list"
+    ],
+    "drill_answer": "ls",
+    "drill_answer_short": "dbt ls lists selected nodes without running or building them",
+    "decision_hinge": "dbt ls --no-write-json --select state:modified --state target",
+    "sources": [
+      "https://docs.getdbt.com/reference/node-selection/methods"
+    ],
+    "topics": [
+      "ae/07-dbt-state/state-selection"
+    ]
+  },
+  {
+    "id": "draft-orig3-ae07-defer-chain-through-ephemeral",
+    "domain": "ae-07",
+    "blueprint_task": "7.1",
+    "qtype": "multiple_choice",
+    "difficulty_estimate": "L5",
+    "stem": "A CI pipeline uses `--defer` with `--state` pointing at production artifacts. A modified model references an ephemeral staging model, which itself references `{{ source('airbnb', 'reviews') }}`. The ephemeral model was not selected and is not deferred at all, since ephemeral models are excluded from deferral entirely. The team needs to know what this means for how the modified model actually builds. What's the practical consequence?",
+    "option_texts": {
+      "A": "The ephemeral model's SQL still runs fresh, interpolated as a CTE, as part of the modified model's own query, regardless of --defer",
+      "B": "The build fails, because an undeferred ephemeral model has no database object for the modified model to reference",
+      "C": "dbt automatically substitutes the ephemeral model's production CTE logic instead, as a special-case exception to the ephemeral deferral rule",
+      "D": "The modified model is skipped entirely, since its ephemeral dependency cannot be resolved under --defer"
+    },
+    "drill_answer": "A",
+    "drill_answer_short": "An ephemeral model is never deferred; its SQL is always interpolated fresh as a CTE regardless of defer",
+    "decision_hinge": "Ephemeral models are never deferred, since they serve as passthroughs for other ref calls.",
+    "sources": [
+      "https://docs.getdbt.com/reference/node-selection/defer"
+    ],
+    "plausible_options": {
+      "B": "since ephemeral models are excluded from deferral entirely"
+    },
+    "eliminated_by": {
+      "C": "since ephemeral models are excluded from deferral entirely",
+      "D": "since ephemeral models are excluded from deferral entirely"
+    },
+    "distractor_traps": {
+      "B": "T3: confusable sibling \u2014 an ephemeral model never has a database object to defer in the first place; it is interpolated as a CTE, deferred or not",
+      "C": "T1: fabricated \u2014 dbt documents no special-case production-CTE substitution for ephemeral models",
+      "D": "T1: fabricated \u2014 an ephemeral dependency being excluded from deferral does not block the referencing model from building"
+    },
+    "topics": [
+      "ae/07-dbt-state/state-selection"
+    ]
+  },
+  {
+    "id": "draft-orig3-ae07-slim-ci-lineage-scope",
+    "domain": "ae-07",
+    "blueprint_task": "7.1",
+    "qtype": "multiple_choice",
+    "difficulty_estimate": "L4",
+    "stem": "A developer modifies only the SQL in `dim_hosts_cleansed` and runs `dbt build --select state:modified+ --state ./prod-artifacts/` as a Slim CI build. `dim_hosts_cleansed` feeds into `dim_listings_w_hosts`, which feeds into a mart; a separate, unrelated branch of the DAG shares no path with `dim_hosts_cleansed` at all. The team needs to know exactly which models this command actually builds. What gets built?",
+    "option_texts": {
+      "A": "`dim_hosts_cleansed` and every model downstream of it, following the + suffix, while the unrelated branch is left untouched",
+      "B": "Every model in the project, since Slim CI always rebuilds the entire DAG to be safe",
+      "C": "Only `dim_hosts_cleansed` itself, since state:modified does not combine with graph operators",
+      "D": "The unrelated branch too, since Slim CI builds every model that shares a production manifest with the modified one"
+    },
+    "drill_answer": "A",
+    "drill_answer_short": "state:modified+ selects the modified node plus its descendants, leaving unrelated branches untouched",
+    "decision_hinge": "Placed after a model/resource, the + operator includes the resource itself and all its descendants (downstream dependencies).",
+    "sources": [
+      "https://docs.getdbt.com/reference/node-selection/graph-operators"
+    ],
+    "plausible_options": {
+      "D": "a separate, unrelated branch of the DAG shares no path with `dim_hosts_cleansed` at all"
+    },
+    "eliminated_by": {
+      "B": "a separate, unrelated branch of the DAG shares no path with `dim_hosts_cleansed` at all",
+      "C": "runs `dbt build --select state:modified+ --state ./prod-artifacts/` as a Slim CI build"
+    },
+    "distractor_traps": {
+      "B": "T4: breaks a stated fact \u2014 Slim CI's whole point is scoping down to what changed, not rebuilding everything",
+      "C": "T1: fabricated \u2014 state:modified combines with graph operators like + exactly as shown in the command itself",
+      "D": "T3: confusable sibling \u2014 Slim CI scopes to the modified node's own lineage, not to anything else sharing the same production manifest"
+    },
+    "topics": [
+      "ae/07-dbt-state/state-selection"
+    ]
+  }
+]

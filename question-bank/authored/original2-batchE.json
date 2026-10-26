@@ -7,12 +7,12 @@
     "difficulty_estimate": "L3",
     "stem": "Before running the nightly pipeline, a team wants to verify that the Airbnb source tables received new data within their configured time window, and they want the command that is documented as the current, recommended way to do this, not the legacy one kept only for backward compatibility. Which command should they run?",
     "option_texts": {
-      "A": "`dbt freshness`, the current top-level command for checking every source and model with freshness configured",
+      "A": "`dbt test`, since freshness checks are currently configured as a category of data test",
       "B": "`dbt source freshness`, since it is the only command dbt has ever currently configured for this check",
-      "C": "`dbt test`, since freshness checks are currently configured as a category of data test",
+      "C": "`dbt freshness`, the current top-level command for checking every source and model with freshness configured",
       "D": "`dbt build`, since building a model automatically re-validates its current source freshness first"
     },
-    "drill_answer": "A",
+    "drill_answer": "C",
     "drill_answer_short": "dbt freshness is the current, recommended command checking both sources and models",
     "decision_hinge": "Run dbt freshness to check every source and model with freshness configured. dbt source freshness is a legacy command that checks freshness for sources only; it's still supported for backward compatibility, but dbt freshness is recommended going forward.",
     "sources": [
@@ -22,13 +22,13 @@
       "B": "the command that is documented as the current, recommended way to do this, not the legacy one kept only for backward compatibility"
     },
     "eliminated_by": {
-      "C": "verify that the Airbnb source tables received new data within their configured time window",
+      "A": "verify that the Airbnb source tables received new data within their configured time window",
       "D": "verify that the Airbnb source tables received new data within their configured time window"
     },
     "distractor_traps": {
-      "B": "T6: stale behaviour \u2014 dbt source freshness still exists, but it is the legacy, sources-only predecessor, not the current recommendation",
-      "C": "T3: confusable sibling \u2014 freshness checks are a distinct mechanism from data tests, with their own dedicated command",
-      "D": "T1: fabricated \u2014 building a model does not automatically run a freshness check against its sources"
+      "A": "T3: confusable sibling — freshness checks are a distinct mechanism from data tests, with their own dedicated command",
+      "B": "T6: stale behaviour — dbt source freshness still exists, but it is the legacy, sources-only predecessor, not the current recommendation",
+      "D": "T1: fabricated — building a model does not automatically run a freshness check against its sources"
     },
     "topics": [
       "ae/06-external-dependencies/source-freshness"
@@ -42,12 +42,12 @@
     "difficulty_estimate": "L2",
     "stem": "A DAG has many dimension models that are independent of each other, meaning none of them depends on another, and the team wants to reduce total run time without changing any model's SQL. Which approach is most likely to help, and why?",
     "option_texts": {
-      "A": "Increase the number of threads, since threads represent the maximum number of paths through the graph dbt may work on at once",
+      "A": "Add a `post-hook` to each model that runs the next model's build, chaining them together manually",
       "B": "Materialize every independent model as a view, since views always build faster than tables regardless of concurrency",
       "C": "Split the DAG into two separate dbt projects, one per half of the independent models",
-      "D": "Add a `post-hook` to each model that runs the next model's build, chaining them together manually"
+      "D": "Increase the number of threads, since threads represent the maximum number of paths through the graph dbt may work on at once"
     },
-    "drill_answer": "A",
+    "drill_answer": "D",
     "drill_answer_short": "More threads let dbt build independent, ready models in parallel",
     "decision_hinge": "The number of threads represents the maximum number of paths through the graph dbt may work on at once; increasing the number of threads can minimize the run time of your project. With more threads, dbt builds as many ready models in parallel as the graph allows, finishing much sooner.",
     "sources": [
@@ -57,16 +57,16 @@
       "B": "reduce total run time without changing any model's SQL"
     },
     "eliminated_by": {
-      "C": "A DAG has many dimension models that are independent of each other",
-      "D": {
+      "A": {
         "signal": "A DAG has many dimension models that are independent of each other",
         "requires_fact": "The number of threads represents the maximum number of paths through the graph dbt may work on at once; with more threads, dbt builds as many ready models in parallel as the graph allows."
-      }
+      },
+      "C": "A DAG has many dimension models that are independent of each other"
     },
     "distractor_traps": {
-      "B": "T3: confusable sibling \u2014 materialization choice is a separate lever from run-time concurrency, and a view is not inherently faster to build",
-      "C": "T7: over-engineering \u2014 splitting into two projects is a heavier change than increasing a concurrency setting",
-      "D": "T1: fabricated \u2014 dbt already parallelizes independent models through threads, without manual hook chaining"
+      "A": "T1: fabricated — dbt already parallelizes independent models through threads, without manual hook chaining",
+      "B": "T3: confusable sibling — materialization choice is a separate lever from run-time concurrency, and a view is not inherently faster to build",
+      "C": "T7: over-engineering — splitting into two projects is a heavier change than increasing a concurrency setting"
     },
     "topics": [
       "ae/01-developing-and-optimizing-models/project-config-and-flags"
@@ -102,9 +102,9 @@
       "D": "wants to use `dbt clone` to copy production state into a development schema"
     },
     "distractor_traps": {
-      "B": "T3: confusable sibling \u2014 on a platform with zero-copy cloning, dbt creates a clone rather than a full physical data copy",
-      "C": "T4: breaks a stated fact \u2014 dbt clone will not recreate a pre-existing relation unless --full-refresh is passed",
-      "D": "T1: fabricated \u2014 dbt clone is useful for incremental models in CI, but it is not restricted to that one materialization"
+      "B": "T3: confusable sibling — on a platform with zero-copy cloning, dbt creates a clone rather than a full physical data copy",
+      "C": "T4: breaks a stated fact — dbt clone will not recreate a pre-existing relation unless --full-refresh is passed",
+      "D": "T1: fabricated — dbt clone is useful for incremental models in CI, but it is not restricted to that one materialization"
     },
     "topics": [
       "ae/04-troubleshooting-pipelines/dbt-clone"
@@ -137,9 +137,9 @@
       "D": "before dbt spends time compiling or running anything"
     },
     "distractor_traps": {
-      "B": "T4: breaks a stated requirement \u2014 tests run after a model builds, not before anything compiles or runs",
-      "C": "T3: confusable sibling \u2014 pre-hooks run per model at build time, not once before the whole build even starts",
-      "D": "T3: confusable sibling \u2014 contracts enforce column shape during a build, they do not enforce project-wide standards like descriptions beforehand"
+      "B": "T4: breaks a stated requirement — tests run after a model builds, not before anything compiles or runs",
+      "C": "T3: confusable sibling — pre-hooks run per model at build time, not once before the whole build even starts",
+      "D": "T3: confusable sibling — contracts enforce column shape during a build, they do not enforce project-wide standards like descriptions beforehand"
     },
     "topics": [
       "ae/04-troubleshooting-pipelines/dag-failure-points"
@@ -172,9 +172,9 @@
       "D": "with no `error_after` anywhere in the block"
     },
     "distractor_traps": {
-      "B": "T1: fabricated \u2014 dbt does not copy one threshold's values into the other",
-      "C": "T3: confusable sibling \u2014 one or both thresholds can be provided, this is not a strict pairing requirement",
-      "D": "T1: fabricated \u2014 an omitted error_after is a valid, documented configuration, not a parse error"
+      "B": "T1: fabricated — dbt does not copy one threshold's values into the other",
+      "C": "T3: confusable sibling — one or both thresholds can be provided, this is not a strict pairing requirement",
+      "D": "T1: fabricated — an omitted error_after is a valid, documented configuration, not a parse error"
     },
     "topics": [
       "ae/06-external-dependencies/source-freshness"
@@ -210,9 +210,9 @@
       }
     },
     "distractor_traps": {
-      "B": "T4: breaks a stated fact \u2014 the schema is unique and temporary, not production's own schema under a different database",
-      "C": "T1: fabricated \u2014 the naming convention is deterministic and traceable, not a random UUID",
-      "D": "T3: confusable sibling \u2014 a personal dev schema is a separate, longer-lived concept from a per-PR CI schema"
+      "B": "T4: breaks a stated fact — the schema is unique and temporary, not production's own schema under a different database",
+      "C": "T1: fabricated — the naming convention is deterministic and traceable, not a random UUID",
+      "D": "T3: confusable sibling — a personal dev schema is a separate, longer-lived concept from a per-PR CI schema"
     },
     "topics": [
       "ae/04-troubleshooting-pipelines/dag-failure-points"

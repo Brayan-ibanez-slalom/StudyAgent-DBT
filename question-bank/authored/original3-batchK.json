@@ -1,0 +1,148 @@
+[
+  {
+    "id": "draft-orig3-ae02-contract-no-data-validation",
+    "domain": "ae-02",
+    "blueprint_task": "2.1",
+    "qtype": "multiple_choice",
+    "difficulty_estimate": "L4",
+    "stem": "A model has `contract: {enforced: true}` and specifies a `data_type` for every column. A stakeholder asks whether dbt checks the actual row values against those declared types at runtime -- for example, rejecting a row where a column typed `integer` somehow contains a non-numeric string mid-build. What's the accurate answer?",
+    "option_texts": {
+      "A": "No; the contract's preflight check verifies the query's returned column names and data types match the declared schema, it does not inspect individual row values for a hidden type mismatch",
+      "B": "Yes; dbt scans every row during the build column by column and rejects any value that doesn't match the declared type",
+      "C": "Yes, but only for numeric columns; string and timestamp column values are never checked against their declared column type",
+      "D": "No; contracts are purely cosmetic documentation and have no bearing on whether the model actually builds"
+    },
+    "drill_answer": "A",
+    "drill_answer_short": "A contract's preflight check compares declared column names/types to the query's output shape, not individual row values",
+    "decision_hinge": "dbt will run a preflight check to ensure that the model's query will return a set of columns with names and data types matching the ones you have defined, or it will fail to build.",
+    "sources": [
+      "https://docs.getdbt.com/docs/collaborate/govern/model-contracts"
+    ],
+    "plausible_options": {
+      "C": "whether dbt checks the actual row values against those declared types at runtime"
+    },
+    "eliminated_by": {
+      "B": "whether dbt checks the actual row values against those declared types at runtime",
+      "D": {
+        "signal": "specifies a `data_type` for every column",
+        "requires_fact": "dbt will run a preflight check to ensure that the model's query returns columns with names and data types matching the contract, or it will fail to build, so a contract clearly does affect whether the model builds."
+      }
+    },
+    "distractor_traps": {
+      "B": "T1: fabricated \u2014 the documented preflight check compares the query's output shape, it does not scan individual row values",
+      "C": "T3: confusable sibling \u2014 the preflight check applies uniformly to every declared column, not only numeric ones",
+      "D": "T4: breaks a stated fact \u2014 a contract violation is documented to fail the build, so it is not merely documentation"
+    },
+    "topics": [
+      "ae/02-model-governance/model-contracts"
+    ]
+  },
+  {
+    "id": "draft-orig3-ae02-version-pin-ref-syntax",
+    "domain": "ae-02",
+    "blueprint_task": "2.2",
+    "qtype": "multiple_choice",
+    "difficulty_estimate": "L3",
+    "stem": "A model `dim_listings_cleansed` defines `latest_version: 2`, with versions `v: 1` and `v: 2` both declared. A downstream model that was written against the old shape needs to keep building against version 1 specifically, even though version 2 is now the default for an unversioned `ref()`. Which call pins it to version 1?",
+    "option_texts": {
+      "A": "`ref('dim_listings_cleansed', v=1)`",
+      "B": "`ref('dim_listings_cleansed')`, since any `ref()` without an explicit version resolves to the oldest declared version",
+      "C": "`ref('dim_listings_cleansed_v1')`, treating the version suffix as part of the base model name",
+      "D": "`ref('dim_listings_cleansed', latest_version=1)`, overriding the model's own `latest_version` property per call"
+    },
+    "drill_answer": "A",
+    "drill_answer_short": "Pin a version explicitly with ref('model', v=N)",
+    "decision_hinge": "ref('dim_customers', v=2) resolves to a specific declared version's database relation, independent of which version is marked latest_version on the model itself.",
+    "sources": [
+      "https://docs.getdbt.com/docs/collaborate/govern/model-versions"
+    ],
+    "plausible_options": {
+      "C": "needs to keep building against version 1 specifically, even though version 2 is now the default"
+    },
+    "eliminated_by": {
+      "B": {
+        "signal": "even though version 2 is now the default for an unversioned `ref()`",
+        "requires_fact": "If latest_version is not specified explicitly, it is the numerically greatest version that is latest; an unversioned ref() resolves to latest_version, which here is explicitly 2, not the oldest version."
+      },
+      "D": "even though version 2 is now the default for an unversioned `ref()`"
+    },
+    "distractor_traps": {
+      "B": "T4: breaks a stated fact \u2014 the stem says version 2 is the default, which contradicts resolving to the oldest",
+      "C": "T3: confusable sibling \u2014 the underlying file may carry a version suffix, but ref() still takes the base model name plus a version argument",
+      "D": "T1: fabricated \u2014 ref() has no per-call latest_version override argument"
+    },
+    "topics": [
+      "ae/02-model-governance/model-versions"
+    ]
+  },
+  {
+    "id": "draft-orig3-ae02-constraints-postgres-all-enforced",
+    "domain": "ae-02",
+    "blueprint_task": "2.3",
+    "qtype": "multiple_choice",
+    "difficulty_estimate": "L4",
+    "stem": "A team adds `not_null`, `foreign_key`, `unique`, and `check` constraints to a contracted model on Postgres. The data governance lead needs to know how many of these four constraint types Postgres actually enforces at build time, not merely records as metadata. How many are enforced?",
+    "option_texts": {
+      "A": "All four; on Postgres, not_null, primary_key, foreign_key, unique, and check are all both definable and enforced",
+      "B": "Only `not_null`; the other three are definable but not enforced on any platform, including Postgres",
+      "C": "Only `not_null` and `foreign_key`; `unique` and `check` are never enforced on any relational warehouse",
+      "D": "None of them; Postgres only supports constraints as comments, with zero enforcement at build time"
+    },
+    "drill_answer": "A",
+    "drill_answer_short": "On Postgres, not_null, primary_key, foreign_key, unique, and check are all definable and enforced",
+    "decision_hinge": "On Postgres: not_null is Definable and Enforced. primary_key is Definable and Enforced. foreign_key is Definable and Enforced. unique is Definable and Enforced. check is Definable and Enforced.",
+    "sources": [
+      "https://docs.getdbt.com/reference/resource-properties/constraints"
+    ],
+    "plausible_options": {
+      "B": "The data governance lead needs to know how many of these four constraint types Postgres actually enforces at build time"
+    },
+    "eliminated_by": {
+      "C": "The data governance lead needs to know how many of these four constraint types Postgres actually enforces at build time",
+      "D": "The data governance lead needs to know how many of these four constraint types Postgres actually enforces at build time"
+    },
+    "distractor_traps": {
+      "B": "T3: confusable sibling \u2014 that enforcement pattern describes other platforms, like BigQuery, not Postgres",
+      "C": "T3: confusable sibling \u2014 this enforcement pattern describes platforms like Snowflake or BigQuery, not Postgres",
+      "D": "T1: fabricated \u2014 Postgres genuinely enforces these constraints at build time, it does not treat them as comments only"
+    },
+    "topics": [
+      "ae/02-model-governance/constraints"
+    ]
+  },
+  {
+    "id": "draft-orig3-ae02-contract-requires-every-column-typed",
+    "domain": "ae-02",
+    "blueprint_task": "2.1",
+    "qtype": "multiple_choice",
+    "difficulty_estimate": "L3",
+    "stem": "A team wants to enforce a contract on `dim_customers`, and defines `constraints` on the `customer_id` column, but leaves `data_type` unset on two other columns in the YAML. The team needs to know whether this is a valid enforced contract as written. Is it?",
+    "option_texts": {
+      "A": "No; `contract: enforced: true` requires an explicit `data_type` declared for every column in the schema config, not only the ones with a constraint",
+      "B": "Yes; only columns with an explicit constraint need a declared data_type, the rest are inferred automatically",
+      "C": "Yes; `data_type` is optional everywhere as long as at least one column declares a constraint",
+      "D": "No; a contract additionally requires every single column to carry its own constraint, beyond just a data_type"
+    },
+    "drill_answer": "A",
+    "drill_answer_short": "An enforced contract requires a declared data_type for every column, regardless of which columns carry constraints",
+    "decision_hinge": "You enforce a contract: this means you need to explicitly define the data_type for every column in your model's schema configuration.",
+    "sources": [
+      "https://docs.getdbt.com/reference/resource-properties/constraints"
+    ],
+    "plausible_options": {
+      "B": "defines `constraints` on the `customer_id` column, but leaves `data_type` unset on two other columns"
+    },
+    "eliminated_by": {
+      "C": "The team needs to know whether this is a valid enforced contract as written",
+      "D": "defines `constraints` on the `customer_id` column, but leaves `data_type` unset on two other columns"
+    },
+    "distractor_traps": {
+      "B": "T3: confusable sibling \u2014 dbt requires a declared type for every column, not only the ones carrying a constraint",
+      "C": "T1: fabricated \u2014 a single constrained column does not exempt the rest of the model from declaring data_type",
+      "D": "T3: confusable sibling \u2014 constraints are optional per column; a declared data_type on every column is the actual requirement"
+    },
+    "topics": [
+      "ae/02-model-governance/constraints"
+    ]
+  }
+]

@@ -7,12 +7,12 @@
     "difficulty_estimate": "L4",
     "stem": "A model `fct_reviews` has an enforced contract declaring five columns, each with a `data_type`. The model's SQL `select` statement returns those five columns plus one extra column that is not declared anywhere in the contract. The team needs to predict whether this model builds. What happens?",
     "option_texts": {
-      "A": "The build fails, because the preflight check requires the query's returned columns to match the contract's declared columns exactly",
+      "A": "The build succeeds, and the extra column is added to the warehouse table without a declared type",
       "B": "The build succeeds, and dbt silently drops the undeclared extra column before loading it into the contract's table",
-      "C": "The build succeeds, and the extra column is added to the warehouse table without a declared type",
+      "C": "The build fails, because the preflight check requires the query's returned columns to match the contract's declared columns exactly",
       "D": "The build succeeds, because contracts only restrict declared columns and ignore anything beyond that list"
     },
-    "drill_answer": "A",
+    "drill_answer": "C",
     "drill_answer_short": "A preflight check compares the query's columns against the contract exactly; an extra column fails it",
     "decision_hinge": "dbt will run a preflight check to ensure that the model's query will return a set of columns with names and data types matching the ones you have defined, or it will fail to build.",
     "sources": [
@@ -22,16 +22,16 @@
       "D": "plus one extra column that is not declared anywhere in the contract"
     },
     "eliminated_by": {
-      "B": "The team needs to predict whether this model builds",
-      "C": {
+      "A": {
         "signal": "plus one extra column that is not declared anywhere in the contract",
         "requires_fact": "dbt will run a preflight check to ensure that the model's query will return a set of columns matching the ones you have defined, or it will fail to build."
-      }
+      },
+      "B": "The team needs to predict whether this model builds"
     },
     "distractor_traps": {
-      "B": "T1: fabricated \u2014 dbt does not silently drop extra columns to make a contracted query fit",
-      "C": "T1: fabricated \u2014 a contract requires every returned column to have a declared, matching data_type",
-      "D": "T3: confusable sibling \u2014 a contract's guarantee covers the whole returned set, not only the declared subset"
+      "A": "T1: fabricated — a contract requires every returned column to have a declared, matching data_type",
+      "B": "T1: fabricated — dbt does not silently drop extra columns to make a contracted query fit",
+      "D": "T3: confusable sibling — a contract's guarantee covers the whole returned set, not only the declared subset"
     },
     "topics": [
       "ae/02-model-governance/model-contracts"
@@ -45,12 +45,12 @@
     "difficulty_estimate": "L3",
     "stem": "A model `dim_listings_cleansed` declares an enforced contract with five columns in its YAML, including `listing_id` as `integer`. A recent SQL edit accidentally drops `listing_id` from the final `select` list, while the other four declared columns are still returned. The team needs to know what happens on the next build.",
     "option_texts": {
-      "A": "The build fails, because the preflight check requires every declared column to actually appear in the query's output",
+      "A": "dbt automatically re-adds `listing_id` by inferring it from the YAML definition",
       "B": "The build succeeds, and `listing_id` is created as a `NULL`-only column to satisfy the declared contract",
       "C": "The build succeeds, because contracts only check the columns a query does return, not ones it omits",
-      "D": "dbt automatically re-adds `listing_id` by inferring it from the YAML definition"
+      "D": "The build fails, because the preflight check requires every declared column to actually appear in the query's output"
     },
-    "drill_answer": "A",
+    "drill_answer": "D",
     "drill_answer_short": "A declared contract column missing from the query output fails the preflight check",
     "decision_hinge": "dbt will run a preflight check to ensure that the model's query will return a set of columns with names and data types matching the ones you have defined, or it will fail to build.",
     "sources": [
@@ -60,16 +60,16 @@
       "C": "A recent SQL edit accidentally drops `listing_id` from the final `select` list"
     },
     "eliminated_by": {
-      "B": "The team needs to know what happens on the next build",
-      "D": {
+      "A": {
         "signal": "A recent SQL edit accidentally drops `listing_id` from the final `select` list",
         "requires_fact": "dbt will run a preflight check to ensure that the model's query will return a set of columns matching the ones you have defined, or it will fail to build."
-      }
+      },
+      "B": "The team needs to know what happens on the next build"
     },
     "distractor_traps": {
-      "B": "T1: fabricated \u2014 dbt does not synthesize a missing column out of nulls to satisfy a contract",
-      "C": "T3: confusable sibling \u2014 the preflight check compares the full declared set, not just what the query happens to return",
-      "D": "T1: fabricated \u2014 dbt has no mechanism to auto-insert a column a query forgot to select"
+      "A": "T1: fabricated — dbt has no mechanism to auto-insert a column a query forgot to select",
+      "B": "T1: fabricated — dbt does not synthesize a missing column out of nulls to satisfy a contract",
+      "C": "T3: confusable sibling — the preflight check compares the full declared set, not just what the query happens to return"
     },
     "topics": [
       "ae/02-model-governance/model-contracts"
@@ -83,12 +83,12 @@
     "difficulty_estimate": "L3",
     "stem": "`dim_listings_cleansed` defines `v: 1` and `v: 2`, with `latest_version: 2`. A downstream model needs to keep building against version 1 specifically, even after version 2 becomes the default. Which `ref()` call pins it to version 1?",
     "option_texts": {
-      "A": "`ref('dim_listings_cleansed', v=1)`",
-      "B": "`ref('dim_listings_cleansed')`, since omitting the version always resolves to the oldest one",
+      "A": "`ref('dim_listings_cleansed')`, since omitting the version always resolves to the oldest one",
+      "B": "`ref('dim_listings_cleansed', v=1)`",
       "C": "`ref('dim_listings_cleansed_v1')`, treating the version suffix as part of the model's name",
       "D": "`ref('dim_listings_cleansed', version='latest')`, since 'latest' always means the lowest version number"
     },
-    "drill_answer": "A",
+    "drill_answer": "B",
     "drill_answer_short": "Pin a version explicitly with the v= argument to ref()",
     "decision_hinge": "ref('dim_customers', v=1) resolves to the database relation for that specific version, independent of which version is marked latest.",
     "sources": [
@@ -98,16 +98,16 @@
       "C": "even after version 2 becomes the default"
     },
     "eliminated_by": {
-      "B": {
+      "A": {
         "signal": "even after version 2 becomes the default",
         "requires_fact": "If latest_version is not specified explicitly, the latest_version would be the numerically greatest version; an unversioned ref() resolves to the latest_version, not the oldest."
       },
       "D": "even after version 2 becomes the default"
     },
     "distractor_traps": {
-      "B": "T4: breaks a stated fact \u2014 an unversioned ref() follows latest_version, which is explicitly set to 2 here, not the oldest",
-      "C": "T3: confusable sibling \u2014 the versioned file may be named with a suffix, but ref() still takes the base model name plus a version argument",
-      "D": "T1: fabricated \u2014 ref() has no `version='latest'` argument, and latest does not mean lowest"
+      "A": "T4: breaks a stated fact — an unversioned ref() follows latest_version, which is explicitly set to 2 here, not the oldest",
+      "C": "T3: confusable sibling — the versioned file may be named with a suffix, but ref() still takes the base model name plus a version argument",
+      "D": "T1: fabricated — ref() has no `version='latest'` argument, and latest does not mean lowest"
     },
     "topics": [
       "ae/02-model-governance/model-versions"
@@ -121,12 +121,12 @@
     "difficulty_estimate": "L2",
     "stem": "A versioned model declares three versions, numbered 1 through 3, with `latest_version: 2` set explicitly. A reviewer needs to understand exactly what this `latest_version` property controls for downstream consumers. What is its purpose?",
     "option_texts": {
-      "A": "It determines which version an unversioned `ref()` call resolves to by default",
+      "A": "It deletes every version other than the one specified once the project is built",
       "B": "It determines which version number dbt treats as numerically highest for comparison purposes",
-      "C": "It deletes every version other than the one specified once the project is built",
+      "C": "It determines which version an unversioned `ref()` call resolves to by default",
       "D": "It determines the order in which versions are listed in the generated documentation site"
     },
-    "drill_answer": "A",
+    "drill_answer": "C",
     "drill_answer_short": "latest_version sets which version an unversioned ref() call resolves to",
     "decision_hinge": "If latest_version is not specified explicitly, the latest_version would be the numerically greatest version. In this case, latest_version: 1 means v2 is a prerelease, in early development and testing.",
     "sources": [
@@ -136,13 +136,13 @@
       "B": "declares three versions, numbered 1 through 3, with `latest_version: 2` set explicitly"
     },
     "eliminated_by": {
-      "C": "A reviewer needs to understand exactly what this `latest_version` property controls for downstream consumers",
+      "A": "A reviewer needs to understand exactly what this `latest_version` property controls for downstream consumers",
       "D": "A reviewer needs to understand exactly what this `latest_version` property controls for downstream consumers"
     },
     "distractor_traps": {
-      "B": "T3: confusable sibling \u2014 latest_version overrides which version counts as latest, it does not change the numeric values themselves",
-      "C": "T1: fabricated \u2014 older or newer versions keep building through their migration window, they are not deleted",
-      "D": "T1: fabricated \u2014 documentation ordering is not what latest_version is documented to control"
+      "A": "T1: fabricated — older or newer versions keep building through their migration window, they are not deleted",
+      "B": "T3: confusable sibling — latest_version overrides which version counts as latest, it does not change the numeric values themselves",
+      "D": "T1: fabricated — documentation ordering is not what latest_version is documented to control"
     },
     "topics": [
       "ae/02-model-governance/model-versions"
@@ -156,19 +156,19 @@
     "difficulty_estimate": "L5",
     "stem": "Before opening a PR, a developer runs `dbt build --select +staging --empty`, and the entire build, models and tests included, succeeds in 30 seconds. The developer is ready to open the PR with confidence that the real data will build correctly too. Is that confidence justified by what `--empty` actually checked?",
     "option_texts": {
-      "A": "No, because `--empty` limits refs and sources to zero rows, so it validates schema and dependencies but never touches real data values",
+      "A": "Yes, because passing tests under `--empty` proves the same tests would pass against full production data",
       "B": "Yes, because `--empty` still executes the model SQL against real data, just faster than a normal run",
       "C": "No, because `--empty` does not connect to the warehouse at all, so nothing was actually validated",
-      "D": "Yes, because passing tests under `--empty` proves the same tests would pass against full production data"
+      "D": "No, because `--empty` limits refs and sources to zero rows, so it validates schema and dependencies but never touches real data values"
     },
-    "drill_answer": "A",
+    "drill_answer": "D",
     "drill_answer_short": "--empty validates schema and dependencies with zero rows; it never touches real data values",
     "decision_hinge": "The --empty flag limits the refs and sources to zero rows. dbt will still execute the model SQL against the target data warehouse but will avoid expensive reads of input data. This validates dependencies and ensures your models will build properly.",
     "sources": [
       "https://docs.getdbt.com/reference/commands/run"
     ],
     "plausible_options": {
-      "D": "the entire build, models and tests included, succeeds in 30 seconds"
+      "A": "the entire build, models and tests included, succeeds in 30 seconds"
     },
     "eliminated_by": {
       "B": "the entire build, models and tests included, succeeds in 30 seconds",
@@ -178,9 +178,9 @@
       }
     },
     "distractor_traps": {
-      "B": "T4: breaks a stated fact \u2014 --empty limits refs and sources to zero rows, it does not run against real data",
-      "C": "T1: fabricated \u2014 dbt does still execute the model SQL against the warehouse under --empty, just with no input rows",
-      "D": "T3: confusable sibling \u2014 a test run against zero rows proves nothing about full production data"
+      "A": "T3: confusable sibling — a test run against zero rows proves nothing about full production data",
+      "B": "T4: breaks a stated fact — --empty limits refs and sources to zero rows, it does not run against real data",
+      "C": "T1: fabricated — dbt does still execute the model SQL against the warehouse under --empty, just with no input rows"
     },
     "topics": [
       "ae/01-developing-and-optimizing-models/dry-runs-and-sampling"
@@ -194,12 +194,12 @@
     "difficulty_estimate": "L4",
     "stem": "A model's enforced contract declares `host_id` as `integer`. The model's SQL returns `host_id` computed as a string expression, and the columns are also selected in a different order than they appear in the YAML contract. Which of these two discrepancies will actually cause the preflight check to fail?",
     "option_texts": {
-      "A": "Only the data type mismatch on `host_id`; the preflight check is agnostic to column order",
-      "B": "Only the column order mismatch on `host_id`; data types are inferred at preflight check time regardless of what the contract declares",
+      "A": "Only the column order mismatch on `host_id`; data types are inferred at preflight check time regardless of what the contract declares",
+      "B": "Only the data type mismatch on `host_id`; the preflight check is agnostic to column order",
       "C": "Both discrepancies independently fail the build, since dbt requires exact order as well as exact types",
       "D": "Neither `host_id` discrepancy fails the preflight check, since contracts only check that every declared column name is present"
     },
-    "drill_answer": "A",
+    "drill_answer": "B",
     "drill_answer_short": "A data_type mismatch fails the preflight check; column order does not matter to it",
     "decision_hinge": "dbt will run a preflight check to ensure that the model's query will return a set of columns with names and data types matching the ones you have defined. This check is agnostic to the order of columns specified in your model (SQL) or YAML spec.",
     "sources": [
@@ -209,16 +209,16 @@
       "C": "the columns are also selected in a different order than they appear in the YAML contract"
     },
     "eliminated_by": {
-      "B": {
+      "A": {
         "signal": "The model's SQL returns `host_id` computed as a string expression",
         "requires_fact": "dbt will run a preflight check to ensure that the model's query will return a set of columns with names and data types matching the ones you have defined."
       },
       "D": "The model's SQL returns `host_id` computed as a string expression"
     },
     "distractor_traps": {
-      "B": "T4: breaks a stated fact \u2014 the preflight check does compare data types, it is only order that it ignores",
-      "C": "T3: confusable sibling \u2014 order is explicitly excluded from the check, so it is not a second, independent failure",
-      "D": "T1: fabricated \u2014 names alone are not sufficient; declared data types are checked too"
+      "A": "T4: breaks a stated fact — the preflight check does compare data types, it is only order that it ignores",
+      "C": "T3: confusable sibling — order is explicitly excluded from the check, so it is not a second, independent failure",
+      "D": "T1: fabricated — names alone are not sufficient; declared data types are checked too"
     },
     "topics": [
       "ae/02-model-governance/model-contracts"
